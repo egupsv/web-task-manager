@@ -1,0 +1,17 @@
+db:
+  image: wnameless/oracle-xe-11g-r2
+  environment:
+    ORACLE_ALLOW_REMOTE: "true"
+  #volumes:
+  #  - ./db_data:/u01/app/oracle/oradata
+  ports:
+    - "49161:1521"
+
+web:
+  image: tomcat:latest
+  ports:
+    - "8888:8080"
+  volumes:
+    - ./target:/usr/local/tomcat/webapps
+  links:
+    - db
