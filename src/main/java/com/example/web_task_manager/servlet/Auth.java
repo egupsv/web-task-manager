@@ -11,8 +11,12 @@ import java.util.Objects;
 
 import static java.util.Objects.nonNull;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Auth implements Filter {
-    Users users = new Users("users.txt");
+    //  Users users = new Users("users.txt");
+    private static Logger log = LoggerFactory.getLogger(HelloServlet.class);
 
     public Auth() throws IOException {
     }
@@ -22,37 +26,36 @@ public class Auth implements Filter {
     }
 
     @Override
-    public void doFilter(final ServletRequest request,
-                         final ServletResponse response,
-                         final FilterChain filterChain) throws IOException, ServletException {
+    public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain filterChain)
+            throws IOException, ServletException {
 
+        log.info("doFilter");
         final HttpServletRequest req = (HttpServletRequest) request;
         final HttpServletResponse res = (HttpServletResponse) response;
 
         final String login = req.getParameter("login");
         final String password = req.getParameter("password");
 
-        Users users = new Users("users.txt");;
+        log.info("login " + login);
+        Users users = new Users("users.txt");
 
         final HttpSession session = req.getSession();
 
-        if (!nonNull(session) ||
-                !nonNull(session.getAttribute("login")) ||
-                !nonNull(session.getAttribute("password"))) {
+        if (!nonNull(session) || !nonNull(session.getAttribute("login")) || !nonNull(session.getAttribute("password"))) {
             Objects.requireNonNull(req.getSession()).setAttribute("password", password);
             req.getSession().setAttribute("login", login);
         } else if (users.getUser(login) != null) {
             moveToTasks(req, res, login);
         }
     }
+
     /**
      * Move user to menu.
      * If access 'admin' move to admin menu.
      * If access 'user' move to user menu.
      */
-    private void moveToTasks(final HttpServletRequest req,
-                            final HttpServletResponse res,
-                            final String login) throws ServletException, IOException {
+    private void moveToTasks(final HttpServletRequest req, final HttpServletResponse res, final String login)
+            throws ServletException, IOException {
         req.getRequestDispatcher("/WEB-INF/view/tasks.jsp").forward(req, res);
     }
 
