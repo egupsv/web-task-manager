@@ -11,10 +11,14 @@ services:
       - "49161:1521"
   web:
     image: tomcat:latest
+    environment:
+      JPDA_OPTS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8000"
     ports:
       - "8888:8080"
+      - "8000:8000"
     volumes:
       - ./target/web_task_manager-1.0-SNAPSHOT.war:/usr/local/tomcat/webapps/web_task_manager-1.0-SNAPSHOT.war
       - ./tomcat_logs:/usr/local/tomcat/logs
     links:
       - db
+    command: /usr/local/tomcat/bin/catalina.sh jpda run
