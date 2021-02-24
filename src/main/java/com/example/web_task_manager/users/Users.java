@@ -15,23 +15,23 @@ public class Users implements Serializable {
     /**
      * path to file which contains list of users
      */
-    private final String path;
+    //private final String path;
 
-    @SuppressWarnings("unchecked")
-    public Users(String path) throws IOException {
-        this.path = path;
+    public Users() throws IOException {
+        /*this.path = path;
         BufferedReader br = new BufferedReader(new FileReader(path));
-        if (br.readLine() == null) {
+        if (br.readLine() == null) {*/
             this.users = new ArrayList<>();
-        } else {
+        /*} else {
             try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path))) {
 
                 this.users = (List<User>) ois.readObject();
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
-        }
+        }*/
     }
+
     /**
      * adds user to current list
      * @param   user new user
@@ -57,7 +57,7 @@ public class Users implements Serializable {
     /**
      * saves the file with the current list to disk
      */
-    public void save() {
+   /* public void save() {
         try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path)))
         {
             oos.writeObject(users);
@@ -65,5 +65,5 @@ public class Users implements Serializable {
         catch(IOException e){
             System.out.println(e.getMessage());
         }
-    }
+    }*/
 }

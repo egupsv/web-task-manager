@@ -1,5 +1,6 @@
 package com.example.web_task_manager.servlet;
 
+import com.example.web_task_manager.users.User;
 import com.example.web_task_manager.users.Users;
 
 import javax.servlet.*;
@@ -7,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Objects;
 
 import static java.util.Objects.nonNull;
@@ -15,14 +17,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Auth implements Filter {
-    //  Users users = new Users("users.txt");
-    private static Logger log = LoggerFactory.getLogger(com.example.web_task_manager.HelloServlet.class);
+    private FilterConfig filterConfig;
+
+    private static final Logger log = LoggerFactory.getLogger(Auth.class);
 
     public Auth() throws IOException {
     }
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
+        this.filterConfig = filterConfig;
     }
 
     @Override
@@ -30,33 +34,56 @@ public class Auth implements Filter {
             throws IOException, ServletException {
 
         log.info("doFilter");
+        //ServletContext ctx = filterConfig.getServletContext();
+        //RequestDispatcher dispatcher = ctx.getRequestDispatcher("/login.jsp");
+        //dispatcher.forward(request, response);
         final HttpServletRequest req = (HttpServletRequest) request;
         final HttpServletResponse res = (HttpServletResponse) response;
-
+        req.getRequestDispatcher("/login.jsp").forward(req, res);
+        Users users = new Users();
+        users.addUser(new User("a", "qwerty"));
         final String login = req.getParameter("login");
         final String password = req.getParameter("password");
 
         log.info("login " + login);
-        Users users = new Users("users.txt");
+        log.info("password " + password);
 
         final HttpSession session = req.getSession();
-
-        if (!nonNull(session) || !nonNull(session.getAttribute("login")) || !nonNull(session.getAttribute("password"))) {
-            Objects.requireNonNull(req.getSession()).setAttribute("password", password);
+        if (nonNull(session) &&
+                nonNull(session.getAttribute("login")) &&
+                nonNull(session.getAttribute("password"))) {
+            req.getRequestDispatcher("/tasks.jsp").forward(req, res);
+        } else {
+            req.getSession().setAttribute("password", password);
             req.getSession().setAttribute("login", login);
-        } else if (users.getUser(login) != null) {
-            moveToTasks(req, res, login);
+            req.getRequestDispatcher("/tasks.jsp").forward(req, res);
         }
+
     }
 
-    /**
-     * Move user to menu.
-     * If access 'admin' move to admin menu.
-     * If access 'user' move to user menu.
-     */
-    private void moveToTasks(final HttpServletRequest req, final HttpServletResponse res, final String login)
+
+    private void moveToTasks(final HttpServletRequest req,
+                             final HttpServletResponse res,
+                             final String login,
+                             final String password,
+                             final Users users)
             throws ServletException, IOException {
-        req.getRequestDispatcher("/WEB-INF/view/tasks.jsp").forward(req, res);
+        User requiredUser = users.getUser(login);
+        log.info("user " + requiredUser.getName());
+        User user = null;
+        //if (requiredUser.getEncPassword().equals(password)) {
+            log.info("111");
+            user = requiredUser;
+            req.getRequestDispatcher("/tasks.jsp").forward(req, res);
+            //res.sendRedirect("/WEB-INF/tasks.jsp");
+        /*} else {
+            PrintWriter pw = res.getWriter();
+            pw.println("alert('login or password is incorrect');");
+            req.getRequestDispatcher("/WEB-INF/login.jsp").forward(req, res);
+            //res.sendRedirect("/login.jsp");
+        }*/
+
+
     }
 
     @Override
