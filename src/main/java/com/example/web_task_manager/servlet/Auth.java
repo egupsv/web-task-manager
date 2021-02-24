@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 
 public class Auth implements Filter {
     //  Users users = new Users("users.txt");
-    private static Logger log = LoggerFactory.getLogger(HelloServlet.class);
+    private static Logger log = LoggerFactory.getLogger(com.example.web_task_manager.HelloServlet.class);
 
     public Auth() throws IOException {
     }
