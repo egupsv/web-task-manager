@@ -16,7 +16,33 @@ import static java.util.Objects.nonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Auth implements Filter {
+public class LoginFilter implements Filter {
+    private static final Logger log = LoggerFactory.getLogger(LoginFilter.class);
+    @Override public void init(FilterConfig config) {}
+    @Override public void destroy() {}
+    @Override public void doFilter(ServletRequest req,
+                                   ServletResponse res,
+                                   FilterChain chain) throws IOException, ServletException {
+        HttpServletRequest request = (HttpServletRequest) req;
+        HttpServletResponse response = (HttpServletResponse) res;
+        HttpSession session = request.getSession();
+
+        String loginURL = request.getContextPath() + "/login.jsp";
+
+        boolean loggedIn = session != null && session.getAttribute("login") != null;// && session.getAttribute("password") != null;
+        boolean loginRequest = request.getRequestURI().equals(loginURL) || request.getRequestURI().equals(loginURL + ".xhtml");
+
+        if(loggedIn || loginRequest) {
+            log.info("doFilter");
+            chain.doFilter(req, res);
+        }
+        else {
+            log.info("redirect");
+            response.sendRedirect("login.jsp");
+        }
+    }
+}
+/*public class Auth implements Filter {
     private FilterConfig filterConfig;
 
     private static final Logger log = LoggerFactory.getLogger(Auth.class);
@@ -81,7 +107,7 @@ public class Auth implements Filter {
             pw.println("alert('login or password is incorrect');");
             req.getRequestDispatcher("/WEB-INF/login.jsp").forward(req, res);
             //res.sendRedirect("/login.jsp");
-        }*/
+        }
 
 
     }
@@ -90,4 +116,4 @@ public class Auth implements Filter {
     public void destroy() {
     }
 
-}
+}*/

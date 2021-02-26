@@ -5,23 +5,23 @@
          version="4.0">
 
     <filter>
-        <filter-name>Auth</filter-name>
-        <filter-class>com.example.web_task_manager.servlet.Auth</filter-class>
+        <filter-name>LoginFilter</filter-name>
+        <filter-class>com.example.web_task_manager.servlet.LoginFilter</filter-class>
     </filter>
 
     <filter-mapping>
-        <filter-name>Auth</filter-name>
-        <url-pattern>/</url-pattern>
+        <filter-name>LoginFilter</filter-name>
+        <url-pattern>/*</url-pattern>
     </filter-mapping>
 
     <servlet>
-      <servlet-name>LogOut</servlet-name>
-      <servlet-class>com.example.web_task_manager.servlet.LogOut</servlet-class>
+      <servlet-name>LoginServlet</servlet-name>
+      <servlet-class>com.example.web_task_manager.servlet.LoginServlet</servlet-class>
   </servlet>
 
   <servlet-mapping>
-      <servlet-name>LogOut</servlet-name>
-      <url-pattern>/logout</url-pattern>
+      <servlet-name>LoginServlet</servlet-name>
+      <url-pattern>/login</url-pattern>
   </servlet-mapping>
 
 </web-app>
