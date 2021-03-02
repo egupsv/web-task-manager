@@ -1,4 +1,4 @@
-package com.gmail.egupovsv89.task_manager.tasks;
+package com.example.web_task_manager.tasks;
 
 import java.io.Serializable;
 import java.util.Date;

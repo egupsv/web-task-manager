@@ -1,4 +1,4 @@
-package com.gmail.egupovsv89.task_manager.tasks;
+package com.example.web_task_manager.tasks;
 
 
 import java.io.*;
@@ -12,7 +12,7 @@ public class TaskRepository implements Serializable {
     /**
      * list of tasks
      */
-    private List<Task> tasks;
+    private final List<Task> tasks;
 
 
     private static final long serialVersionUID = 1L;
@@ -20,21 +20,20 @@ public class TaskRepository implements Serializable {
     /**
      * path to user's file which contains repository
      */
-    private final String path;
+    //private final String path;
 
-    @SuppressWarnings("unchecked")
-    public TaskRepository(String path) throws IOException {
-        this.path = path;
+     public TaskRepository() throws IOException {
+        /*this.path = path;
         BufferedReader br = new BufferedReader(new FileReader(path));
-        if (br.readLine() == null) {
+        if (br.readLine() == null) {*/
             this.tasks = new ArrayList<>();
-        } else {
+        /*} else {
             try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path))) {
                 this.tasks = (List<Task>) ois.readObject();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
+        }*/
     }
 
     /**
@@ -117,7 +116,7 @@ public class TaskRepository implements Serializable {
     /**
      * saves current repository to disk
      */
-    public void save() {
+    /*public void save() {
         try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path)))
         {
             oos.writeObject(tasks);
@@ -126,5 +125,5 @@ public class TaskRepository implements Serializable {
         catch(IOException e){
             System.out.println(e.getMessage());
         }
-    }
+    }*/
 }

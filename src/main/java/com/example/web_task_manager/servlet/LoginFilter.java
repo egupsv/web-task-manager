@@ -27,12 +27,19 @@ public class LoginFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) res;
         HttpSession session = request.getSession();
 
-        String loginURL = request.getContextPath() + "/login.jsp";
-
+        String loginURL = request.getContextPath() + "/login";
+        String signupURL = request.getContextPath() + "/signup";
         boolean loggedIn = session != null && session.getAttribute("login") != null;// && session.getAttribute("password") != null;
-        boolean loginRequest = request.getRequestURI().equals(loginURL) || request.getRequestURI().equals(loginURL + ".xhtml");
+        String reqURI = request.getRequestURI();
+        log.info("requestUI " + reqURI);
+        log.info("loginURL " + loginURL);
+        boolean loginRequest = request.getRequestURI().equals(loginURL) || request.getRequestURI().equals(loginURL + ".jsp");
+        boolean signupRequest = request.getRequestURI().equals(signupURL) || request.getRequestURI().equals(signupURL + ".jsp");
 
-        if(loggedIn || loginRequest) {
+        log.info(loginRequest ? "true" : "false");
+        log.info(loggedIn ? "l true" : "l false");
+        if(loggedIn || loginRequest || signupRequest) {
+
             log.info("doFilter");
             chain.doFilter(req, res);
         }
@@ -78,11 +85,11 @@ public class LoginFilter implements Filter {
         if (nonNull(session) &&
                 nonNull(session.getAttribute("login")) &&
                 nonNull(session.getAttribute("password"))) {
-            req.getRequestDispatcher("/tasks.jsp").forward(req, res);
+            req.getRequestDispatcher("/index.jsp").forward(req, res);
         } else {
             req.getSession().setAttribute("password", password);
             req.getSession().setAttribute("login", login);
-            req.getRequestDispatcher("/tasks.jsp").forward(req, res);
+            req.getRequestDispatcher("/index.jsp").forward(req, res);
         }
 
     }
@@ -100,8 +107,8 @@ public class LoginFilter implements Filter {
         //if (requiredUser.getEncPassword().equals(password)) {
             log.info("111");
             user = requiredUser;
-            req.getRequestDispatcher("/tasks.jsp").forward(req, res);
-            //res.sendRedirect("/WEB-INF/tasks.jsp");
+            req.getRequestDispatcher("/index.jsp").forward(req, res);
+            //res.sendRedirect("/WEB-INF/index.jsp");
         /*} else {
             PrintWriter pw = res.getWriter();
             pw.println("alert('login or password is incorrect');");

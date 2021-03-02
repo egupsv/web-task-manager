@@ -4,3 +4,4 @@ Task Manager.iml
 .idea
 *.class
 tomcat_logs
+*.jar
