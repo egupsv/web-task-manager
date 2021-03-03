@@ -20,7 +20,7 @@
             <td><c:out value="${task.getName()}" /></td>
             <td><c:out value="${task.getDescription()}" /></td>
             <td><c:out value="${task.getTime()}" /></td>
-            <td><c:out value="${task.getCompleted()}" /></td>
+            <td><c:out value="${task.isCompleted()}" /></td>
         </tr>
         </c:forEach>
 

@@ -28,7 +28,7 @@ public class LoginServlet extends HttpServlet {
         if(user != null) {
             log.info("User has logged in");
             request.getSession().setAttribute("login", login);
-            response.sendRedirect("/web_task_manager-1.0-SNAPSHOT/");
+            response.sendRedirect("/web_task_manager-1.0-SNAPSHOT/tasks");
         }
         else {
             log.info("login or password is incorrect");
