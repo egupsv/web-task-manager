@@ -1,6 +1,7 @@
 package com.example.web_task_manager.tasks;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -52,9 +53,13 @@ public class Task implements Serializable {
         return completed;
     }
 
+    public String getState() { return completed ? "complete" : "incomplete";}
+
     public Date getTime() {
         return time;
     }
+
+    public String getTimeString() { return new SimpleDateFormat("dd.MM.yyyy HH:mm").format(time); }
 
     public int getId() { return id; }
 

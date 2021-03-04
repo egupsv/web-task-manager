@@ -33,6 +33,8 @@ public class LoginServlet extends HttpServlet {
         else {
             log.info("login or password is incorrect");
             String message = "login or password is incorrect";
+            request.getSession().setAttribute("wrong", "wrong");
+            response.sendRedirect("login.jsp");
             PrintWriter out = response.getWriter();
             out.print("<html><head>");
             out.print("<script type=\"text/javascript\">alert(" + message + ");</script>");
