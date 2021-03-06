@@ -44,7 +44,26 @@ public class TaskDAO extends DataAccessible<Task, Integer> {
 
     @Override
     public boolean delete(Integer id) { // TODO: 06.03.2021
+        try (Session session = DatabaseAccess.getSessionFactory().openSession()) {
+            Task taskInstance = session.load(Task.class, id);
+            if (taskInstance != null) {
+                session.getTransaction().begin();
+                session.delete(taskInstance);
+                session.getTransaction().commit();
+                return true;
+            }
+
+        } catch (PersistenceException pex) {
+            pex.printStackTrace();
+        }
         return false;
+    }
+
+    public void deleteAllUserTasks(int userId) {
+        for (Task task : getUserTasks(userId)) {
+            delete(task.getId());
+        }
+
     }
 
     public List<Task> getUserTasks(int userId) {

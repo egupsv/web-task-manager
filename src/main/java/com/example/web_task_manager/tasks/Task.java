@@ -78,15 +78,11 @@ public class Task implements Serializable {
         return completed;
     }
 
-    //public String getState() { return completed ? "complete" : "incomplete";}
-
     @Column(name = "datetime")
     public Date getTime() {
         return time;
     }
 
-
-    //public String getTimeString() { return new SimpleDateFormat("dd.MM.yyyy HH:mm").format(time); }
     @Id
     @Column(name = "TASK_ID")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "task_id_generator")

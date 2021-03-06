@@ -1,6 +1,7 @@
 package com.example.web_task_manager.dba;
 
 
+import com.example.web_task_manager.tasks.Task;
 import com.example.web_task_manager.users.User;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -59,7 +60,19 @@ public class UserDAO extends DataAccessible<User, Integer> {
     }
 
     @Override
-    public boolean delete(Integer id) { // TODO: 06.03.2021
+    public boolean delete(Integer id) {
+        try (Session session = DatabaseAccess.getSessionFactory().openSession()) {
+            User userInstance = session.load(User.class, id);
+            if (userInstance != null) {
+                new TaskDAO().deleteAllUserTasks(id);
+                session.getTransaction().begin();
+                session.delete(userInstance);
+                session.getTransaction().commit();
+                return true;
+            }
+        } catch (PersistenceException pex) {
+            pex.printStackTrace();
+        }
         return false;
     }
 
