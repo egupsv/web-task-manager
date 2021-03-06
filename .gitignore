@@ -1,6 +1,6 @@
 out
 target
-web_task_manager.iml.iml
+web_task_manager.iml
 .idea
 *.class
 tomcat_logs
