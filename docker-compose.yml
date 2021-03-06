@@ -14,7 +14,7 @@ services:
     ports:
       - "8888:8080"
     volumes:
-      - ./target/:/usr/local/tomcat/webapps/
+      - ./libs:/usr/local/tomcat/webapps/
       - ./tomcat_logs:/usr/local/tomcat/logs
     links:
       - db

@@ -2,6 +2,7 @@ package com.example.web_task_manager.tasks;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -76,11 +77,16 @@ public class Task implements Serializable {
         return completed;
     }
 
+    //public String getState() { return completed ? "complete" : "incomplete";}
+
     @Column(name = "datetime")
     public Date getTime() {
         return time;
     }
 
+
+
+    //public String getTimeString() { return new SimpleDateFormat("dd.MM.yyyy HH:mm").format(time); }
     @Id
     @Column(name = "TASK_ID")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "task_id_generator")
@@ -93,6 +99,9 @@ public class Task implements Serializable {
     public int getUserId() {
         return userId;
     }
+
+
+
 
     public void setName(String name) {
         this.name = name;

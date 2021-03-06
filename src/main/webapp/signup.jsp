@@ -5,7 +5,8 @@
     <title>sign up</title>
 </head>
 <body>
-<form method="post" action="">
+<h1>Sign up</h1><br>
+<form method="post" action="/web_task_manager-1.0-SNAPSHOT/signup">
 
   <input type="text" required placeholder="login" name="login">
   <br />

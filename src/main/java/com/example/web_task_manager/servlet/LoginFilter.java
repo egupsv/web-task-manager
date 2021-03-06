@@ -30,22 +30,27 @@ public class LoginFilter implements Filter {
         String loginURL = request.getContextPath() + "/login";
         String signupURL = request.getContextPath() + "/signup";
         boolean loggedIn = session != null && session.getAttribute("login") != null;// && session.getAttribute("password") != null;
+        boolean isSmthWrong = session != null && session.getAttribute("wrong") != null;
         String reqURI = request.getRequestURI();
         log.info("requestUI " + reqURI);
         log.info("loginURL " + loginURL);
         boolean loginRequest = request.getRequestURI().equals(loginURL) || request.getRequestURI().equals(loginURL + ".jsp");
         boolean signupRequest = request.getRequestURI().equals(signupURL) || request.getRequestURI().equals(signupURL + ".jsp");
 
-        log.info(loginRequest ? "true" : "false");
-        log.info(loggedIn ? "l true" : "l false");
-        if(loggedIn || loginRequest || signupRequest) {
+        log.info("loginRequest " + (loginRequest ? "true" : "false"));
+        log.info("signupRequest " + (signupRequest ? "true" : "false"));
+        log.info("loggedIn " + (loggedIn ? "true" : "false"));
+        if(loggedIn || (loginRequest && !isSmthWrong) || (signupRequest && !isSmthWrong)) {
 
             log.info("doFilter");
             chain.doFilter(req, res);
         }
         else {
             log.info("redirect");
-            response.sendRedirect("login.jsp");
+            String page = reqURI.contains("signup") ? "signup.jsp" : "login.jsp";
+            log.info("to " + page);
+            if (session != null) session.setAttribute("wrong", null);
+            response.sendRedirect(page);
         }
     }
 }
