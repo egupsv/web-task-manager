@@ -30,8 +30,8 @@ public class TaskServlet extends HttpServlet {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        tr.addTask(new Task("meeting", "bla-bla-bla", time1, 1));
-        tr.addTask(new Task("call", "bla-bla", time2, 2));
+        tr.addTask(new Task(1, "meeting", "bla-bla-bla", time1));
+        tr.addTask(new Task(2, "call", "bla-bla", time2));
     }
 
     @Override public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -63,7 +63,7 @@ public class TaskServlet extends HttpServlet {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            tr.addTask(new Task(name, description, time, tr.calculateMaxId() + 1));
+            tr.addTask(new Task(tr.calculateMaxId() + 1, name, description, time));
         }
         request.setAttribute("tasks", tr.getTasks());
         getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
