@@ -13,7 +13,8 @@
 
         <property name="show_sql">true</property>
 
-        <mapping class="com.example.web_task_manager.users.User" />
 
+        <mapping class="com.example.web_task_manager.users.User" />
+        <mapping class="com.example.web_task_manager.tasks.Task" />
     </session-factory>
 </hibernate-configuration>

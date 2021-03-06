@@ -10,6 +10,11 @@ import java.io.Serializable;
 @Table(name = "USERS")
 public class User implements Serializable {
     private static final long serialVersionUID = 1L;
+
+    public static final String NAME_COLUMN = "NAME";
+    public static final String ID_COLUMN = "USER_ID";
+    public static final String PASSWORD_COLUMN = "ENC_PASSWORD";
+
     /**
      * user id
      */
@@ -32,7 +37,7 @@ public class User implements Serializable {
     }
 
     @Id
-    @Column(name = "USER_ID")
+    @Column(name = ID_COLUMN)
     @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "user_id_generator")
     @SequenceGenerator(name = "user_id_generator", sequenceName = "USER_ID_SEQUENCE",allocationSize = 1)
     public int getId(){
@@ -42,7 +47,7 @@ public class User implements Serializable {
         this.id = id;
     }
 
-    @Column(name = "NAME")
+    @Column(name = NAME_COLUMN,unique = true)
     public String getName() {
         return name;
     }
@@ -51,7 +56,7 @@ public class User implements Serializable {
         this.name = name;
     }
 
-    @Column(name = "ENC_PASSWORD")
+    @Column(name = PASSWORD_COLUMN)
     public String getEncPassword() {
         return encPassword;
     }
@@ -60,4 +65,12 @@ public class User implements Serializable {
         this.encPassword = encPassword;
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", encPassword='" + encPassword + '\'' +
+                '}';
+    }
 }
