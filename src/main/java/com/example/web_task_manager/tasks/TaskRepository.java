@@ -98,12 +98,18 @@ public class TaskRepository implements Serializable {
         tasks.removeAll(requiredTasks);
     }
 
+    public void removeTask(int id) {
+        Task task= getTaskByID(id);
+        tasks.remove(task);
+    }
+
     /**
      * makes any task completed
      * @param task task which must be completed
      */
-    public void completeTask(Task task) {
-        task.setCompleted(true);
+    public void changeTaskState(int id) {
+        Task task= getTaskByID(id);
+        task.setCompleted(!task.isCompleted());
     }
 
     /**
