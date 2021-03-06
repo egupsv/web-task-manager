@@ -17,7 +17,7 @@ import java.util.Date;
 public class TaskServlet extends HttpServlet {
 
     private static final Logger log = LoggerFactory.getLogger(TaskServlet.class);
-    private TaskRepository tr;
+    private final TaskRepository tr;
 
     public TaskServlet() throws IOException {
     this.tr = new TaskRepository();

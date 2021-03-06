@@ -6,3 +6,4 @@ Task Manager.iml
 tomcat_logs
 *.jar
 libs
+web_task_manager-1.0-SNAPSHOT.war
