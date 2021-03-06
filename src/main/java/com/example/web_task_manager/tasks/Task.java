@@ -54,7 +54,8 @@ public class Task implements Serializable {
         this.description = description;
         this.userId = userId;
     }
-    public Task(int id,String name, String description, Date time) {
+
+    public Task(int id, String name, String description, Date time) {
         this.id = id;
         this.name = name;
         this.time = time;
@@ -85,7 +86,6 @@ public class Task implements Serializable {
     }
 
 
-
     //public String getTimeString() { return new SimpleDateFormat("dd.MM.yyyy HH:mm").format(time); }
     @Id
     @Column(name = "TASK_ID")
@@ -95,12 +95,10 @@ public class Task implements Serializable {
         return id;
     }
 
-    @Column(name = "user_id",nullable = false)
+    @Column(name = "user_id", nullable = false)
     public int getUserId() {
         return userId;
     }
-
-
 
 
     public void setName(String name) {
