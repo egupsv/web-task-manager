@@ -1,8 +1,9 @@
 out
 target
-Task Manager.iml
+web_task_manager.iml
 .idea
 *.class
 tomcat_logs
 *.jar
 libs
+web_task_manager-1.0-SNAPSHOT.war
