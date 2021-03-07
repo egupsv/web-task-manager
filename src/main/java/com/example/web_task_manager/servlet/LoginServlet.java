@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 
 public class LoginServlet extends HttpServlet {
@@ -28,17 +27,16 @@ public class LoginServlet extends HttpServlet {
         if(user != null) {
             log.info("User has logged in");
             request.getSession().setAttribute("login", login);
+            TryChecker.setPropertyOfLoginDiv("none");
+            request.getSession().setAttribute("attempt", null);
             response.sendRedirect("/web_task_manager-1.0-SNAPSHOT/tasks");
         }
         else {
             log.info("login or password is incorrect");
-            String message = "login or password is incorrect";
-            request.getSession().setAttribute("wrong", "wrong");
+            request.getSession().setAttribute("attempt", "wrong");
             response.sendRedirect("login.jsp");
-            PrintWriter out = response.getWriter();
-            out.print("<html><head>");
-            out.print("<script type=\"text/javascript\">alert(" + message + ");</script>");
-            out.print("</head><body></body></html>");
+            TryChecker.setPropertyOfLoginDiv("block");
+
         }
     }
 }

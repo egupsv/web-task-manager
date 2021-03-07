@@ -13,6 +13,7 @@ public class LogOut extends HttpServlet {
         final HttpSession session = req.getSession();
         session.removeAttribute("password");
         session.removeAttribute("login");
+
         resp.sendRedirect(super.getServletContext().getContextPath());
     }
 }

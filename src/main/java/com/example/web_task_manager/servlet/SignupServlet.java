@@ -25,12 +25,15 @@ public class SignupServlet extends HttpServlet {
         User user = new User(login, password);
         if (users.getUser(login) != null) {
             log.info("this login is already taken");
-            request.getSession().setAttribute("wrong", "wrong");
+            request.getSession().setAttribute("attempt", "wrong");
+            TryChecker.setPropertyOfSignupDiv("block");
             response.sendRedirect("signup.jsp");
         }
         else {
             users.addUser(user);
             log.info("User has logged in");
+            request.getSession().setAttribute("attempt", null);
+            TryChecker.setPropertyOfSignupDiv("none");
             request.getSession().setAttribute("login", login);
             response.sendRedirect("/web_task_manager-1.0-SNAPSHOT/tasks");
         }

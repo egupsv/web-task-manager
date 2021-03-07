@@ -1,17 +1,10 @@
 package com.example.web_task_manager.servlet;
 
-import com.example.web_task_manager.users.User;
-import com.example.web_task_manager.users.Users;
-
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Objects;
-
-import static java.util.Objects.nonNull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,11 +19,10 @@ public class LoginFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
         HttpSession session = request.getSession();
-
         String loginURL = request.getContextPath() + "/login";
         String signupURL = request.getContextPath() + "/signup";
         boolean loggedIn = session != null && session.getAttribute("login") != null;// && session.getAttribute("password") != null;
-        boolean isSmthWrong = session != null && session.getAttribute("wrong") != null;
+        boolean isSmthWrong = session != null && session.getAttribute("attempt") == "wrong";
         String reqURI = request.getRequestURI();
         log.info("requestUI " + reqURI);
         log.info("loginURL " + loginURL);
@@ -40,6 +32,7 @@ public class LoginFilter implements Filter {
         log.info("loginRequest " + (loginRequest ? "true" : "false"));
         log.info("signupRequest " + (signupRequest ? "true" : "false"));
         log.info("loggedIn " + (loggedIn ? "true" : "false"));
+        if (session != null) log.info("try " + session.getAttribute("attempt"));
         if(loggedIn || (loginRequest && !isSmthWrong) || (signupRequest && !isSmthWrong)) {
 
             log.info("doFilter");
@@ -49,7 +42,7 @@ public class LoginFilter implements Filter {
             log.info("redirect");
             String page = reqURI.contains("signup") ? "signup.jsp" : "login.jsp";
             log.info("to " + page);
-            if (session != null) session.setAttribute("wrong", null);
+            if (session != null) session.setAttribute("attempt", null);
             response.sendRedirect(page);
         }
     }

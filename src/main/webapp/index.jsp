@@ -37,7 +37,7 @@
             <td><c:out value="${task.getName()}" /></td>
             <td><c:out value="${task.getDescription()}" /></td>
             <td><c:out value="${Utils.getFormattedTime(task)}" /></td>
-            <td style="width: 100px"><c:out value="${Utils.getState(task)}" /></td>--%>
+            <td style="width: 100px"><c:out value="${Utils.getState(task)}" /></td>
             <td><button type="submit" name="delete" style="color:red; width:40px; height:25px" value="${task.getId()}">&#215</button></td>
             <td><button type="submit" name="complete" style="color:green; width:40px; height:25px" value="${task.getId()}">&#10003</button></td>
         </tr>
