@@ -1,12 +1,12 @@
 package com.example.web_task_manager.dba;
 
 
-import com.example.web_task_manager.tasks.Task;
-import com.example.web_task_manager.users.User;
+import com.example.web_task_manager.model.User;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -23,8 +23,11 @@ public class UserDAO extends DataAccessible<User, Integer> {
             Root<User> from = cq.from(User.class);
             cq.select(from);
             cq.where(session.getCriteriaBuilder().equal(from.get("name"), userName));
+
             return session.createQuery(cq).getSingleResult();
-        } catch (Exception ex) {
+        } catch (NoResultException ignored) {
+
+        } catch (PersistenceException ex) {
             ex.printStackTrace();
         }
         return null;
@@ -44,20 +47,14 @@ public class UserDAO extends DataAccessible<User, Integer> {
 
     @Override
     public User getEntityById(Integer id) {
-        User user = null;
-
         try (Session session = DatabaseAccess.getSessionFactory().openSession()) {
-            user = session.get(User.class, id);
+            return session.get(User.class, id);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        return user;
-    }
-
-    @Override
-    public User update(User entity) { // TODO: 06.03.2021  
         return null;
     }
+
 
     @Override
     public boolean delete(Integer id) {

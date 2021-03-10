@@ -3,6 +3,7 @@
         "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
         "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
+
     <session-factory>
         <property name="connection.driver_class">oracle.jdbc.OracleDriver</property>
         <property name="connection.url">jdbc:oracle:thin:@localhost:1521:orcl</property>
@@ -14,7 +15,8 @@
         <property name="show_sql">true</property>
 
 
-        <mapping class="com.example.web_task_manager.users.User" />
-        <mapping class="com.example.web_task_manager.tasks.Task" />
+        <mapping class="com.example.web_task_manager.model.User" />
+        <mapping class="com.example.web_task_manager.model.Task" />
     </session-factory>
+
 </hibernate-configuration>

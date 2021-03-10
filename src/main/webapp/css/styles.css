@@ -1,0 +1,89 @@
+h1 {
+    margin-left: auto;
+    margin-right: auto;
+    width: 4em;
+    text-align: center;
+}
+
+
+.TableHeader {
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    justify-content: center;
+    width: 4em;
+    text-align: center;
+}
+
+.button {
+    cursor: pointer;
+}
+
+table {
+    width: 800px;
+    border: 2px solid black;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+caption {
+    caption-side: top;
+    text-align: center;
+    font-size: 14px;
+}
+
+.form {
+    display: table;
+    margin-left: auto;
+    margin-right: auto;
+
+}
+
+.center {
+    margin: 0;
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+body {
+    background: rgb(31,4,54);
+    background: linear-gradient(32deg, rgba(31,4,54,1) 4%, rgba(145,79,104,1) 29%, rgba(252,149,150,1) 77%, rgba(31,4,54,1) 100%);
+}
+
+.auth_button {
+    background-color: #7B6DBB;
+    border: none;
+    color: #d5d5d5;
+    padding: 10px 32px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5%;
+    display: flex;
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+.auth_field {
+    margin-bottom: 5px;
+    border: 2px solid;
+}
+
+input[type=text], input[type=password] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 2px solid #7B6DBB;
+    box-sizing: border-box;
+}
+
+.auth_button:hover {
+    opacity: 0.8;
+
+}
+

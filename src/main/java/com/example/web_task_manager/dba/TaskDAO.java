@@ -1,10 +1,13 @@
 package com.example.web_task_manager.dba;
 
-import com.example.web_task_manager.tasks.Task;
+import com.example.web_task_manager.model.Task;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -12,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TaskDAO extends DataAccessible<Task, Integer> {
+    private static final Logger log = LoggerFactory.getLogger(TaskDAO.class);
 
     @Override
     public boolean create(Task task) {
@@ -27,6 +31,7 @@ public class TaskDAO extends DataAccessible<Task, Integer> {
         return false;
     }
 
+
     @Override
     public Task getEntityById(Integer id) {
         try (Session session = DatabaseAccess.getSessionFactory().openSession()) {
@@ -37,13 +42,14 @@ public class TaskDAO extends DataAccessible<Task, Integer> {
         return null;
     }
 
+    /**
+     * Deletes Task
+     *
+     * @param id id of task
+     * @return true - if successful delete, false - otherwise
+     */
     @Override
-    public Task update(Task task) { // TODO: 06.03.2021
-        return null;
-    }
-
-    @Override
-    public boolean delete(Integer id) { // TODO: 06.03.2021
+    public boolean delete(Integer id) {
         try (Session session = DatabaseAccess.getSessionFactory().openSession()) {
             Task taskInstance = session.load(Task.class, id);
             if (taskInstance != null) {
@@ -59,6 +65,11 @@ public class TaskDAO extends DataAccessible<Task, Integer> {
         return false;
     }
 
+    /**
+     * Deletes All @task of user
+     *
+     * @param userId id of user
+     */
     public void deleteAllUserTasks(int userId) {
         for (Task task : getUserTasks(userId)) {
             delete(task.getId());
@@ -66,6 +77,10 @@ public class TaskDAO extends DataAccessible<Task, Integer> {
 
     }
 
+    /**
+     * @param userId id of user
+     * @return list uf user tasks
+     */
     public List<Task> getUserTasks(int userId) {
         try (Session session = DatabaseAccess.getSessionFactory().openSession()) {
             CriteriaQuery<Task> c = session.getCriteriaBuilder().createQuery(Task.class);
@@ -73,10 +88,13 @@ public class TaskDAO extends DataAccessible<Task, Integer> {
             c.select(from);
             c.where(session.getCriteriaBuilder().equal(from.get("userId"), userId));
             return session.createQuery(c).getResultList();
+        } catch (NoResultException ignored) {
+            log.info("_______________________________task NO RESULTS FOR ID = " + userId);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        return new ArrayList<>();
+        log.info("_______________________________task NO RESULTS FOR ID = " + userId);
+        return null;
     }
 
     @Override

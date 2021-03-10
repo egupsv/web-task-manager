@@ -11,6 +11,7 @@ public class DatabaseAccess {
     private static SessionFactory sessionFactory;
 
     public DatabaseAccess() {
+        System.out.println("CREATING INSTANCE OF DA");
         if(sessionFactory != null)
         {
             closeFactory();
@@ -27,6 +28,7 @@ public class DatabaseAccess {
         }
         catch (Exception ex){
             StandardServiceRegistryBuilder.destroy(registry);
+            ex.printStackTrace();
         }
     }
 
