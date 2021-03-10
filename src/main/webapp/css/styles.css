@@ -49,8 +49,7 @@ caption {
 }
 
 body {
-    background: rgb(31,4,54);
-    background: linear-gradient(32deg, rgba(31,4,54,1) 4%, rgba(145,79,104,1) 29%, rgba(252,149,150,1) 77%, rgba(31,4,54,1) 100%);
+    background: linear-gradient(45deg, #FF1F0436 12%, #FFFC9596, #FF1F0436 88%) fixed;
 }
 
 .auth_button {
