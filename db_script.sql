@@ -1,7 +1,10 @@
+drop trigger task_id_trigger;
+drop trigger user_id_trigger;
 drop sequence task_id_sequence;
 drop table tasks;
 drop sequence USER_ID_SEQUENCE;
 drop table USERS;
+
 create table USERS
 (
     user_id      number(*)   not null primary key,
@@ -47,9 +50,12 @@ begin
     from dual;
 end;
 
-insert into USERS(name, enc_password) values ('admin', 'admin');
-insert into USERS(name, enc_password) values ('supertestname', 'supertestpassword');
-insert into USERS(name, enc_password) values ('ultratestname', 'ultratestpassword');
-insert into USERS(name, enc_password) values ('megatestname', 'megatestpassword');
-
-insert into TASKS(USER_ID,TASK_NAME,DESCRIPTION,DATETIME)
+insert into USERS(name, enc_password)
+values ('admin', 'admin');
+insert into USERS(name, enc_password)
+values ('supertestname', 'supertestpassword');
+insert into USERS(name, enc_password)
+values ('ultratestname', 'ultratestpassword');
+insert into USERS(name, enc_password)
+values ('megatestname', 'megatestpassword');
+commit;
