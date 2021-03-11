@@ -34,6 +34,7 @@ public class UserDAO extends DataAccessible<User, Integer> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<User> getAll() {
         List<User> userlist = new ArrayList<>();
 
@@ -61,7 +62,7 @@ public class UserDAO extends DataAccessible<User, Integer> {
         try (Session session = DatabaseAccess.getSessionFactory().openSession()) {
             User userInstance = session.load(User.class, id);
             if (userInstance != null) {
-                new TaskDAO().deleteAllUserTasks(id);
+                new TaskDAO().deleteAllUserTasks(userInstance);
                 session.getTransaction().begin();
                 session.delete(userInstance);
                 session.getTransaction().commit();
@@ -86,5 +87,21 @@ public class UserDAO extends DataAccessible<User, Integer> {
             ex.printStackTrace();
         }
         return false;
+    }
+
+    public User getUserByMail(String userMail) {
+        try (Session session = DatabaseAccess.getSessionFactory().openSession()) {
+            CriteriaQuery<User> cq = session.getCriteriaBuilder().createQuery(User.class);
+            Root<User> from = cq.from(User.class);
+            cq.select(from);
+            cq.where(session.getCriteriaBuilder().equal(from.get("mail"), userMail));
+
+            return session.createQuery(cq).getSingleResult();
+        } catch (NoResultException ignored) {
+            return null;
+        } catch (PersistenceException ex) {
+            ex.printStackTrace();
+        }
+        return User.DEFAULT_USER;
     }
 }

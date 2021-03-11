@@ -13,78 +13,88 @@ import java.util.Date;
 @Table(name = "TASKS")
 public class Task implements Serializable {
     private static final long serialVersionUID = 1L;
+
+    private static final String TASK_NAME_COLUMN = "task_name";
+    private static final String DESCRIPTION_COLUMN = "description";
+    private static final String COMPLETED_COLUMN = "completed";
+    private static final String DATE_COLUMN = "datetime";
+    private static final String TASK_ID_COLUMN = "TASK_ID";
+    private static final String USER_ID_COLUMN = "user_id";
+
+    /**
+     * unique ID of task
+     */
+    @Id
+    @Column(name = TASK_ID_COLUMN)
+    private int id;
+
     /**
      * the name of task
      */
+    @Column(name = TASK_NAME_COLUMN)
     private String name;
 
     /**
      * short description of task (any important information)
      */
+    @Column(name = DESCRIPTION_COLUMN)
     private String description;
 
     /**
      * status of task
      */
+    @Column(name = COMPLETED_COLUMN)
     private boolean completed = false;
 
-    /**
-     * unique ID
-     */
-    private int id;
+
     /**
      * unique ID of task owner
      */
 
-
-    private int userId;
+    @ManyToOne
+    @JoinColumn(name = USER_ID_COLUMN, nullable = false)
+    private User user;
 
     /**
      * date and time of task
      */
+    @Column(name = DATE_COLUMN, nullable = false)
     private Date time;
 
     public Task() {
 
     }
 
-    public Task(String name, String description, Date time, int userId) {
+    public Task(String name, String description, Date time, User user) {
         this.name = name;
         this.time = time;
         this.description = description;
-        this.userId = userId;
+        this.user = user;
     }
 
 
-    @Column(name = "task_name")
     public String getName() {
         return name;
     }
 
-    @Column(name = "description")
+
     public String getDescription() {
         return description;
     }
 
-    @Column(name = "completed")
+
     public boolean isCompleted() {
         return completed;
     }
 
-    @Column(name = "datetime",nullable = false)
+
     public Date getTime() {
         return time;
     }
 
-    @Id
-    @Column(name = "TASK_ID")
+
     public int getId() {
         return id;
-    }
-
-    @Column(name = "user_id", nullable = false)
-    public int getUserId() {
-        return userId;
     }
 
 
@@ -109,9 +119,6 @@ public class Task implements Serializable {
         this.id = id;
     }
 
-    public void setUserId(int user_id) {
-        this.userId = user_id;
-    }
 
     @Override
     public String toString() {
@@ -120,7 +127,7 @@ public class Task implements Serializable {
                 ", description='" + description + '\'' +
                 ", completed=" + completed +
                 ", id=" + id +
-                ", userId=" + userId +
+                ", userId=" + user.getId() +
                 ", time=" + time +
                 '}';
     }

@@ -7,21 +7,22 @@ drop table USERS;
 
 create table USERS
 (
-    user_id      number(*)   not null primary key,
-    name         varchar(32) not null,
-    enc_password varchar(32) not null
+    user_id      number(*)    not null primary key,
+    mail         varchar(255) not null, /* must be unique  - non unique for tests*/
+    name         varchar(32)  not null,
+    enc_password varchar(32)  not null
 );
 create sequence user_id_sequence
     start with 1
     increment by 1;
 create table tasks
 (
-    task_id     NUMBER(4) not null primary key,
-    user_id     NUMBER(4) not null,
-    task_name   varchar2(32),
+    task_id     NUMBER(4)    not null primary key,
+    user_id     NUMBER(4)    not null,
+    task_name   varchar2(32) not null,
     description varchar2(64),
     completed   NUMBER(1, 0),
-    datetime    date      not null,
+    datetime    date         not null,
     constraint task_user_fk foreign key (user_id) references USERS (USER_ID)
 );
 create sequence task_id_sequence
@@ -50,12 +51,18 @@ begin
     from dual;
 end;
 
-insert into USERS(name, enc_password)
-values ('admin', 'admin');
-insert into USERS(name, enc_password)
-values ('supertestname', 'supertestpassword');
-insert into USERS(name, enc_password)
-values ('ultratestname', 'ultratestpassword');
-insert into USERS(name, enc_password)
-values ('megatestname', 'megatestpassword');
+insert into USERS(name, enc_password, mail)
+values ('admin', 'admin', 'dezen53412gml@gmail.com');
+insert into USERS(name, enc_password, mail)
+values ('supertestname', 'supertestpassword', 'dezen53412gml@gmail.com');
+insert into USERS(name, enc_password, mail)
+values ('ultratestname', 'ultratestpassword', 'dezen53412gml@gmail.com');
+insert into USERS(name, enc_password, mail)
+values ('megatestname', 'megatestpassword', 'dezen53412gml@gmail.com');
+
+insert into TASKS(USER_ID, task_name, description, COMPLETED, datetime)
+values (1, 'wefwed', 'asdwqef', 0, TO_Date('2021-03-11 23:40:00', 'YYYY-MM-DD HH24:MI:SS'));
+insert into TASKS(USER_ID, task_name, description, COMPLETED, datetime)
+values (1, 'SuperTask', 'fweddf', 0, TO_Date('2022-03-11 23:50:00', 'YYYY-MM-DD HH24:MI:SS'));
+
 commit;

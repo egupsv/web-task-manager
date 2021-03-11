@@ -21,7 +21,8 @@
         </div>
         <div class="container">
             <label for="login"><b>Username</b></label>
-            <input id="login" class="auth_field" type="text" required placeholder="Enter Username" name="login"/>
+            <input id="login" class="auth_field" type="text" required placeholder="Enter Username" name="login"
+                   pattern="^[A-Za-z0-9]{4,16}$" title="Username must be more than 4 symbols and less than 16 and dont contain any special symbols"/>
             <br/>
             <label for="psw"><b>Password</b></label>
             <input id="psw" class="auth_field" type="password" required placeholder="Enter Password" name="password"/>

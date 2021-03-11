@@ -19,24 +19,28 @@ public class LoginFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
         HttpSession session = request.getSession();
+
         String loginURL = request.getContextPath() + "/login";
         String signupURL = request.getContextPath() + "/signup";
         boolean loggedIn = session != null && session.getAttribute("login") != null;// && session.getAttribute("password") != null;
-        boolean isSmthWrong = session != null && session.getAttribute("attempt") == "wrong";
+        boolean isSmthWrong = session != null && session.getAttribute("attempt") != null;
         String reqURI = request.getRequestURI();
         log.info("requestUI " + reqURI);
-        log.info("loginURL " + loginURL);
         boolean loginRequest = request.getRequestURI().equals(loginURL) || request.getRequestURI().equals(loginURL + ".jsp");
         boolean signupRequest = request.getRequestURI().equals(signupURL) || request.getRequestURI().equals(signupURL + ".jsp");
 
         log.info("loginRequest " + (loginRequest ? "true" : "false"));
         log.info("signupRequest " + (signupRequest ? "true" : "false"));
         log.info("loggedIn " + (loggedIn ? "true" : "false"));
-        if (session != null) log.info("try " + session.getAttribute("attempt"));
-        if(loggedIn || (loginRequest && !isSmthWrong) || (signupRequest && !isSmthWrong)) {
+        log.info("reqURI " + reqURI);
+        if((loggedIn && reqURI.contains("tasks")) || (loginRequest && !isSmthWrong) || (signupRequest && !isSmthWrong)) {
 
             log.info("doFilter");
             chain.doFilter(req, res);
+        }
+        else if(loggedIn) {
+            log.info("go to tasks");
+            response.sendRedirect("tasks");
         }
         else {
             log.info("redirect");

@@ -1,7 +1,11 @@
 package com.example.web_task_manager.model;
 
+import com.example.web_task_manager.Properties;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
+import java.util.Set;
 
 /**
  * The {@code User} class represents user.
@@ -14,32 +18,59 @@ public class User implements Serializable {
     public static final String NAME_COLUMN = "NAME";
     public static final String ID_COLUMN = "USER_ID";
     public static final String PASSWORD_COLUMN = "ENC_PASSWORD";
-
+    public static final String MAIL_COLUMN = "MAIL";
+    public static final User DEFAULT_USER = new User();
     /**
      * user id
      */
+    @Id
+    @Column(name = ID_COLUMN, unique = true)
     private int id;
     /**
      * user's name (login)
      */
-
+    @Column(name = NAME_COLUMN, unique = true)
     private String name;
     /**
      * encrypted password which is used for sending to the server
      */
+    @Column(name = PASSWORD_COLUMN)
     private String encPassword;
+
+    /**
+     * Mail of user
+     */
+    @Column(name = MAIL_COLUMN) //todo: must be unique (unique = true)
+    private String mail;
+
+
+
+    @OneToMany(mappedBy = "user")
+    private List<Task> tasks;
 
     public User() {
 
     }
 
     public User(String name, String encPassword) {
-        this.name = name;
-        this.encPassword = encPassword;
+        this(name, encPassword, Properties.DEFAULT_MAIL_IN);
     }
 
-    @Id
-    @Column(name = ID_COLUMN, unique = true)
+    public User(String name, String encPassword, String mail) {
+        this.name = name;
+        this.encPassword = encPassword;
+        this.mail = mail;
+    }
+
+    public String getMail() {
+        return mail;
+    }
+
+    public void setMail(String mail) {
+        this.mail = mail;
+    }
+
+
     public int getId() {
         return id;
     }
@@ -48,7 +79,7 @@ public class User implements Serializable {
         this.id = id;
     }
 
-    @Column(name = NAME_COLUMN, unique = true)
+
     public String getName() {
         return name;
     }
@@ -57,13 +88,21 @@ public class User implements Serializable {
         this.name = name;
     }
 
-    @Column(name = PASSWORD_COLUMN)
+
     public String getEncPassword() {
         return encPassword;
     }
 
     public void setEncPassword(String encPassword) {
         this.encPassword = encPassword;
+    }
+
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
     }
 
     @Override

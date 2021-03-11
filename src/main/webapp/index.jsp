@@ -10,7 +10,7 @@
         const showAddFields = () => {
             let visibility = document.getElementById("add_form").style.display === "none" ? 0 : 1;
             if (visibility === 0) {
-                document.getElementById("add_form").style.display = "block";
+                document.getElementById("add_form").style.display = "table";
                 document.getElementById("add_button").value = "Cancel adding";
                 visibility === 1
             } else {
@@ -24,7 +24,7 @@
 
 <body>
 <form method="post" action="/web_task_manager-1.0-SNAPSHOT/tasks">
-    <div class = "task_table">
+    <div class="task_table">
         <table border="1" style="border-collapse: collapse">
             <caption class="TableHeader">Tasks</caption>
             <tr>
@@ -63,23 +63,32 @@
 
 <form id="add_form" method="post" style="display: none" action="/web_task_manager-1.0-SNAPSHOT/tasks">
     <div>
-        <input type="text" required placeholder="task name" name="name"/>
+        <label for="name"><b>Task name</b></label>
+        <input id="name" type="text" required placeholder="task name" name="name"/>
     </div>
     <div>
-        <input type="text" placeholder="description" name="description"/>
+        <label for="desc"><b>Task description</b></label>
+        <input id="desc" type="text" placeholder="description" name="description"/>
     </div>
     <div>
+        <label for="date"><b>Task expire date</b></label>
         <input
+                id="date"
                 type="text"
                 required
                 placeholder="date and time"
                 pattern="^([0-2][0-9]|3[0-1])[.](0[0-9]|1[0-2])[.][2][0-9]{3}[ ]([0-1][0-9]|2[0-3])[:]([0-5][0-9])$"
                 name="time"
+                title="time in format &quot;dd.mm.yyyy hh:mm&quot; for example &quot;01.01.2021 15:00&quot;
                 value="${Utils.getCurrentDateString()}"
         />
         <p>time in format "dd.mm.yyyy hh:mm" for example "01.01.2021 15:00"</p>
     </div>
     <input type="submit" value="confirm">
+</form>
+
+<form action="/web_task_manager-1.0-SNAPSHOT/tasks">
+    <button type="submit" name="Logout" value="Logout"> Log out</button>
 </form>
 </body>
 </html>
