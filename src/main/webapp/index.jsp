@@ -79,7 +79,7 @@
                 placeholder="date and time"
                 pattern="^([0-2][0-9]|3[0-1])[.](0[0-9]|1[0-2])[.][2][0-9]{3}[ ]([0-1][0-9]|2[0-3])[:]([0-5][0-9])$"
                 name="time"
-                title="time in format &quot;dd.mm.yyyy hh:mm&quot; for example &quot;01.01.2021 15:00&quot;
+                title="time in format &quot;dd.mm.yyyy hh:mm&quot; for example &quot;01.01.2021 15:00&quot;"
                 value="${Utils.getCurrentDateString()}"
         />
         <p>time in format "dd.mm.yyyy hh:mm" for example "01.01.2021 15:00"</p>

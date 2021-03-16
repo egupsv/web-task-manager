@@ -5,7 +5,6 @@ import com.example.web_task_manager.Properties;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
-import java.util.Set;
 
 /**
  * The {@code User} class represents user.
@@ -42,7 +41,6 @@ public class User implements Serializable {
      */
     @Column(name = MAIL_COLUMN) //todo: must be unique (unique = true)
     private String mail;
-
 
 
     @OneToMany(mappedBy = "user")
@@ -111,6 +109,8 @@ public class User implements Serializable {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", encPassword='" + encPassword + '\'' +
+                ", mail='" + mail + '\'' +
+                ", tasks=" + tasks +
                 '}';
     }
 }

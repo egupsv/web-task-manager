@@ -1,10 +1,12 @@
 package com.example.web_task_manager.servlet;
 
+import com.example.web_task_manager.controller.NotifyWorker;
 import com.example.web_task_manager.dba.UserDAO;
 import com.example.web_task_manager.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,7 +17,16 @@ public class LoginServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(LoginServlet.class);
 
     @Override
+    public void init() throws ServletException {
+        super.init();
+    }
+
+    @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        if (NotifyWorker.INSTANCE == null) {
+            NotifyWorker.INSTANCE = new NotifyWorker();
+            NotifyWorker.INSTANCE.run();
+        }
         String login = request.getParameter("login");
         String password = request.getParameter("password");
 

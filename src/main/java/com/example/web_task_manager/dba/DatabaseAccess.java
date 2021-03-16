@@ -9,14 +9,17 @@ public class DatabaseAccess {
     public static DatabaseAccess INSTANCE;
     private StandardServiceRegistry registry;
     private static SessionFactory sessionFactory;
+    private static boolean isLoading = false;
 
     public DatabaseAccess() {
+        if (isLoading)
+            return;
         System.out.println("CREATING INSTANCE OF DA");
-        if(sessionFactory != null)
-        {
+        if (sessionFactory != null) {
             closeFactory();
         }
         try {
+            isLoading = true;
             registry = new StandardServiceRegistryBuilder()
                     .configure()
                     .build();
@@ -25,20 +28,20 @@ public class DatabaseAccess {
             System.out.println("creating factory-------------------------");
             sessionFactory = new MetadataSources(registry).buildMetadata().buildSessionFactory();
             System.out.println("factory created-----------------------");
-        }
-        catch (Exception ex){
+        } catch (Exception ex) {
             StandardServiceRegistryBuilder.destroy(registry);
             ex.printStackTrace();
         }
+        isLoading = false;
     }
 
     public static SessionFactory getSessionFactory() {
-        if(INSTANCE == null)
-             INSTANCE = new DatabaseAccess();
+        if (INSTANCE == null)
+            INSTANCE = new DatabaseAccess();
         return sessionFactory;
     }
 
-    public static void closeFactory(){
+    public static void closeFactory() {
         sessionFactory.close();
     }
 

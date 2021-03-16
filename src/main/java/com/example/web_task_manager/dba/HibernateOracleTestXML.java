@@ -3,6 +3,8 @@ package com.example.web_task_manager.dba;
 
 import com.example.web_task_manager.Properties;
 import com.example.web_task_manager.mail.MailSender;
+import com.example.web_task_manager.model.Task;
+import com.example.web_task_manager.model.User;
 
 
 public class HibernateOracleTestXML {
@@ -11,7 +13,7 @@ public class HibernateOracleTestXML {
     public static TaskDAO taskDAO = new TaskDAO();
     public static UserDAO userDAO = new UserDAO();
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args){
 
 //        for (int i = 0; i < 10; i++) {
 //            User user = new User("DefaultUser" + i, "pass" + i);
@@ -20,7 +22,10 @@ public class HibernateOracleTestXML {
 //            taskDAO.create(task);
 //        }
         MailSender ms = new MailSender();
-        ms.sendMessage(Properties.DEFAULT_MAIL_IN, "wqefqwef", "qewfweqdf");
+        //ms.sendMessage(Properties.DEFAULT_MAIL_IN, "wqefqwef", "qewfweqdf");
+        System.out.println();
+
+        Task task = new TaskDAO().getEntityById(6);
 
     }
 

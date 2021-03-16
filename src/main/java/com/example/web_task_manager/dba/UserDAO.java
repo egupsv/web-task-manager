@@ -97,7 +97,7 @@ public class UserDAO extends DataAccessible<User, Integer> {
             cq.where(session.getCriteriaBuilder().equal(from.get("mail"), userMail));
 
             return session.createQuery(cq).getSingleResult();
-        } catch (NoResultException ignored) {
+        } catch (NoResultException e) {
             return null;
         } catch (PersistenceException ex) {
             ex.printStackTrace();

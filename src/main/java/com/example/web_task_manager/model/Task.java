@@ -114,6 +114,9 @@ public class Task implements Serializable {
         this.time = time;
     }
 
+    public int getUserId() {
+        return user.getId();
+    }
 
     public void setId(int id) {
         this.id = id;
