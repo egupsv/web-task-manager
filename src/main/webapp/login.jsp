@@ -15,7 +15,7 @@
 <body>
 <div class="center">
     <h1>Log in</h1><br>
-    <form method="post" action="/web_task_manager-1.0-SNAPSHOT/login">
+    <form method="post" action="${pageContext.request.contextPath}/login">
         <jsp:useBean id="TryChecker" class="com.example.web_task_manager.servlet.TryChecker" scope="page"/>
         <div id="try" style="color:red; display:${TryChecker.getPropertyOfLoginDiv()}">login or password is incorrect
         </div>

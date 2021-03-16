@@ -36,7 +36,7 @@ create or replace trigger user_id_trigger
     FOR EACH ROW
 begin
     select user_id_sequence.nextval
-    into : new.user_id
+    into :new.user_id
     from dual;
 end;
 

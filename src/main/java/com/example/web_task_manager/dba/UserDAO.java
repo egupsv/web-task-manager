@@ -102,6 +102,6 @@ public class UserDAO extends DataAccessible<User, Integer> {
         } catch (PersistenceException ex) {
             ex.printStackTrace();
         }
-        return User.DEFAULT_USER;
+        return null;
     }
 }

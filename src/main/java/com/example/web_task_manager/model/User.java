@@ -39,7 +39,7 @@ public class User implements Serializable {
     /**
      * Mail of user
      */
-    @Column(name = MAIL_COLUMN) //todo: must be unique (unique = true)
+    @Column(name = MAIL_COLUMN, unique = true)
     private String mail;
 
 

@@ -23,7 +23,8 @@
 </head>
 
 <body>
-<form method="post" action="/web_task_manager-1.0-SNAPSHOT/tasks">
+
+<form method="post" action="${pageContext.request.contextPath}/tasks">
     <div class="task_table">
         <table border="1" style="border-collapse: collapse">
             <caption class="TableHeader">Tasks</caption>
@@ -61,7 +62,7 @@
     </div>
 </form>
 
-<form id="add_form" method="post" style="display: none" action="/web_task_manager-1.0-SNAPSHOT/tasks">
+<form id="add_form" method="post" style="display: none" action="${pageContext.request.contextPath}/tasks">
     <div>
         <label for="name"><b>Task name</b></label>
         <input id="name" type="text" required placeholder="task name" name="name"/>
@@ -87,7 +88,7 @@
     <input type="submit" value="confirm">
 </form>
 
-<form action="/web_task_manager-1.0-SNAPSHOT/tasks">
+<form action="${pageContext.request.contextPath}/tasks">
     <button type="submit" name="Logout" value="Logout"> Log out</button>
 </form>
 </body>

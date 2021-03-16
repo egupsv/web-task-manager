@@ -12,7 +12,7 @@
 <body>
 <div class="center">
     <h1>Sign up</h1><br>
-    <form method="post" action="/web_task_manager-1.0-SNAPSHOT/signup">
+    <form method="post" action="${pageContext.request.contextPath}/signup">
         <jsp:useBean id="TryChecker" class="com.example.web_task_manager.servlet.TryChecker" scope="page"/>
         <div id="try" style="color:red; display:${TryChecker.getPropertyOfSignupDiv()}">this login is already used</div>
         <div class="container">
