@@ -42,7 +42,7 @@ public class NotifyWorker {
         setActive(true);
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
         executor.scheduleAtFixedRate(() -> {
-            if (isActive()) {
+            if (isActive() && DatabaseAccess.getSessionFactory() != null) {
                 for (Task task : getExpiredTasks()) {
                     releaseTask(task);
                 }
