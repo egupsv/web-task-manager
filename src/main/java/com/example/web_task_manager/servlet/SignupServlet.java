@@ -38,7 +38,7 @@ public class SignupServlet extends HttpServlet {
             request.getSession().setAttribute("attempt", null);
             TryChecker.setPropertyOfSignupDiv("none");
             request.getSession().setAttribute("login", login);
-            response.sendRedirect("/web_task_manager-1.0-SNAPSHOT/tasks");
+            response.sendRedirect(request.getContextPath() + "/tasks");
         } else {
             log.info("this login + " + login + " is incorrect");
             log.info(" or this mail + " + mail + " is incorrect");

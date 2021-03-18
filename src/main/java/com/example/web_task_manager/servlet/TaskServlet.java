@@ -46,7 +46,7 @@ public class TaskServlet extends HttpServlet {
     }
 
     @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String login = request.getSession().getAttribute("login").toString();
         int userId = userDAO.getUserByName(login).getId();
         log.info("here");
@@ -86,9 +86,10 @@ public class TaskServlet extends HttpServlet {
             request.setAttribute("login", null);
             request.setAttribute("password", null);
         }
-        List<Task> tasks = taskDAO.getUserTasks(userDAO.getUserByName(request.getSession().getAttribute("login").toString()));
-        request.setAttribute("tasks", tasks);
+        //List<Task> tasks = taskDAO.getUserTasks(userDAO.getUserByName(request.getSession().getAttribute("login").toString()));
+        //request.setAttribute("tasks", tasks);
 
-        getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
+        //getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
+        response.sendRedirect(request.getContextPath() + "/index.jsp");
     }
 }

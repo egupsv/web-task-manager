@@ -39,7 +39,7 @@ public class LoginServlet extends HttpServlet {
             request.getSession().setAttribute("login", login);
             TryChecker.setPropertyOfLoginDiv("none");
             request.getSession().setAttribute("attempt", null);
-            response.sendRedirect("/web_task_manager-1.0-SNAPSHOT/tasks");
+            response.sendRedirect(request.getContextPath() + "/tasks");
         } else {
             log.info("login or password is incorrect");
             request.getSession().setAttribute("attempt", "wrong");

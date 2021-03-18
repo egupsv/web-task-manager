@@ -11,14 +11,11 @@ import org.hibernate.Session;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Class for parse input users and finding expired task
  */
-public class NotifyWorker {
+public class NotifyWorker implements Runnable {
 
     private final TaskDAO taskDao = new TaskDAO();
     private final UserDAO userDAO = new UserDAO();
@@ -30,40 +27,20 @@ public class NotifyWorker {
 
     public NotifyWorker() {
         System.out.println("NOTIFY WORKER CREATED");
+
     }
 
 
     /**
      * Runs the parse Thread
      */
+    @Override
     public void run() {
-        if (isActive())
-            return;
-        setActive(true);
-        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-        executor.scheduleAtFixedRate(() -> {
-            if (isActive() && DatabaseAccess.getSessionFactory() != null) {
-                for (Task task : getExpiredTasks()) {
-                    releaseTask(task);
-                }
+        if (DatabaseAccess.getSessionFactory() != null) {
+            for (Task task : getExpiredTasks()) {
+                releaseTask(task);
             }
-        }, 1000, 10000, TimeUnit.MILLISECONDS);
-    }
-
-    /**
-     * Sets State of thread.
-     *
-     * @param value State
-     */
-    public void setActive(boolean value) {
-        active = value;
-    }
-
-    /**
-     * @return Active state
-     */
-    public boolean isActive() {
-        return active;
+        }
     }
 
     /**
