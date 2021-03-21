@@ -26,16 +26,8 @@ public class Encryptor {
         KeyGenerator keyGen = KeyGenerator.getInstance("AES");
         int keySize = 256;
         keyGen.init(keySize);
-        try {
-            File file = new File("key.txt");
-            FileReader fr = new FileReader(file);
-            BufferedReader reader = new BufferedReader(fr);
-            String line = reader.readLine();
-            byte[] decodedKey = Base64.getDecoder().decode(line);
-            this.key = new SecretKeySpec(decodedKey, 0, decodedKey.length, "AES");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        byte[] decodedKey = Base64.getDecoder().decode("TNIIGp0EctFoytVBrcTbnoC9A9XWWHVgF5A4XhUoQPc=");
+        this.key = new SecretKeySpec(decodedKey, 0, decodedKey.length, "AES");
     }
 
     /**
