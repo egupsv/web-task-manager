@@ -30,7 +30,7 @@ public class LoginFilter implements Filter {
 
         String loginURL = request.getContextPath() + "/login";
         String signupURL = request.getContextPath() + "/signup";
-        boolean loggedIn = session != null && session.getAttribute("login") != null;// && session.getAttribute("password") != null;
+        boolean loggedIn = session != null && session.getAttribute("login") != null;
         boolean isSmthWrong = session != null && session.getAttribute("attempt") != null;
         String reqURI = request.getRequestURI();
 //        log.info("requestUI " + reqURI);
@@ -57,78 +57,3 @@ public class LoginFilter implements Filter {
         }
     }
 }
-/*public class Auth implements Filter {
-    private FilterConfig filterConfig;
-
-    private static final Logger log = LoggerFactory.getLogger(Auth.class);
-
-    public Auth() throws IOException {
-    }
-
-    @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-        this.filterConfig = filterConfig;
-    }
-
-    @Override
-    public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain filterChain)
-            throws IOException, ServletException {
-
-        log.info("doFilter");
-        //ServletContext ctx = filterConfig.getServletContext();
-        //RequestDispatcher dispatcher = ctx.getRequestDispatcher("/login.jsp");
-        //dispatcher.forward(request, response);
-        final HttpServletRequest req = (HttpServletRequest) request;
-        final HttpServletResponse res = (HttpServletResponse) response;
-        req.getRequestDispatcher("/login.jsp").forward(req, res);
-        Users users = new Users();
-        users.addUser(new User("a", "qwerty"));
-        final String login = req.getParameter("login");
-        final String password = req.getParameter("password");
-
-        log.info("login " + login);
-        log.info("password " + password);
-
-        final HttpSession session = req.getSession();
-        if (nonNull(session) &&
-                nonNull(session.getAttribute("login")) &&
-                nonNull(session.getAttribute("password"))) {
-            req.getRequestDispatcher("/index.jsp").forward(req, res);
-        } else {
-            req.getSession().setAttribute("password", password);
-            req.getSession().setAttribute("login", login);
-            req.getRequestDispatcher("/index.jsp").forward(req, res);
-        }
-
-    }
-
-
-    private void moveToTasks(final HttpServletRequest req,
-                             final HttpServletResponse res,
-                             final String login,
-                             final String password,
-                             final Users users)
-            throws ServletException, IOException {
-        User requiredUser = users.getUser(login);
-        log.info("user " + requiredUser.getName());
-        User user = null;
-        //if (requiredUser.getEncPassword().equals(password)) {
-            log.info("111");
-            user = requiredUser;
-            req.getRequestDispatcher("/index.jsp").forward(req, res);
-            //res.sendRedirect("/WEB-INF/index.jsp");
-        /*} else {
-            PrintWriter pw = res.getWriter();
-            pw.println("alert('login or password is incorrect');");
-            req.getRequestDispatcher("/WEB-INF/login.jsp").forward(req, res);
-            //res.sendRedirect("/login.jsp");
-        }
-
-
-    }
-
-    @Override
-    public void destroy() {
-    }
-
-}*/

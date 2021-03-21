@@ -1,9 +1,9 @@
-drop trigger task_id_trigger;
-drop trigger user_id_trigger;
-drop sequence task_id_sequence;
-drop table tasks;
-drop sequence USER_ID_SEQUENCE;
-drop table USERS;
+-- drop trigger task_id_trigger;
+-- drop trigger user_id_trigger;
+-- drop sequence task_id_sequence;
+-- drop table tasks;
+-- drop sequence USER_ID_SEQUENCE;
+-- drop table USERS;
 
 create table USERS
 (
@@ -52,13 +52,8 @@ begin
 end;
 
 insert into USERS(name, enc_password, mail)
-values ('admin', 'admin', 'dezen53412gml@gmail.com');
-insert into USERS(name, enc_password, mail)
-values ('supertestname', 'supertestpassword', 'dezen53412gml@gmail.com');
-insert into USERS(name, enc_password, mail)
-values ('ultratestname', 'ultratestpassword', 'dezen53412gml@gmail.com');
-insert into USERS(name, enc_password, mail)
-values ('megatestname', 'megatestpassword', 'dezen53412gml@gmail.com');
+values ('admin', 'KWT8VWCBV5kdWtnYdznAMQ==', 'dezen53412gml@gmail.com');
+
 
 insert into TASKS(USER_ID, task_name, description, COMPLETED, datetime)
 values (1, 'wefwed', 'asdwqef', 0, TO_Date('2021-03-11 23:40:00', 'YYYY-MM-DD HH24:MI:SS'));

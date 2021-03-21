@@ -2,14 +2,17 @@ package com.example.web_task_manager.servlet;
 
 import com.example.web_task_manager.dba.UserDAO;
 import com.example.web_task_manager.model.User;
+import com.example.web_task_manager.users.Encryptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.crypto.NoSuchPaddingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 
 
 public class LoginServlet extends HttpServlet {
@@ -24,11 +27,17 @@ public class LoginServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String login = request.getParameter("login");
         String password = request.getParameter("password");
-
+        String encPassword = null;
+        try {
+            encPassword = new Encryptor().encrypt(password);
+        } catch (NoSuchPaddingException | NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        log.info(encPassword);
         User user = null;
         User targetUser = new UserDAO().getUserByName(login);
         if (targetUser != null &&
-                password.equals(targetUser.getEncPassword())) user = targetUser;
+                encPassword.equals(targetUser.getEncPassword())) user = targetUser;
         if (user != null) {
             log.info("User has logged in");
             request.getSession().setAttribute("login", login);

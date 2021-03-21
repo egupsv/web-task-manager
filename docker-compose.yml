@@ -9,6 +9,7 @@ services:
     #  - ./ddl_scripts/init.sql:/docker-entrypoint-initdb.d/init.sql You can uncomment this in order to specify some DB init script
     ports:
       - "49161:1521"
+      - "49162:8080"
   web:
     image: tomcat:latest
     ports:
