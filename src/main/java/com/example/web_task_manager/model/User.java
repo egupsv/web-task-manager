@@ -18,6 +18,7 @@ public class User implements Serializable {
     public static final String ID_COLUMN = "USER_ID";
     public static final String PASSWORD_COLUMN = "ENC_PASSWORD";
     public static final String MAIL_COLUMN = "MAIL";
+    public static final String ROLE_COLUMN = "ROLE";
     public static final User DEFAULT_USER = new User();
     /**
      * user id
@@ -42,6 +43,11 @@ public class User implements Serializable {
     @Column(name = MAIL_COLUMN, unique = true)
     private String mail;
 
+    /**
+     * Role of user ("admin" or "user")
+     */
+    @Column(name = ROLE_COLUMN)
+    private String role;
 
     @OneToMany(mappedBy = "user")
     private List<Task> tasks;
@@ -51,13 +57,14 @@ public class User implements Serializable {
     }
 
     public User(String name, String encPassword) {
-        this(name, encPassword, Properties.DEFAULT_MAIL_IN);
+        this(name, encPassword, Properties.DEFAULT_MAIL_IN, Properties.DEFAULT_ROLE);
     }
 
-    public User(String name, String encPassword, String mail) {
+    public User(String name, String encPassword, String mail, String role) {
         this.name = name;
         this.encPassword = encPassword;
         this.mail = mail;
+        this.role = role;
     }
 
     public String getMail() {
