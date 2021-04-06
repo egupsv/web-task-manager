@@ -14,4 +14,5 @@ public class Properties {
     public static final String DEFAULT_MAIL_IN = "dezen53412gml@gmail.com";// "dezen53412gml@gmail.com"; anonnyasd@gmail.com
     public static final String DEFAULT_SAVE_DIR = "";
     public static final String MAIL_PASSWORD_OUT = "sfcbhaepcweijobd";
+    public static final String DEFAULT_ROLE = "user";
 }
