@@ -3,6 +3,7 @@ package com.example.web_task_manager.servlet;
 import com.example.web_task_manager.dba.UserDAO;
 import com.example.web_task_manager.model.User;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -25,18 +26,14 @@ public class UserServlet extends HttpServlet {
             getServletContext().getRequestDispatcher("/login.jsp").forward(request, response);
             return;
         }
-//        String pathInfo = request.getPathInfo();
-//        String uName = pathInfo.substring(1);
-        User user = new UserDAO().getUserByName(request.getParameter("login"));
-        request.setAttribute("target_user", user);
-        if (user == null) {
-            System.out.println("target USER is not found");
-            request.removeAttribute("target_user");
-            getServletContext().getRequestDispatcher(request.getParameter("login")).forward(request, response);
-        }
-        //getServletContext().getRequestDispatcher("/user/" + uName).forward(request, response);
-        //response.sendRedirect(request.getContextPath() + "/user/" + uName);
-        //request.setAttribute("user", new UserDAO().getUserByName(request.getParameter("")));
-        //super.doGet(request, response);
+
+        String login = request.getSession().getAttribute("login").toString();
+        User user = new UserDAO().getUserByName(login);
+        request.getSession().setAttribute("tar_user", user);
+
+        System.out.println("a");
+
+        RequestDispatcher rd = request.getRequestDispatcher("/user.jsp");
+        rd.forward(request, response);
     }
 }

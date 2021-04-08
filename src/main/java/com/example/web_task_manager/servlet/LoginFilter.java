@@ -41,13 +41,10 @@ public class LoginFilter implements Filter {
 //        log.info("signupRequest " + (signupRequest ? "true" : "false"));
 //        log.info("loggedIn " + (loggedIn ? "true" : "false"));
 //        log.info("reqURI " + reqURI);
-        if ((loggedIn && reqURI.contains("tasks")) || (loginRequest && !isSmthWrong) || (signupRequest && !isSmthWrong)) {
+        if (loggedIn || (loginRequest && !isSmthWrong) || (signupRequest && !isSmthWrong)) {
 
 //            log.info("doFilter");
             chain.doFilter(req, res);
-        } else if (loggedIn) {
-//            log.info("go to tasks");
-            response.sendRedirect("tasks");
         } else {
             log.info("redirect");
             String page = reqURI.contains("signup") ? "signup.jsp" : "login.jsp";

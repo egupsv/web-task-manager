@@ -3,6 +3,7 @@ package com.example.web_task_manager.servlet;
 import com.example.web_task_manager.dba.TaskDAO;
 import com.example.web_task_manager.dba.UserDAO;
 import com.example.web_task_manager.model.Task;
+import com.example.web_task_manager.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,17 +32,32 @@ public class TaskServlet extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        final HttpSession session = request.getSession();
         log.info("tasks");
         log.info("log out " + request.getParameter("Logout"));
         if (request.getParameter("Logout") != null) {
-            final HttpSession session = request.getSession();
             session.removeAttribute("password");
             session.removeAttribute("login");
-            getServletContext().getRequestDispatcher("/login.jsp").forward(request, response);
+            //getServletContext().getRequestDispatcher("/login.jsp").forward(request, response);
+            response.sendRedirect("/login.jsp");
         } else {
-            List<Task> tasks = taskDAO.getUserTasks(userDAO.getUserByName(request.getSession().getAttribute("login").toString()));
-            request.setAttribute("tasks", tasks);
-            getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
+            String pathInfo = request.getPathInfo();
+            System.out.println(pathInfo);
+            String uName = pathInfo.substring(1);
+            System.out.println(uName);
+            if (uName.trim().length() > 4) {
+                User user = userDAO.getUserByName(uName);
+                request.setAttribute("target_user", user);
+                if (user == null) {
+                    System.out.println("target USER is not found");
+                    request.removeAttribute("target_user");
+                    return;
+                }
+                List<Task> tasks = taskDAO.getUserTasks(user);
+                request.setAttribute("tasks", tasks);
+                System.out.println("CAST /index.jsp");
+                getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
+            }
         }
     }
 

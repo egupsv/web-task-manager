@@ -2,7 +2,6 @@ package com.example.web_task_manager.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**

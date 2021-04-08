@@ -24,6 +24,11 @@ public class LoginServlet extends HttpServlet {
     }
 
     @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        getServletContext().getRequestDispatcher("/login.jsp").forward(req, resp);
+    }
+
+    @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String login = request.getParameter("login");
         String password = request.getParameter("password");
@@ -43,7 +48,8 @@ public class LoginServlet extends HttpServlet {
             request.getSession().setAttribute("login", login);
             TryChecker.setPropertyOfLoginDiv("none");
             request.getSession().setAttribute("attempt", null);
-            response.sendRedirect(request.getContextPath() + "/tasks");
+            response.sendRedirect(request.getContextPath() + "/tasks/" + login);
+            //response.sendRedirect(request.getContextPath() + "/user/" + login);
         } else {
             log.info("login or password is incorrect");
             request.getSession().setAttribute("attempt", "wrong");

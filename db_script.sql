@@ -1,7 +1,7 @@
 -- drop trigger task_id_trigger;
 -- drop trigger user_id_trigger;
--- drop sequence task_id_sequence;
 -- drop table tasks;
+-- drop sequence task_id_sequence;
 -- drop sequence USER_ID_SEQUENCE;
 -- drop table USERS;
 
@@ -10,7 +10,8 @@ create table USERS
     user_id      number(*)    not null primary key,
     mail         varchar(255) not null, /* must be unique  - non unique for tests*/
     name         varchar(32)  not null,
-    enc_password varchar(32)  not null
+    enc_password varchar(32)  not null,
+    role         varchar(32)  not null
 );
 create sequence user_id_sequence
     start with 1
@@ -51,13 +52,15 @@ begin
     from dual;
 end;
 
-insert into USERS(name, enc_password, mail)
-values ('admin', 'KWT8VWCBV5kdWtnYdznAMQ==', 'dezen53412gml@gmail.com');
+insert into USERS(name, enc_password, mail, role)
+values ('admin', 'KWT8VWCBV5kdWtnYdznAMQ==', 'dezen53412gml@gmail.com', 'admin');
 
 
 insert into TASKS(USER_ID, task_name, description, COMPLETED, datetime)
-values (1, 'wefwed', 'asdwqef', 0, TO_Date('2021-03-11 23:40:00', 'YYYY-MM-DD HH24:MI:SS'));
+values (1, 'wefwed', 'asdwqef', 0, TO_Date('2023-03-11 23:40:00', 'YYYY-MM-DD HH24:MI:SS'));
 insert into TASKS(USER_ID, task_name, description, COMPLETED, datetime)
 values (1, 'SuperTask', 'fweddf', 0, TO_Date('2022-03-11 23:50:00', 'YYYY-MM-DD HH24:MI:SS'));
 
+insert into USERS(name, enc_password, mail, role)
+values ('daillie', 'KWT8VWCBV5kdWtnYdznAMQ==', 'joker53412@mail.ru','user');
 commit;

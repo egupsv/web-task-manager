@@ -50,9 +50,9 @@
                         </button>
                     </td>
                     <td>
-                        <button type="submit" name="complete" style="color:green; width:40px; height:25px"
+                        <input type="submit" name="complete" style="color:green; width:40px; height:25px"
                                 value="${task.getId()}">&#10003
-                        </button>
+                        </input>
                     </td>
                 </tr>
             </c:forEach>

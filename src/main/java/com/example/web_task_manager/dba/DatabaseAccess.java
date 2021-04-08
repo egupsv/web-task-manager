@@ -31,12 +31,13 @@ public class DatabaseAccess {
         } catch (Exception ex) {
             StandardServiceRegistryBuilder.destroy(registry);
             ex.printStackTrace();
+            sessionFactory = null;
         }
         isLoading = false;
     }
 
     public static SessionFactory getSessionFactory() {
-        if (INSTANCE == null)
+        if (INSTANCE == null || sessionFactory == null)
             INSTANCE = new DatabaseAccess();
         return sessionFactory;
     }
