@@ -49,7 +49,7 @@ public class User implements Serializable {
     @Column(name = ROLE_COLUMN)
     private String role;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER) //todo: Lazy
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Task> tasks;
 
     public User() {
@@ -57,7 +57,7 @@ public class User implements Serializable {
     }
 
     public User(String name, String encPassword) {
-        this(name, encPassword, Properties.DEFAULT_MAIL_IN, Properties.DEFAULT_ROLE);
+        this(name, encPassword, Properties.DEFAULT_MAIL_IN);
     }
 
     public User(String name, String encPassword, String mail) {

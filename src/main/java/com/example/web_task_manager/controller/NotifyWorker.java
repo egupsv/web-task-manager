@@ -21,10 +21,6 @@ public class NotifyWorker implements Runnable {
     private final UserDAO userDAO = new UserDAO();
     private final MailSender mailSender = new MailSender();
 
-    private boolean active = false;
-
-    public static NotifyWorker INSTANCE;
-
     public NotifyWorker() {
         System.out.println("NOTIFY WORKER CREATED");
 

@@ -4,30 +4,19 @@
 <head>
     <title>tasks</title>
     <style>
-        <%@include file="css/styles.css" %>
+        <%@include file="css/styles.css"%>
     </style>
     <script type="text/javascript">
-        const showAddFields = () => {
-            let visibility = document.getElementById("add_form").style.display === "none" ? 0 : 1;
-            if (visibility === 0) {
-                document.getElementById("add_form").style.display = "table";
-                document.getElementById("add_button").value = "Cancel adding";
-                visibility === 1
-            } else {
-                document.getElementById("add_form").style.display = "none";
-                document.getElementById("add_button").value = "Add task";
-                visibility === 0
-            }
-        }
+        <%@include file="js/source.js"%>
     </script>
 </head>
 
 <body>
-
-<form method="post" action="${pageContext.request.contextPath}/tasks">
+<jsp:useBean id="target_user" scope="request" type="com.example.web_task_manager.model.User"/>
+<form method="post" action="${pageContext.request.contextPath}/tasks/${target_user.name}">
     <div class="task_table">
-        <table border="1" style="border-collapse: collapse">
-            <caption class="TableHeader">Tasks</caption>
+        <table>
+            <caption class="TableHeader">Tasks of " ${target_user.name} "</caption>
             <tr>
                 <th>name</th>
                 <th>description</th>
@@ -36,7 +25,7 @@
                 <th>delete</th>
                 <th>complete</th>
             </tr>
-            <jsp:useBean id="Utils" class="com.example.web_task_manager.Utils" scope="page"/>
+            <jsp:useBean id="Utils" class="com.example.web_task_manager.Utils"/>
             <jsp:useBean id="tasks" scope="request" type="java.util.List"/>
             <c:forEach var="task" items="${tasks}">
                 <tr>
@@ -51,8 +40,7 @@
                     </td>
                     <td>
                         <input type="submit" name="complete" style="color:green; width:40px; height:25px"
-                                value="${task.getId()}">&#10003
-                        </input>
+                               value="${task.getId()}"/>&#10003
                     </td>
                 </tr>
             </c:forEach>
@@ -62,7 +50,8 @@
     </div>
 </form>
 
-<form id="add_form" method="post" style="display: none" action="${pageContext.request.contextPath}/tasks">
+<form id="add_form" method="post" style="display: none"
+      action="${pageContext.request.contextPath}/tasks/${target_user.name}">
     <div>
         <label for="name"><b>Task name</b></label>
         <input id="name" type="text" required placeholder="task name" name="name"/>
@@ -89,7 +78,8 @@
 </form>
 
 <form action="${pageContext.request.contextPath}/tasks">
-    <button type="submit" name="Logout" value="Logout"> Log out</button>
+    <button type="submit" name="Logout" value="Logout">Log Out</button>
+
 </form>
 </body>
 </html>

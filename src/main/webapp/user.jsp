@@ -2,27 +2,34 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>User</title> <%-- ${tar_user.name} --%>
+    <jsp:useBean id="tar_user" scope="request" type="com.example.web_task_manager.model.User"/>
+    <c:choose>
+        <c:when test="${empty tar_user.id}">
+            <title>Empty user</title>
+        </c:when>
+        <c:otherwise>
+            <title>${tar_user.name}</title>
+        </c:otherwise>
+    </c:choose>
     <style>
         <%@include file="css/styles.css" %>
     </style>
 </head>
 <body>
 <div>
-    <form method="get">
-        <jsp:useBean id="tar_user" scope="session" type="com.example.web_task_manager.model.User"/>
+    <div>
         <c:choose>
-            <c:when test="${empty tar_user}">
-                <a>users is empty</a>
+            <c:when test="${empty tar_user.id}">
+                <a>user is empty</a>
             </c:when>
             <c:otherwise>
                 <a>user_Name ="${tar_user.name}"></a>
                 <a>id = "${tar_user.id}"></a>
-                <a>user_Name = ${tar_user.name}"></a>
+                <a>user role = ${tar_user.name}"></a>
             </c:otherwise>
         </c:choose>
 
-    </form>
+    </div>
 </div>
 </body>
 </html>

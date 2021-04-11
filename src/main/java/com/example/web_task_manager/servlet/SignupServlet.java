@@ -41,13 +41,13 @@ public class SignupServlet extends HttpServlet {
             } catch (NoSuchPaddingException | NoSuchAlgorithmException e) {
                 e.printStackTrace();
             }
-            User user = new User(login, encPassword, mail, "user");
+            User user = new User(login, encPassword, mail);
             userDAO.create(user);
             log.info("User has logged in");
             request.getSession().setAttribute("attempt", null);
             TryChecker.setPropertyOfSignupDiv("none");
             request.getSession().setAttribute("login", login);
-            response.sendRedirect(request.getContextPath() + "/tasks");
+            response.sendRedirect(request.getContextPath() + "/tasks/" + user.getName());
         } else {
             log.info("this login + " + login + " is incorrect");
             log.info(" or this mail + " + mail + " is incorrect");

@@ -1,3 +1,9 @@
+:root {
+    --table_border: 2px solid black;
+    --table_data_border: 1px solid black;
+    --button_bg_color: #7b6dbb
+}
+
 h1 {
     margin-left: auto;
     margin-right: auto;
@@ -21,10 +27,15 @@ h1 {
 
 table {
     width: 800px;
-    border: 2px solid black;
+    border: var(--table_border);
     margin-left: auto;
     margin-right: auto;
     text-align: center;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: var(--table_data_border)
 }
 
 caption {
@@ -53,7 +64,7 @@ body {
 }
 
 .auth_button {
-    background-color: #7B6DBB;
+    background-color: var(--button_bg_color);
     border: none;
     color: #d5d5d5;
     padding: 10px 32px;
@@ -81,8 +92,30 @@ input[type=text], input[type=password], input[type=email] {
     box-sizing: border-box;
 }
 
-.auth_button:hover {
+.auth_button:hover, .user_b:hover {
     opacity: 0.8;
-
 }
 
+.user_b {
+    background-color: var(--button_bg_color);
+    border: none;
+    color: #d5d5d5;
+    padding: 10px 16px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5%;
+}
+
+.delete_b:hover {
+    color: #f44336;
+}
+
+header {
+    display: block;
+    height: 405px;
+    background: #4e4572;
+    position: fixed;
+}

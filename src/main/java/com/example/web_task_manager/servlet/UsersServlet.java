@@ -1,57 +1,88 @@
 package com.example.web_task_manager.servlet;
 
+import com.example.web_task_manager.Properties;
 import com.example.web_task_manager.dba.UserDAO;
 import com.example.web_task_manager.model.User;
+import com.example.web_task_manager.users.Encryptor;
+import com.sun.istack.NotNull;
 
+import javax.crypto.NoSuchPaddingException;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
-public class UsersServlet extends HttpServlet {
+public class UsersServlet extends AuthServletTemplate {
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        final HttpSession session = req.getSession();
-        if (req.getParameter("Logout") != null) {
-            session.removeAttribute("password");
-            session.removeAttribute("login");
-            getServletContext().getRequestDispatcher("/login.jsp").forward(req, resp);
+        super.doGet(req, resp);
+        if (!"admin".equals(user.getRole())) {
+            resp.sendRedirect("http://localhost:8888/web_task_manager-1.0-SNAPSHOT/user/" + user.getName()); //todo:
             return;
         }
-        String login = session.getAttribute("login").toString();
-        User user = new UserDAO().getUserByName(login);
-        if (!"admin".equals(user.getRole())) {
-            System.out.println("Not admin");
-            resp.sendRedirect("http://localhost:8888/web_task_manager-1.0-SNAPSHOT/user"); //todo:
-        }
-        List<User> users = new UserDAO().getAll();
 
-        session.setAttribute("users", users);
-        System.out.println("_______________________________________________________________________________" +
-                "_____________________________________________________________________________________________________" +
-                "_____________________________________________________________________________" +
-                "_____________________________________________________________________________" +
-                "_____________________________________________________________________________" +
-                "_____________________________________________________");
-        System.out.println("USERS RAW size = " + users.size());
-        users.forEach(us -> System.out.println(us.toString()));
-        System.out.println("tostring= "+  session.getAttribute("users").toString());
-        System.out.println("LEN= "+ session.getAttribute("users"));
-        System.out.println("TRUE IF not null == "+ session.getAttribute("users") != null);
-        System.out.println("_______________________________________________________________________________" +
-                "_____________________________________________________________________________________________________" +
-                "_____________________________________________________________________________" +
-                "_____________________________________________________________________________" +
-                "_____________________________________________________________________________" +
-                "_____________________________________________________");
+        setUsersParameter(req);
         getServletContext().getRequestDispatcher("/users.jsp").forward(req, resp);
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPost(req, resp);
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String login = req.getSession().getAttribute("login").toString();
+        boolean isAdmin = "admin".equals(new UserDAO().getUserByName(login).getRole());
+        if (!isAdmin)
+            return; //???
+
+        String editIdParam = req.getParameter("submit_edit_b");
+        int editableId = editIdParam == null ? 0 : Integer.parseInt(editIdParam.trim());
+        if (editableId > 0) {
+            User targetUser = new UserDAO().getEntityById(editableId);
+            String newName = req.getParameter("name").trim();
+            String newMail = req.getParameter("mail").trim();
+            String newPassword = req.getParameter("password").trim();
+            String newRole = req.getParameter("role").trim();
+
+            if (newRole.length() > 0 && !targetUser.getName().equals(req.getSession().getAttribute("login")))
+                targetUser.setRole(newRole);
+            if (newName.length() > 0)
+                targetUser.setName(newName);
+
+            if (newPassword.length() > 0) {
+                try {
+                    String encPassword = new Encryptor().encrypt(newPassword);
+                    targetUser.setEncPassword(encPassword);
+                } catch (NoSuchPaddingException | NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (Properties.REGEX_MAIL_PATTERN.matcher(newMail).find())
+                targetUser.setMail(newMail);
+
+            new UserDAO().update(targetUser);
+        }
+        String deleteParam = req.getParameter("delete");
+        int deleteId = deleteParam == null ? 0 : Integer.parseInt(deleteParam.trim());
+
+        if (deleteId > 0) {
+            User targetUser = new UserDAO().getEntityById(deleteId);
+            if (!targetUser.getName().equals(req.getSession().getAttribute("login")))
+                new UserDAO().delete(targetUser.getId());
+        }
+        resp.sendRedirect(req.getContextPath() + "/users");
     }
+
+    public void editCheck() {
+
+    }
+
+    public void setUsersParameter(@NotNull HttpServletRequest req) {
+        List<User> users;
+        //if (req.getParameter("filtered_users") == null)
+        users = new UserDAO().getAll();
+        req.setAttribute("users", users);
+    }
+
 }

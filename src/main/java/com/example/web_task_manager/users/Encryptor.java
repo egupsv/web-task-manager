@@ -2,7 +2,6 @@ package com.example.web_task_manager.users;
 
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
@@ -32,7 +31,8 @@ public class Encryptor {
 
     /**
      * runs encryption of specific string
-     * @param   password password inputted by user
+     *
+     * @param password password inputted by user
      * @return The resulting encrypted password
      */
     public String encrypt(String password) {

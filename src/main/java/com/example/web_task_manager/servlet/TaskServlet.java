@@ -1,111 +1,84 @@
 package com.example.web_task_manager.servlet;
 
-import com.example.web_task_manager.dba.TaskDAO;
-import com.example.web_task_manager.dba.UserDAO;
 import com.example.web_task_manager.model.Task;
 import com.example.web_task_manager.model.User;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-public class TaskServlet extends HttpServlet {
-
-    private static final Logger log = LoggerFactory.getLogger(TaskServlet.class);
-    private final TaskDAO taskDAO;
-    private final UserDAO userDAO;
+public class TaskServlet extends AuthServletTemplate {
+    //private static final Logger log = LoggerFactory.getLogger(TaskServlet.class);
     private final SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-
-    public TaskServlet() {
-        this.taskDAO = new TaskDAO();
-        this.userDAO = new UserDAO();
-    }
+    private String targetUserName;
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        final HttpSession session = request.getSession();
-        log.info("tasks");
-        log.info("log out " + request.getParameter("Logout"));
-        if (request.getParameter("Logout") != null) {
-            session.removeAttribute("password");
-            session.removeAttribute("login");
-            //getServletContext().getRequestDispatcher("/login.jsp").forward(request, response);
-            response.sendRedirect("/login.jsp");
-        } else {
-            String pathInfo = request.getPathInfo();
-            System.out.println(pathInfo);
-            String uName = pathInfo.substring(1);
-            System.out.println(uName);
-            if (uName.trim().length() > 4) {
-                User user = userDAO.getUserByName(uName);
-                request.setAttribute("target_user", user);
-                if (user == null) {
-                    System.out.println("target USER is not found");
-                    request.removeAttribute("target_user");
-                    return;
-                }
-                List<Task> tasks = taskDAO.getUserTasks(user);
-                request.setAttribute("tasks", tasks);
-                System.out.println("CAST /index.jsp");
-                getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
+        super.doGet(request, response);
+        String pathInfo = request.getPathInfo();
+
+        targetUserName = request.getSession().getAttribute("login").toString();
+        if (pathInfo != null)
+            targetUserName = pathInfo.substring(1).trim();
+
+        if (targetUserName.length() > 4) {
+            User targetUser = userDAO.getUserByName(targetUserName);
+            request.setAttribute("target_user", targetUser);
+            if (targetUser == null) {
+                System.out.println("target USER is not found");
+                request.removeAttribute("target_user");
+                return;
             }
+            List<Task> tasks = taskDAO.getUserTasks(targetUser);
+            request.setAttribute("tasks", tasks);
+            System.out.println("CAST /index.jsp");
+            getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
         }
     }
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String login = request.getSession().getAttribute("login").toString();
-        int userId = userDAO.getUserByName(login).getId();
-        log.info("here");
-        log.info("delete " + request.getParameter("delete"));
-        log.info("complete " + request.getParameter("complete"));
-        log.info("log out " + request.getParameter("Log out"));
+        super.doPost(request,response);
+        if (targetUserName == null)
+            targetUserName = user.getName();
 
-        if (request.getParameter("delete") != null) {
-            int deletedTaskID = Integer.parseInt(request.getParameter("delete"));
-            if (taskDAO.taskBelongs(deletedTaskID, userId))
+        boolean access = (targetUserName.equals(user.getName()) || "admin".equals(user.getRole()));
+        if (access) {
+            if (request.getParameter("delete") != null) {
+                int deletedTaskID = Integer.parseInt(request.getParameter("delete"));
                 taskDAO.delete(deletedTaskID);
-
-        }
-        if (request.getParameter("complete") != null) {
-            int completedTaskID = Integer.parseInt(request.getParameter("complete"));
-            if (taskDAO.taskBelongs(completedTaskID, userId)) {
+            }
+            if (request.getParameter("complete") != null) {
+                int completedTaskID = Integer.parseInt(request.getParameter("complete"));
                 Task task = taskDAO.getEntityById(completedTaskID);
                 task.setCompleted(!task.isCompleted());
-
                 taskDAO.update(task);
-            }
-        }
-        if (request.getParameter("name") != null) {
-            String name = request.getParameter("name");
-            String description = request.getParameter("description") != null ? request.getParameter("description") : "";
-            String timeStr = request.getParameter("time");
-            Date time = null;
-            try {
-                time = formatter.parse(timeStr);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            Task createdTask = new Task(name, description, time, userDAO.getUserByName(login));
-            taskDAO.create(createdTask);
-        }
-        if (request.getParameter("Logout") != null) {
-            request.setAttribute("login", null);
-            request.setAttribute("password", null);
-        }
-        //List<Task> tasks = taskDAO.getUserTasks(userDAO.getUserByName(request.getSession().getAttribute("login").toString()));
-        //request.setAttribute("tasks", tasks);
 
-        //getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
-        response.sendRedirect(request.getContextPath() + "/index.jsp");
+            }
+            if (request.getParameter("name") != null) {
+                String name = request.getParameter("name");
+                String description = request.getParameter("description") != null ? request.getParameter("description") : "";
+                String timeStr = request.getParameter("time");
+                Date time = null;
+                try {
+                    time = formatter.parse(timeStr);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                Task createdTask = new Task(name, description, time, userDAO.getUserByName(targetUserName));
+                taskDAO.create(createdTask);
+            }
+            if (request.getParameter("Logout") != null) {
+                request.setAttribute("login", null);
+                request.setAttribute("password", null);
+                return;
+            }
+        }
+        response.sendRedirect(request.getContextPath() + "/tasks/" + targetUserName);
     }
 }
