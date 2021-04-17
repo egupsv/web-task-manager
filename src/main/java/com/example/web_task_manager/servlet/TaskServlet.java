@@ -1,7 +1,10 @@
 package com.example.web_task_manager.servlet;
 
+import com.example.web_task_manager.converter.Converter;
 import com.example.web_task_manager.model.Task;
 import com.example.web_task_manager.model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -13,7 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 public class TaskServlet extends AuthServletTemplate {
-    //private static final Logger log = LoggerFactory.getLogger(TaskServlet.class);
+    private static final Logger log = LoggerFactory.getLogger(TaskServlet.class);
     private final SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm");
     private String targetUserName;
 
@@ -56,8 +59,15 @@ public class TaskServlet extends AuthServletTemplate {
             if (request.getParameter("complete") != null) {
                 int completedTaskID = Integer.parseInt(request.getParameter("complete"));
                 Task task = taskDAO.getEntityById(completedTaskID);
-                task.setCompleted(!task.isCompleted());
+                task.setCompleted(!task.getCompleted());
                 taskDAO.update(task);
+            }
+            if (request.getParameter("export") != null) {
+                log.info("export");
+                int exportedTaskID = Integer.parseInt(request.getParameter("export"));
+                Task task = taskDAO.getEntityById(exportedTaskID);
+                log.info(task.getName());
+                Converter.convertObjectToXml(task, "task.xml", response);
 
             }
             if (request.getParameter("name") != null) {

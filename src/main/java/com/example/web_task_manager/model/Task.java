@@ -1,6 +1,9 @@
 package com.example.web_task_manager.model;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -10,6 +13,8 @@ import java.util.Date;
 
 @Entity
 @Table(name = "TASKS")
+@XmlRootElement(name = "Task")
+@XmlType(propOrder = {"name", "description", "completed", "time"})
 public class Task implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -82,7 +87,7 @@ public class Task implements Serializable {
     }
 
 
-    public boolean isCompleted() {
+    public boolean getCompleted() {
         return completed;
     }
 
@@ -91,7 +96,7 @@ public class Task implements Serializable {
         return time;
     }
 
-
+    @XmlTransient
     public int getId() {
         return id;
     }
@@ -113,6 +118,7 @@ public class Task implements Serializable {
         this.time = time;
     }
 
+    @XmlTransient
     public int getUserId() {
         return user.getId();
     }
