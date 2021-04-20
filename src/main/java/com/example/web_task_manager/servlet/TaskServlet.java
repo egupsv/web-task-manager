@@ -13,7 +13,6 @@ import java.util.Date;
 import java.util.List;
 
 public class TaskServlet extends AuthServletTemplate {
-    //private static final Logger log = LoggerFactory.getLogger(TaskServlet.class);
     private final SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm");
     private String targetUserName;
 
@@ -47,7 +46,7 @@ public class TaskServlet extends AuthServletTemplate {
         if (targetUserName == null)
             targetUserName = user.getName();
 
-        boolean access = (targetUserName.equals(user.getName()) || "admin".equals(user.getRole()));
+        boolean access = (targetUserName.equals(user.getName()) || isAdmin);
         if (access) {
             if (request.getParameter("delete") != null) {
                 int deletedTaskID = Integer.parseInt(request.getParameter("delete"));
@@ -73,7 +72,7 @@ public class TaskServlet extends AuthServletTemplate {
                 Task createdTask = new Task(name, description, time, userDAO.getUserByName(targetUserName));
                 taskDAO.create(createdTask);
             }
-            if (request.getParameter("Logout") != null) {
+            if (request.getParameter("Logout") != null) { // todo: delete or replace
                 request.setAttribute("login", null);
                 request.setAttribute("password", null);
                 return;

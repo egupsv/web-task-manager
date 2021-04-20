@@ -10,16 +10,15 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Initializes Background tasks and properly  closing it when Application job is over.
+ */
 @WebListener
 public class BackgroundJobManager implements ServletContextListener {
     private ScheduledExecutorService scheduler;
-    public static boolean DB_INIT = false;
 
     @Override
     public void contextInitialized(ServletContextEvent event) {
-        System.out.println("______________________________________________________________________");
-        System.out.println("V = 12");
-        System.out.println("______________________________________________________________________");
         scheduler = Executors.newSingleThreadScheduledExecutor();
         scheduler.scheduleAtFixedRate(new NotifyWorker(), 1000, 10000, TimeUnit.MILLISECONDS);
     }

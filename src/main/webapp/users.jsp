@@ -42,6 +42,13 @@
             </tr>
         </c:forEach>
     </table>
+    <div>
+        <form id="add_form" method="post" action="${pageContext.request.contextPath}/users">
+            <input name="new_user_check" type="hidden" value="0">
+            <button class="button" onclick="">Add user</button>
+
+        </form>
+    </div>
     <div class="compose_user_field">
         <form id="edit_form" method="post" style="display: none" action="${pageContext.request.contextPath}/users">
             <div>

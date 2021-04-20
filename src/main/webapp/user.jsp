@@ -3,14 +3,7 @@
 <html>
 <head>
     <jsp:useBean id="tar_user" scope="request" type="com.example.web_task_manager.model.User"/>
-    <c:choose>
-        <c:when test="${empty tar_user.id}">
-            <title>Empty user</title>
-        </c:when>
-        <c:otherwise>
-            <title>${tar_user.name}</title>
-        </c:otherwise>
-    </c:choose>
+    <title>${tar_user.name}</title>
     <style>
         <%@include file="css/styles.css" %>
     </style>
@@ -18,18 +11,24 @@
 <body>
 <div>
     <div>
-        <c:choose>
-            <c:when test="${empty tar_user.id}">
-                <a>user is empty</a>
-            </c:when>
-            <c:otherwise>
-                <a>user_Name ="${tar_user.name}"></a>
-                <a>id = "${tar_user.id}"></a>
-                <a>user role = ${tar_user.name}"></a>
-            </c:otherwise>
-        </c:choose>
-
+        <div>
+            <p id="id_f">ID: ${tar_user.id}</p>
+        </div>
+        <div>
+            <p id="name_f">LOGIN: ${tar_user.name}</p>
+        </div>
+        <div>
+            <p id="role_f">ROLE: ${tar_user.role}</p>
+        </div>
     </div>
+    <form id="delete_user" method="post">
+        <input id="delete_input" type="hidden" name="delete" value="0"/>
+        <button id="del_user_btn"
+                type="submit"
+                class="delete_b"
+                value="1">Delete Account
+        </button>
+    </form>
 </div>
 </body>
 </html>

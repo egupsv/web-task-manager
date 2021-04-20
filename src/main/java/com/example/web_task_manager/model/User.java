@@ -1,6 +1,7 @@
 package com.example.web_task_manager.model;
 
 import com.example.web_task_manager.Properties;
+import com.example.web_task_manager.Role;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -19,7 +20,6 @@ public class User implements Serializable {
     public static final String PASSWORD_COLUMN = "ENC_PASSWORD";
     public static final String MAIL_COLUMN = "MAIL";
     public static final String ROLE_COLUMN = "ROLE";
-    public static final User DEFAULT_USER = new User();
     /**
      * user id
      */
@@ -61,7 +61,7 @@ public class User implements Serializable {
     }
 
     public User(String name, String encPassword, String mail) {
-        this(name, encPassword, mail, Properties.DEFAULT_ROLE);
+        this(name, encPassword, mail, Role.DEFAULT_ROLE.toString());
     }
 
     public User(String name, String encPassword, String mail, String role) {

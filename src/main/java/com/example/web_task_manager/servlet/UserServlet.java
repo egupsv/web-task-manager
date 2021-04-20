@@ -1,14 +1,12 @@
 package com.example.web_task_manager.servlet;
 
-import com.example.web_task_manager.dba.UserDAO;
-import com.example.web_task_manager.model.User;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class UserServlet extends AuthServletTemplate {
+    private static final String DELETE_PARAM = "delete";
 
     public UserServlet() {
 
@@ -18,16 +16,24 @@ public class UserServlet extends AuthServletTemplate {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         super.doGet(req, resp);
 
-
-        String pathInfo = req.getPathInfo();
-        String targetUser = req.getSession().getAttribute("login").toString();
-        if (pathInfo != null)
-            targetUser = pathInfo.substring(1).trim();
-        else{
-            resp.sendRedirect("http://localhost:8888/web_task_manager-1.0-SNAPSHOT/user/" + user.getName());
-        }
-        req.setAttribute("tar_user", targetUser);
+        req.setAttribute("tar_user", user);
 
         getServletContext().getRequestDispatcher("/user.jsp").forward(req, resp);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        super.doPost(req, resp);
+
+        String deleteStatusString = req.getParameter(DELETE_PARAM).trim();
+        if (deleteStatusString.length() > 0) {
+            int deleteStatus = Integer.parseInt(deleteStatusString);
+            if (deleteStatus == 1) {
+                logoutUser(req, resp);
+                userDAO.delete(user.getId());
+                return;
+            }
+        }
+        resp.sendRedirect(req.getContextPath() + "/user");
     }
 }

@@ -20,8 +20,8 @@ public class UsersServlet extends AuthServletTemplate {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         super.doGet(req, resp);
-        if (!"admin".equals(user.getRole())) {
-            resp.sendRedirect("http://localhost:8888/web_task_manager-1.0-SNAPSHOT/user/" + user.getName()); //todo:
+        if (!isAdmin) {
+            resp.sendRedirect("http://localhost:8888/web_task_manager-1.0-SNAPSHOT/user");
             return;
         }
 
@@ -31,11 +31,32 @@ public class UsersServlet extends AuthServletTemplate {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String login = req.getSession().getAttribute("login").toString();
-        boolean isAdmin = "admin".equals(new UserDAO().getUserByName(login).getRole());
-        if (!isAdmin)
-            return; //???
+        //String login = req.getSession().getAttribute("login").toString();
 
+        //boolean isAdmin = Role.ADMIN.toString().equals(user.getRole());
+        if (!isAdmin) {
+            resp.sendRedirect(req.getContextPath() + "/user");
+            return;
+        }
+
+        editParamCheck(req);
+        deleteParamCheck(req);
+
+        resp.sendRedirect(req.getContextPath() + "/users");
+    }
+
+    private void deleteParamCheck(HttpServletRequest req) {
+        String deleteParam = req.getParameter("delete");
+        int deleteId = deleteParam == null ? 0 : Integer.parseInt(deleteParam.trim());
+
+        if (deleteId > 0) {
+            User targetUser = new UserDAO().getEntityById(deleteId);
+            if (!targetUser.getName().equals(req.getSession().getAttribute("login")))
+                new UserDAO().delete(targetUser.getId());
+        }
+    }
+
+    public void editParamCheck(HttpServletRequest req) {
         String editIdParam = req.getParameter("submit_edit_b");
         int editableId = editIdParam == null ? 0 : Integer.parseInt(editIdParam.trim());
         if (editableId > 0) {
@@ -63,19 +84,6 @@ public class UsersServlet extends AuthServletTemplate {
 
             new UserDAO().update(targetUser);
         }
-        String deleteParam = req.getParameter("delete");
-        int deleteId = deleteParam == null ? 0 : Integer.parseInt(deleteParam.trim());
-
-        if (deleteId > 0) {
-            User targetUser = new UserDAO().getEntityById(deleteId);
-            if (!targetUser.getName().equals(req.getSession().getAttribute("login")))
-                new UserDAO().delete(targetUser.getId());
-        }
-        resp.sendRedirect(req.getContextPath() + "/users");
-    }
-
-    public void editCheck() {
-
     }
 
     public void setUsersParameter(@NotNull HttpServletRequest req) {
