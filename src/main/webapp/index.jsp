@@ -24,6 +24,7 @@
                 <th>state</th>
                 <th>delete</th>
                 <th>complete</th>
+                <th>export</th>
             </tr>
             <jsp:useBean id="Utils" class="com.example.web_task_manager.Utils"/>
             <jsp:useBean id="tasks" scope="request" type="java.util.List"/>
@@ -39,8 +40,14 @@
                         </button>
                     </td>
                     <td>
-                        <input type="submit" name="complete" style="color:green; width:40px; height:25px"
-                               value="${task.getId()}"/>&#10003
+                        <button type="submit" name="complete" style="color:green; width:40px; height:25px"
+                               value="${task.getId()}">&#10003
+                        </button>
+                    </td>
+                    <td>
+                        <button type="submit" name="export" style="width:80px; height:25px"
+                               value="${task.getId()}"><a href="${pageContext.request.contextPath}/task.xml" download>export</a>
+                        </button>
                     </td>
                 </tr>
             </c:forEach>
@@ -79,7 +86,6 @@
 
 <form action="${pageContext.request.contextPath}/tasks">
     <button type="submit" name="Logout" value="Logout">Log Out</button>
-
 </form>
 </body>
 </html>

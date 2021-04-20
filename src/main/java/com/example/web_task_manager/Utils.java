@@ -17,7 +17,7 @@ public class Utils {
     }
 
     public static String getState(Task task) {
-        return task.isCompleted() ? "complete" : "incomplete";
+        return task.getCompleted() ? "complete" : "incomplete";
     }
 
     public static String getCurrentDateString() {
