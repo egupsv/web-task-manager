@@ -43,14 +43,12 @@
         </c:forEach>
     </table>
     <div>
-        <form id="add_form" method="post" action="${pageContext.request.contextPath}/users">
-            <input name="new_user_check" type="hidden" value="0">
-            <button class="button" onclick="">Add user</button>
 
-        </form>
+        <button class="button" onclick="showUserAddFields()">Add user</button>
     </div>
     <div class="compose_user_field">
         <form id="edit_form" method="post" style="display: none" action="${pageContext.request.contextPath}/users">
+            <input id="new_user_check" name="new_user_check" type="hidden" value="0">
             <div>
                 <label for="target_id">target user id:</label>
                 <a id="target_id" style="text-align: center">0</a>

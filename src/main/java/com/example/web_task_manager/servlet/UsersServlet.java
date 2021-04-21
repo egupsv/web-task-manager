@@ -16,6 +16,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 public class UsersServlet extends AuthServletTemplate {
+    private static final String NEW_USER_PARAM = "new_user_check";
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -38,8 +39,12 @@ public class UsersServlet extends AuthServletTemplate {
             resp.sendRedirect(req.getContextPath() + "/user");
             return;
         }
-
-        editParamCheck(req);
+        System.out.println("POST EDIT PARAM_CHECK");
+        if (!editParamCheck(req)) {
+            System.out.println("POST CREATE USER CHECK");
+            createUser(req);
+        }
+        System.out.println("POST DELETE PARAM_CHECK");
         deleteParamCheck(req);
 
         resp.sendRedirect(req.getContextPath() + "/users");
@@ -56,7 +61,7 @@ public class UsersServlet extends AuthServletTemplate {
         }
     }
 
-    public void editParamCheck(HttpServletRequest req) {
+    public boolean editParamCheck(HttpServletRequest req) {
         String editIdParam = req.getParameter("submit_edit_b");
         int editableId = editIdParam == null ? 0 : Integer.parseInt(editIdParam.trim());
         if (editableId > 0) {
@@ -82,7 +87,38 @@ public class UsersServlet extends AuthServletTemplate {
             if (Properties.REGEX_MAIL_PATTERN.matcher(newMail).find())
                 targetUser.setMail(newMail);
 
-            new UserDAO().update(targetUser);
+            userDAO.update(targetUser);
+            return true;
+        }
+        return false;
+    }
+
+    public void createUser(HttpServletRequest req) {
+        String addParamString = req.getParameter(NEW_USER_PARAM);
+        System.out.println("PARAM STRING ADD: " + addParamString);
+        int addParam = addParamString == null ? 0 : Integer.parseInt(addParamString.trim());
+        System.out.println("NEW USER PRE-START: " + addParam);
+        if (addParam == 1) {
+            System.out.println("NEW USER START");
+            String newName = req.getParameter("name").trim();
+            String newMail = req.getParameter("mail").trim();
+            String newPassword = req.getParameter("password").trim();
+            String newRole = req.getParameter("role").trim();
+            User newUser;
+
+            if (!("".equals(newName) && "".equals(newPassword) && "".equals(newMail))) {
+                try {
+                    System.out.println("__________CREATING USER________");
+                    newUser = new User(newName, new Encryptor().encrypt(newPassword), newMail);
+                    if (!"".equals(newRole))
+                        newUser.setRole(newRole);
+                    userDAO.create(newUser);
+                    System.out.println("__________USER CREATED________");
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+
         }
     }
 

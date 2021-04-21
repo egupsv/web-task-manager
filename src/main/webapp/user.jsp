@@ -22,10 +22,9 @@
         </div>
     </div>
     <form id="delete_user" method="post">
-        <input id="delete_input" type="hidden" name="delete" value="0"/>
+        <input id="delete" type="hidden" name="delete" value="1"/>
         <button id="del_user_btn"
                 type="submit"
-                class="delete_b"
                 value="1">Delete Account
         </button>
     </form>

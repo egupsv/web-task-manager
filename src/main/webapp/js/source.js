@@ -3,9 +3,23 @@ function showEditFields(id) {
     if (visibility === 0) {
         document.getElementById("edit_form").style.display = "table";
     }
+    document.getElementById('new_user_check').value = 0;
     document.getElementById("target_id").textContent = "User: " + id;
-    document.getElementById("delete_b").value = id
+    document.getElementById("delete_b").value = id;
+    document.getElementById("delete_b").style.display = "inline-block";
     document.getElementById("submit_edit_b").value = id;
+}
+
+function showUserAddFields() {
+    let visibility = document.getElementById("edit_form").style.display === "none" ? 0 : 1;
+    if (visibility === 0) {
+        document.getElementById("edit_form").style.display = "table";
+    }
+    document.getElementById("target_id").textContent = "Creating new User.";
+    document.getElementById("delete_b").style.display = "none";
+    document.getElementById("delete_b").value = 0;
+    document.getElementById("submit_edit_b").value = 0;
+    document.getElementById('new_user_check').value = 1;
 }
 
 function hideEditFields() {
@@ -13,6 +27,8 @@ function hideEditFields() {
     if (visibility === 1) {
         document.getElementById("edit_form").style.display = "none";
     }
+    document.getElementById('new_user_check').value = 0;
+    document.getElementById("delete_b").value = 0;
 }
 
 function showAddFields() {
