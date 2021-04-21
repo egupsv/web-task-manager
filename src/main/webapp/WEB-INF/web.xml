@@ -64,14 +64,4 @@
         <url-pattern>/users</url-pattern>
     </servlet-mapping>
 
-    <servlet>
-        <servlet-name>UserServlet</servlet-name>
-        <servlet-class>com.example.web_task_manager.servlet.UserServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>UserServlet</servlet-name>
-        <url-pattern>/user</url-pattern>
-    </servlet-mapping>
-
 </web-app>
