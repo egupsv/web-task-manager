@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 public class LoginFilter implements Filter {
     private static final Logger log = LoggerFactory.getLogger(LoginFilter.class);
+    private static final CookieController cookieController = new CookieController();
 
     @Override
     public void init(FilterConfig config) {
@@ -46,15 +47,15 @@ public class LoginFilter implements Filter {
 //        log.info("loggedIn " + (loggedIn ? "true" : "false"));
 //        log.info("reqURI " + reqURI);
 
-        if (loggedIn || (loginRequest && !isSmthWrong) || (signupRequest && !isSmthWrong)) {
 
+        if (loggedIn  || (loginRequest && !isSmthWrong) || (signupRequest && !isSmthWrong)) {
 //            log.info("doFilter");
             chain.doFilter(req, res);
         } else {
             System.out.println("LOGIN FILTER");
-            String userName = new CookieController().getCookieValue(request, CookieName.LOGIN);
+            String userName = cookieController.getCookieValue(request, CookieName.LOGIN);
             System.out.println("username: " + userName);
-            String userPassword = new CookieController().getCookieValue(request, CookieName.PASSWORD);
+            String userPassword = cookieController.getCookieValue(request, CookieName.PASSWORD);
             System.out.println("userpassword: " + userPassword);
             User cookieUser = new UserDAO().getUserByName(userName);
             if (cookieUser != null && userPassword.equals(cookieUser.getEncPassword())) {
@@ -64,7 +65,8 @@ public class LoginFilter implements Filter {
                 request.getSession().setAttribute("attempt", null);
                 chain.doFilter(request, response);
             } else {
-
+                cookieController.deleteCookie(response, CookieName.LOGIN);
+                cookieController.deleteCookie(response, CookieName.PASSWORD);
                 log.info("redirect");
                 String page = reqURI.contains("signup") ? "signup.jsp" : "login.jsp";
                 log.info("to " + page);

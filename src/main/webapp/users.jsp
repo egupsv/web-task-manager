@@ -13,7 +13,7 @@
     </script>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color: #5b1375 !important;">
+<nav class="navbar navbar-expand-lg navbar-light bg-light nav-h" style="background-color: #5b1375 !important;">
     <div class="container header">
         Web Task Manager
         <div>

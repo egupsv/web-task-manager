@@ -1,5 +1,6 @@
 package com.example.web_task_manager.servlet;
 
+import com.example.web_task_manager.CookieName;
 import com.example.web_task_manager.users.Encryptor;
 
 import javax.servlet.ServletException;
@@ -30,7 +31,7 @@ public class UserServlet extends AuthServletTemplate {
 
         if (checkDeleteStatus(req, resp))
             return;
-        checkEditPassParam(req);
+        checkEditPassParam(req, resp);
 
         resp.sendRedirect(req.getContextPath() + "/user");
     }
@@ -49,7 +50,7 @@ public class UserServlet extends AuthServletTemplate {
         return false;
     }
 
-    private void checkEditPassParam(HttpServletRequest req) {
+    private void checkEditPassParam(HttpServletRequest req, HttpServletResponse resp) {
         String chgPassParam = req.getParameter(CHANGE_PASS_PARAM);
         String newPassString = chgPassParam == null ? "" : chgPassParam.trim();
         if (newPassString.length() > 0) { //need condition
@@ -57,6 +58,7 @@ public class UserServlet extends AuthServletTemplate {
                 String newPass = new Encryptor().encrypt(newPassString);
                 user.setEncPassword(newPass);
                 userDAO.update(user);
+                cookieController.createCookie(resp, CookieName.PASSWORD, newPass);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

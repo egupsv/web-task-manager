@@ -56,7 +56,6 @@ caption {
 }
 
 .auth-center {
-    margin-top: 33px;
     max-width: 400px !important;
     max-height: 700px !important;
 }
@@ -122,4 +121,12 @@ input[type=text], input[type=password], input[type=email] {
 
 .header {
     height: 25px;
+    font-weight: bold;
+}
+
+.nav-button {
+    border-radius: 0;
+}
+.nav-h{
+    margin-bottom: 2rem;
 }

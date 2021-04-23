@@ -22,17 +22,17 @@
 </head>
 
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color: #5b1375 !important;">
+<nav class="navbar navbar-expand-lg navbar-light bg-light nav-h" style="background-color: #5b1375 !important;">
     <div class="container header">
         Web Task Manager
-        <a class="btn btn-close-white" href="${pageContext.request.contextPath}/user">Go to Profile</a>
+        <a class="btn btn-close-white nav-button" href="${pageContext.request.contextPath}/user">Go to Profile</a>
         <div>
             <c:choose>
                 <c:when test="${sessionScope.login != null}">
 
                     <form action="${pageContext.request.contextPath}/tasks" style="margin-bottom:0 !important;">
                             ${sessionScope.login}
-                        <button class="btn btn-outline-danger" type="submit" name="Logout" value="Logout">Log Out
+                        <button class="btn btn-outline-danger nav-button" type="submit" name="Logout" value="Logout">Log Out
                         </button>
                     </form>
                 </c:when>

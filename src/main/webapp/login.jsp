@@ -13,7 +13,7 @@
     </script>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color: #5b1375 !important;">
+<nav class="navbar navbar-expand-lg navbar-light bg-light nav-h" style="background-color: #5b1375 !important;">
     <div class="container header">
         Web Task Manager
         <div>
@@ -22,7 +22,7 @@
 
                     <form action="${pageContext.request.contextPath}/tasks" style="margin-bottom:0 !important;">
                             ${sessionScope.login}
-                        <button class="btn btn-outline-danger" type="submit" name="Logout" value="Logout">Log Out
+                        <button class="btn btn-outline-danger nav-button" type="submit" name="Logout" value="Logout">Log Out
                         </button>
                     </form>
                 </c:when>
