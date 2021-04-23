@@ -1,7 +1,7 @@
 package com.example.web_task_manager.model;
 
 import com.example.web_task_manager.Properties;
-import com.example.web_task_manager.Role;
+import com.example.web_task_manager.users.Role;
 
 import javax.persistence.*;
 import java.io.Serializable;

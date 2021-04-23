@@ -1,20 +1,18 @@
 package com.example.web_task_manager.servlet;
 
-import com.example.web_task_manager.Role;
+import com.example.web_task_manager.users.Role;
 import com.example.web_task_manager.dba.TaskDAO;
 import com.example.web_task_manager.dba.UserDAO;
 import com.example.web_task_manager.model.User;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-public class AuthServletTemplate extends HttpServlet {
+public class AuthServletTemplate extends ServletTemplate {
     protected final TaskDAO taskDAO = new TaskDAO();
-    protected final UserDAO userDAO = new UserDAO();
     protected User user;
 
 

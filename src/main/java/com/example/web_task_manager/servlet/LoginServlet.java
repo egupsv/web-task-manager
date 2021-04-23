@@ -1,6 +1,7 @@
 package com.example.web_task_manager.servlet;
 
-import com.example.web_task_manager.dba.UserDAO;
+import com.example.web_task_manager.CookieName;
+import com.example.web_task_manager.controller.CookieController;
 import com.example.web_task_manager.model.User;
 import com.example.web_task_manager.users.Encryptor;
 import org.slf4j.Logger;
@@ -8,15 +9,15 @@ import org.slf4j.LoggerFactory;
 
 import javax.crypto.NoSuchPaddingException;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
 
-public class LoginServlet extends HttpServlet {
+public class LoginServlet extends ServletTemplate {
     private static final Logger log = LoggerFactory.getLogger(LoginServlet.class);
+
 
     @Override
     public void init() throws ServletException {
@@ -25,6 +26,7 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
         getServletContext().getRequestDispatcher("/login.jsp").forward(req, resp);
     }
 
@@ -40,16 +42,18 @@ public class LoginServlet extends HttpServlet {
         }
         log.info(encPassword);
         User user = null;
-        User targetUser = new UserDAO().getUserByName(login);
+        User targetUser = userDAO.getUserByName(login);
         if (targetUser != null &&
-                encPassword.equals(targetUser.getEncPassword())) user = targetUser;
+                encPassword.equals(targetUser.getEncPassword()))
+            user = targetUser;
+
         if (user != null) {
+            cookieController.createCookie(response, CookieName.LOGIN, login);
+            cookieController.createCookie(response, CookieName.PASSWORD, encPassword);
+            logInUser(request, response, login);
+            //response.sendRedirect(request.getContextPath() + "/tasks/" + login);
+
             log.info("User has logged in");
-            request.getSession().setAttribute("login", login);
-            TryChecker.setPropertyOfLoginDiv("none");
-            request.getSession().setAttribute("attempt", null);
-            response.sendRedirect(request.getContextPath() + "/tasks/" + login);
-            //response.sendRedirect(request.getContextPath() + "/user/" + login);
         } else {
             log.info("login or password is incorrect");
             request.getSession().setAttribute("attempt", "wrong");
@@ -57,5 +61,12 @@ public class LoginServlet extends HttpServlet {
             TryChecker.setPropertyOfLoginDiv("block");
 
         }
+    }
+
+    private void logInUser(HttpServletRequest request, HttpServletResponse response, String login) throws IOException {
+        request.getSession().setAttribute("login", login);
+        TryChecker.setPropertyOfLoginDiv("none");
+        request.getSession().setAttribute("attempt", null);
+        response.sendRedirect(request.getContextPath() + "/tasks/" + login);
     }
 }

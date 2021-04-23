@@ -1,4 +1,4 @@
-package com.example.web_task_manager;
+package com.example.web_task_manager.users;
 
 public enum Role {
     ADMIN(0),

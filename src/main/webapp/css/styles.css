@@ -1,6 +1,6 @@
 :root {
     --table_border: 2px solid black;
-    --table_data_border: 1px solid black;
+    --table_data_border: 1px solid gray;
     --button_bg_color: #7b6dbb
 }
 
@@ -25,17 +25,13 @@ h1 {
     cursor: pointer;
 }
 
-table {
-    width: 800px;
-    border: var(--table_border);
-    margin-left: auto;
-    margin-right: auto;
+.table-data {
+    color: var(--bs-yellow);
     text-align: center;
-    border-collapse: collapse;
 }
 
 th, td {
-    border: var(--table_data_border)
+    border: var(--table_data_border);
 }
 
 caption {
@@ -54,13 +50,24 @@ caption {
 .center {
     margin: 0;
     position: absolute;
-    top: 30%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    top: 10%;
+    left: 40%;
+
+}
+
+.auth-center {
+    margin-top: 33px;
+    max-width: 400px !important;
+    max-height: 700px !important;
+}
+
+.auth-title {
+    margin-bottom: 25px;
 }
 
 body {
-    background: linear-gradient(45deg, #FF1F0436 12%, #FFFC9596, #FF1F0436 88%) fixed;
+    background: var(--bs-dark);
+    color: var(--bs-white);
 }
 
 .auth_button {
@@ -113,9 +120,6 @@ input[type=text], input[type=password], input[type=email] {
     color: #f44336;
 }
 
-header {
-    display: block;
-    height: 405px;
-    background: #4e4572;
-    position: fixed;
+.header {
+    height: 25px;
 }

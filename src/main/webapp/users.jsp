@@ -3,6 +3,8 @@
 <html>
 <head>
     <title>Users list</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
     <style>
         <%@include file="css/styles.css"%>
     </style>
@@ -11,40 +13,62 @@
     </script>
 </head>
 <body>
-<div>
-    <table>
-        <caption class="TableHeader">Users</caption>
+<nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color: #5b1375 !important;">
+    <div class="container header">
+        Web Task Manager
+        <div>
+            <c:choose>
+                <c:when test="${sessionScope.login != null}">
+
+                    <form action="${pageContext.request.contextPath}/tasks" style="margin-bottom:0 !important;">
+                            ${sessionScope.login}
+                        <button class="btn btn-outline-danger" type="submit" name="Logout" value="Logout">Log Out
+                        </button>
+                    </form>
+                </c:when>
+
+                <c:otherwise>
+                    please log in
+                </c:otherwise>
+            </c:choose>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <h2 class="h1 fw-bold">Users</h2>
+    <table class="table table-hover table-dark table-data">
+        <thead class="thead-dark">
         <tr>
-            <th>id</th>
-            <th>Role</th>
-            <th>Name</th>
-            <th>Mail</th>
-            <th>Edit</th>
-            <th>Tasks</th>
+            <th scope="col">id</th>
+            <th scope="col">Role</th>
+            <th scope="col">Name</th>
+            <th scope="col">Mail</th>
+            <th scope="col">Edit</th>
+            <th scope="col">Tasks</th>
         </tr>
+        </thead>
         <jsp:useBean id="users" scope="request" type="java.util.List"/>
         <c:forEach var="user" items="${users}">
             <tr>
-                <td><c:out value="${user.id}"/></td>
+                <th scope="row"><c:out value="${user.id}"/></th>
                 <td><c:out value="${user.role}"/></td>
                 <td><c:out value="${user.name}"/></td>
                 <td><c:out value="${user.mail}"/></td>
                 <td>
-                    <button value="Edit" onclick="showEditFields(${user.id})">
-                        Edit ${user.id}
+                    <button class="btn btn-warning" value="Edit" onclick="showEditFields(${user.id})">
+                        Edit
                     </button>
                 </td>
                 <td>
-                    <form action="${pageContext.request.contextPath}/tasks/${user.name}">
-                        <input type="submit" value="Go to Tasks"/>
-                    </form>
+                    <a href="${pageContext.request.contextPath}/tasks/${user.name}" class="btn btn-primary"> Go to
+                        Tasks</a>
                 </td>
             </tr>
         </c:forEach>
     </table>
     <div>
 
-        <button class="button" onclick="showUserAddFields()">Add user</button>
+        <button class="btn btn-primary" onclick="showUserAddFields()">Add user</button>
     </div>
     <div class="compose_user_field">
         <form id="edit_form" method="post" style="display: none" action="${pageContext.request.contextPath}/users">

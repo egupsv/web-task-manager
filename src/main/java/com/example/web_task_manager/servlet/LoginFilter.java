@@ -6,6 +6,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+import com.example.web_task_manager.CookieName;
+import com.example.web_task_manager.controller.CookieController;
+import com.example.web_task_manager.dba.UserDAO;
+import com.example.web_task_manager.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,16 +45,33 @@ public class LoginFilter implements Filter {
 //        log.info("signupRequest " + (signupRequest ? "true" : "false"));
 //        log.info("loggedIn " + (loggedIn ? "true" : "false"));
 //        log.info("reqURI " + reqURI);
+
         if (loggedIn || (loginRequest && !isSmthWrong) || (signupRequest && !isSmthWrong)) {
 
 //            log.info("doFilter");
             chain.doFilter(req, res);
         } else {
-            log.info("redirect");
-            String page = reqURI.contains("signup") ? "signup.jsp" : "login.jsp";
-            log.info("to " + page);
-            if (session != null) session.setAttribute("attempt", null);
-            response.sendRedirect(page);
+            System.out.println("LOGIN FILTER");
+            String userName = new CookieController().getCookieValue(request, CookieName.LOGIN);
+            System.out.println("username: " + userName);
+            String userPassword = new CookieController().getCookieValue(request, CookieName.PASSWORD);
+            System.out.println("userpassword: " + userPassword);
+            User cookieUser = new UserDAO().getUserByName(userName);
+            if (cookieUser != null && userPassword.equals(cookieUser.getEncPassword())) {
+                System.out.println("EQUALS and etc");
+                request.getSession().setAttribute("login", cookieUser.getName()); //dupl
+                TryChecker.setPropertyOfLoginDiv("none");
+                request.getSession().setAttribute("attempt", null);
+                chain.doFilter(request, response);
+            } else {
+
+                log.info("redirect");
+                String page = reqURI.contains("signup") ? "signup.jsp" : "login.jsp";
+                log.info("to " + page);
+                if (session != null) session.setAttribute("attempt", null);
+                response.sendRedirect(page);
+            }
         }
     }
+
 }

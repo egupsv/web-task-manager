@@ -1,6 +1,8 @@
 package com.example.web_task_manager.servlet;
 
+import com.example.web_task_manager.CookieName;
 import com.example.web_task_manager.Properties;
+import com.example.web_task_manager.controller.CookieController;
 import com.example.web_task_manager.dba.UserDAO;
 import com.example.web_task_manager.model.User;
 import com.example.web_task_manager.users.Encryptor;
@@ -9,15 +11,13 @@ import org.slf4j.LoggerFactory;
 
 import javax.crypto.NoSuchPaddingException;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
-public class SignupServlet extends HttpServlet {
+public class SignupServlet extends ServletTemplate {
     private static final Logger log = LoggerFactory.getLogger(SignupServlet.class);
-    private final UserDAO userDAO = new UserDAO();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -47,7 +47,13 @@ public class SignupServlet extends HttpServlet {
             request.getSession().setAttribute("attempt", null);
             TryChecker.setPropertyOfSignupDiv("none");
             request.getSession().setAttribute("login", login);
+
+
+            cookieController.createCookie(response, CookieName.LOGIN, login);
+            cookieController.createCookie(response, CookieName.PASSWORD, encPassword);
             response.sendRedirect(request.getContextPath() + "/tasks/" + user.getName());
+
+
         } else {
             log.info("this login + " + login + " is incorrect");
             log.info(" or this mail + " + mail + " is incorrect");

@@ -32,19 +32,14 @@ public class UsersServlet extends AuthServletTemplate {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        //String login = req.getSession().getAttribute("login").toString();
-
-        //boolean isAdmin = Role.ADMIN.toString().equals(user.getRole());
         if (!isAdmin) {
             resp.sendRedirect(req.getContextPath() + "/user");
             return;
         }
-        System.out.println("POST EDIT PARAM_CHECK");
         if (!editParamCheck(req)) {
             System.out.println("POST CREATE USER CHECK");
             createUser(req);
         }
-        System.out.println("POST DELETE PARAM_CHECK");
         deleteParamCheck(req);
 
         resp.sendRedirect(req.getContextPath() + "/users");
