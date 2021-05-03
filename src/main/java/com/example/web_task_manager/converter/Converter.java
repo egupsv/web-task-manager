@@ -11,25 +11,46 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Converter {
     public static void convertObjectToXml(Task task, String fileName, HttpServletResponse response) {
-        try {
+        try (ServletOutputStream sos = response.getOutputStream()) {
             File file = new File(fileName);
             JAXBContext context = JAXBContext.newInstance(Task.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
             marshaller.marshal(task, file);
-            ServletOutputStream sos = response.getOutputStream();
             response.setContentLength((int) file.length());
             FileInputStream fileInputStream = new FileInputStream(file);
-            BufferedInputStream bis = new BufferedInputStream(fileInputStream);
-            int readBytes = 0;
-            while ((readBytes = bis.read()) != -1)
-                sos.write(readBytes);
-            sos.flush();
-            sos.close();
-            bis.close();
+            try(BufferedInputStream bis = new BufferedInputStream(fileInputStream)) {
+                int readBytes = 0;
+                while ((readBytes = bis.read()) != -1)
+                    sos.write(readBytes);
+                sos.flush();
+            }
+        } catch (JAXBException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void convertObjectToXml(ArrayList<Task> tasks, String fileName, HttpServletResponse response) {
+        try (ServletOutputStream sos = response.getOutputStream()) {
+            File file = new File(fileName);
+            TasksForXml tasksForXml = new TasksForXml(tasks);
+            JAXBContext context = JAXBContext.newInstance(Task.class, TasksForXml.class);
+            Marshaller marshaller = context.createMarshaller();
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+            marshaller.marshal(tasksForXml, file);
+            response.setContentLength((int) file.length());
+            FileInputStream fileInputStream = new FileInputStream(file);
+            try(BufferedInputStream bis = new BufferedInputStream(fileInputStream)) {
+                int readBytes = 0;
+                while ((readBytes = bis.read()) != -1)
+                    sos.write(readBytes);
+                sos.flush();
+            }
         } catch (JAXBException | IOException e) {
             e.printStackTrace();
         }

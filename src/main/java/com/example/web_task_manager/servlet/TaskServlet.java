@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -80,11 +81,22 @@ public class TaskServlet extends AuthServletTemplate {
             }
             if (request.getParameter(EXPORT_PARAM) != null) {
                 log.info("export");
-                int exportedTaskID = Integer.parseInt(request.getParameter(EXPORT_PARAM));
-                Task task = taskDAO.getEntityById(exportedTaskID);
-                log.info(task.getName());
-                Converter.convertObjectToXml(task, "task.xml", response);
-
+                String parameter = request.getParameter(EXPORT_PARAM);
+                String fileName = "tasks.xml";
+                if(parameter.equals("all")) {
+                    ArrayList<Task> tasks = (ArrayList<Task>) taskDAO.getUserTasks(user);
+                    response.setHeader("Content-disposition", "attachment; filename=\"" + fileName + "\"");
+                    response.setContentType("text/xml; name=\"fileName\"");
+                    Converter.convertObjectToXml(tasks, fileName, response);
+                } else {
+                    int exportedTaskID = Integer.parseInt(parameter);
+                    Task task = taskDAO.getEntityById(exportedTaskID);
+                    //log.info(task.getName());
+                    fileName = "task" + task.getId() + ".xml";
+                    response.setHeader("Content-disposition", "attachment; filename=\"" + fileName + "\"");
+                    response.setContentType("text/xml; name=\"fileName\"");
+                    Converter.convertObjectToXml(task, fileName, response);
+                }
             }
             if (request.getParameter(NAME_PARAM) != null) {
                 String name = request.getParameter(NAME_PARAM);

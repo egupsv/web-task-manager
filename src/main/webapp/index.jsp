@@ -12,7 +12,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.min.js"
             integrity="sha384-j0CNLUeiqtyaRmlzUHCPZ+Gy5fQu0dQ6eZ/xAww941Ai1SxSY+0EQqNXNE6DZiVc"
             crossorigin="anonymous"></script>
-
     <style>
         <%@include file="css/styles.css"%>
     </style>
@@ -83,7 +82,7 @@
                     </td>
                     <td>
                         <button class="btn btn-secondary" type="submit" name="export"
-                                value="${task.getId()}"><a href="${pageContext.request.contextPath}/task.xml" download>export</a>
+                                value="${task.getId()}" onclick="window.location.href='web_task_manager-1.0-SNAPSHOT/task.xml'">export
                         </button>
                     </td>
                 </tr>
@@ -91,6 +90,7 @@
             </tbody>
         </table>
         <input id="add_button" class="btn btn-primary" type="button" onclick="showAddFields()" value="Add task"/>
+        <button id="export_button" class="btn btn-primary" type="submit" name="export" value="all">Export all</button>
     </form>
     <div>
         <form id="add_form" method="post" style="display: none"
