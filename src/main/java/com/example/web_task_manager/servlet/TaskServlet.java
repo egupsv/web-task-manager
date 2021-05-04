@@ -84,7 +84,8 @@ public class TaskServlet extends AuthServletTemplate {
                 String parameter = request.getParameter(EXPORT_PARAM);
                 String fileName = "tasks.xml";
                 if(parameter.equals("all")) {
-                    ArrayList<Task> tasks = (ArrayList<Task>) taskDAO.getUserTasks(user);
+                    List<Task> tasks = taskDAO.getUserTasks(user);
+                    log.info("tasks: {}", tasks);
                     response.setHeader("Content-disposition", "attachment; filename=\"" + fileName + "\"");
                     response.setContentType("text/xml; name=\"fileName\"");
                     Converter.convertObjectToXml(tasks, fileName, response);

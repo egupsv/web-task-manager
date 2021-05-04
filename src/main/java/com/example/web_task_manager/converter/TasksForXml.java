@@ -10,18 +10,19 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-@XmlType(name = "tasks")
-@XmlRootElement
+@XmlType
+@XmlRootElement(name = "tasks")
 public class TasksForXml implements Serializable {
 
     @XmlElement(name="task")
-    private final ArrayList<Task> tasks;
+    private List<Task> tasks;
 
-    public TasksForXml(ArrayList<Task> tasks) {
+    public TasksForXml() {}
+    public TasksForXml(List<Task> tasks) {
         this.tasks = tasks;
     }
 
-    public ArrayList<Task> getTasks() {
+    public List<Task> getTasks() {
         return tasks;
     }
 }

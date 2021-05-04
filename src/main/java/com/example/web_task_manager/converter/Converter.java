@@ -35,7 +35,7 @@ public class Converter {
         }
     }
 
-    public static void convertObjectToXml(ArrayList<Task> tasks, String fileName, HttpServletResponse response) {
+    public static void convertObjectToXml(List<Task> tasks, String fileName, HttpServletResponse response) {
         try (ServletOutputStream sos = response.getOutputStream()) {
             File file = new File(fileName);
             TasksForXml tasksForXml = new TasksForXml(tasks);
