@@ -8,6 +8,7 @@ import com.example.web_task_manager.users.Role;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,6 +30,9 @@ public class TaskServlet extends AuthServletTemplate {
     private static final String TIME_PARAM = "time";
     private static final String LOGOUT_PARAM = "Logout";
     private String targetUserName;
+
+    @EJB
+    private Converter ejb;
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -83,21 +87,19 @@ public class TaskServlet extends AuthServletTemplate {
                 log.info("export");
                 String parameter = request.getParameter(EXPORT_PARAM);
                 String fileName = "tasks.xml";
+                List<Task> tasks = new ArrayList<Task>();
                 if(parameter.equals("all")) {
-                    List<Task> tasks = taskDAO.getUserTasks(user);
+                    tasks = taskDAO.getUserTasks(user);
                     log.info("tasks: {}", tasks);
-                    response.setHeader("Content-disposition", "attachment; filename=\"" + fileName + "\"");
-                    response.setContentType("text/xml; name=\"fileName\"");
-                    Converter.convertObjectToXml(tasks, fileName, response);
                 } else {
                     int exportedTaskID = Integer.parseInt(parameter);
                     Task task = taskDAO.getEntityById(exportedTaskID);
-                    //log.info(task.getName());
+                    tasks.add(task);
                     fileName = "task" + task.getId() + ".xml";
-                    response.setHeader("Content-disposition", "attachment; filename=\"" + fileName + "\"");
-                    response.setContentType("text/xml; name=\"fileName\"");
-                    Converter.convertObjectToXml(task, fileName, response);
                 }
+                response.setHeader("Content-disposition", "attachment; filename=\"" + fileName + "\"");
+                response.setContentType("text/xml; name=\"fileName\"");
+                ejb.convertObjectToXml(tasks, fileName, response);
             }
             if (request.getParameter(NAME_PARAM) != null) {
                 String name = request.getParameter(NAME_PARAM);
