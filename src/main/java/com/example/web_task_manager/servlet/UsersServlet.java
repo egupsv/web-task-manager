@@ -1,23 +1,34 @@
 package com.example.web_task_manager.servlet;
 
 import com.example.web_task_manager.Properties;
+import com.example.web_task_manager.converter.Converter;
 import com.example.web_task_manager.dba.UserDAO;
+import com.example.web_task_manager.model.Task;
 import com.example.web_task_manager.model.User;
 import com.example.web_task_manager.servlet.template.AuthServletTemplate;
 import com.example.web_task_manager.users.Encryptor;
 import com.sun.istack.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.crypto.NoSuchPaddingException;
+import javax.ejb.EJB;
 import javax.servlet.ServletException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UsersServlet extends AuthServletTemplate {
     private static final String NEW_USER_PARAM = "new_user_check";
+    private static final String EXPORT_PARAM = "export";
+    private static final Logger log = LoggerFactory.getLogger(UsersServlet.class);
+
+    @EJB
+    private Converter ejb;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -42,7 +53,23 @@ public class UsersServlet extends AuthServletTemplate {
             createUser(req);
         }
         deleteParamCheck(req);
+        if (req.getParameter(EXPORT_PARAM) != null) {
 
+            String parameter = req.getParameter(EXPORT_PARAM);
+            String fileName = "users.xml";
+            List<User> users = new ArrayList<>();
+            if(parameter.equals("all")) {
+                users = userDAO.getAll();
+            } else {
+                int exportedUserID = Integer.parseInt(parameter);
+                User user = userDAO.getEntityById(exportedUserID);
+                users.add(user);
+                fileName = "user" + user.getId() + ".xml";
+            }
+            resp.setHeader("Content-disposition", "attachment; filename=\"" + fileName + "\"");
+            resp.setContentType("text/xml; name=\"fileName\"");
+            ejb.convertObjectToXml(users, null, fileName, resp);
+        }
         resp.sendRedirect(req.getContextPath() + "/users");
     }
 

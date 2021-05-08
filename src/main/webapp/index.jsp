@@ -112,7 +112,7 @@
                     </td>
                     <td>
                         <button class="btn btn-secondary" type="submit" name="export"
-                                value="${task.getId()}" onclick="window.location.href='web_task_manager-1.0-SNAPSHOT/task.xml'">export
+                                value="${task.getId()}">export
                         </button>
                     </td>
                 </tr>

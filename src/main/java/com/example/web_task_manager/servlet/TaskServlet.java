@@ -1,6 +1,5 @@
 package com.example.web_task_manager.servlet;
 
-import com.example.web_task_manager.CookieName;
 import com.example.web_task_manager.converter.Converter;
 import com.example.web_task_manager.model.Task;
 import com.example.web_task_manager.model.User;
@@ -90,19 +89,18 @@ public class TaskServlet extends AuthServletTemplate {
                 log.info("export");
                 String parameter = request.getParameter(EXPORT_PARAM);
                 String fileName = "tasks.xml";
-                List<Task> tasks = new ArrayList<>();
-                if(parameter.equals("all")) {
-                    tasks = taskDAO.getUserTasks(user);
-                    log.info("tasks: {}", tasks);
-                } else {
-                    int exportedTaskID = Integer.parseInt(parameter);
-                    Task task = taskDAO.getEntityById(exportedTaskID);
-                    tasks.add(task);
-                    fileName = "task" + task.getId() + ".xml";
+                Task exportedTask = null;
+                List<User> users = new ArrayList<>();
+                users.add(user);
+                int exportedTaskID = 0;
+                if(!parameter.equals("all")) {
+                    exportedTaskID = Integer.parseInt(parameter);
+                    exportedTask = taskDAO.getEntityById(exportedTaskID);
+                    fileName = "task" + exportedTaskID + ".xml";
                 }
                 response.setHeader("Content-disposition", "attachment; filename=\"" + fileName + "\"");
                 response.setContentType("text/xml; name=\"fileName\"");
-                ejb.convertObjectToXml(tasks, fileName, response);
+                ejb.convertObjectToXml(users, exportedTask, fileName, response);
             }
             if (request.getParameter(NAME_PARAM) != null) {
                 String name = request.getParameter(NAME_PARAM);

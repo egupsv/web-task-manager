@@ -66,42 +66,49 @@
     </div>
 </nav>
 <div class="container">
-    <h2 class="h1 fw-bold">Users</h2>
-    <table class="table table-hover table-dark table-data">
-        <thead class="thead-dark">
-        <tr>
-            <th scope="col">id</th>
-            <th scope="col">Role</th>
-            <th scope="col">Name</th>
-            <th scope="col">Mail</th>
-            <th scope="col">Edit</th>
-            <th scope="col">Tasks</th>
-        </tr>
-        </thead>
-        <jsp:useBean id="users" scope="request" type="java.util.List"/>
-        <c:forEach var="user" items="${users}">
+    <form method="post" action="${pageContext.request.contextPath}/users">
+        <h2 class="h1 fw-bold">Users</h2>
+        <table class="table table-hover table-dark table-data">
+            <thead class="thead-dark">
             <tr>
-                <th scope="row"><c:out value="${user.id}"/></th>
-                <td><c:out value="${user.role}"/></td>
-                <td><c:out value="${user.name}"/></td>
-                <td><c:out value="${user.mail}"/></td>
-                <td>
-                    <button class="btn btn-warning" value="Edit"
-                            onclick="showEditFields(${user.id},'${user.name}','${user.mail}','${user.role}')">
-                        Edit
-                    </button>
-                </td>
-                <td>
-                    <a href="${pageContext.request.contextPath}/tasks/${user.name}" class="btn btn-primary"> Go to
-                        Tasks</a>
-                </td>
+                <th scope="col">id</th>
+                <th scope="col">Role</th>
+                <th scope="col">Name</th>
+                <th scope="col">Mail</th>
+                <th scope="col">Edit</th>
+                <th scope="col">Tasks</th>
+                <th scope="col">Export</th>
             </tr>
-        </c:forEach>
-    </table>
-    <div>
-
-        <button class="btn btn-primary" onclick="showUserAddFields()">Add user</button>
-    </div>
+            </thead>
+            <jsp:useBean id="users" scope="request" type="java.util.List"/>
+            <c:forEach var="user" items="${users}">
+                <tr>
+                    <th scope="row"><c:out value="${user.id}"/></th>
+                    <td><c:out value="${user.role}"/></td>
+                    <td><c:out value="${user.name}"/></td>
+                    <td><c:out value="${user.mail}"/></td>
+                    <td>
+                        <button class="btn btn-warning" value="Edit" onclick="showEditFields(${user.id})">
+                            Edit
+                        </button>
+                    </td>
+                    <td>
+                        <a href="${pageContext.request.contextPath}/tasks/${user.name}" class="btn btn-primary"> Go to
+                            Tasks</a>
+                    </td>
+                    <td>
+                        <button class="btn btn-secondary" type="submit" name="export"
+                                value="${user.getId()}">export
+                        </button>
+                    </td>
+                </tr>
+            </c:forEach>
+        </table>
+        <div>
+            <button class="btn btn-primary" onclick="showUserAddFields()">Add user</button>
+            <button id="export_button" class="btn btn-primary" type="submit" name="export" value="all">Export all</button>
+        </div>
+    </form>
     <div class="compose_user_field">
         <form id="edit_form" method="post" style="display: none" action="${pageContext.request.contextPath}/users">
             <input id="new_user_check" name="new_user_check" type="hidden" value="0">
