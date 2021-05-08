@@ -49,7 +49,7 @@ public class User implements Serializable {
     @Column(name = ROLE_COLUMN)
     private String role;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<Task> tasks;
 
     public User() {
