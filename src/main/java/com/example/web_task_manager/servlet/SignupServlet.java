@@ -2,9 +2,9 @@ package com.example.web_task_manager.servlet;
 
 import com.example.web_task_manager.CookieName;
 import com.example.web_task_manager.Properties;
-import com.example.web_task_manager.controller.CookieController;
-import com.example.web_task_manager.dba.UserDAO;
+
 import com.example.web_task_manager.model.User;
+import com.example.web_task_manager.servlet.template.ServletTemplate;
 import com.example.web_task_manager.users.Encryptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,8 +47,7 @@ public class SignupServlet extends ServletTemplate {
             request.getSession().setAttribute("attempt", null);
             TryChecker.setPropertyOfSignupDiv("none");
             request.getSession().setAttribute("login", login);
-
-
+            request.getSession().setAttribute("role", user.getRole());
             cookieController.createCookie(response, CookieName.LOGIN, login);
             cookieController.createCookie(response, CookieName.PASSWORD, encPassword);
             response.sendRedirect(request.getContextPath() + "/tasks/" + user.getName());

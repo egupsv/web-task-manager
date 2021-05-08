@@ -11,6 +11,7 @@ import javax.persistence.PersistenceException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -36,14 +37,16 @@ public class UserDAO extends DataAccessible<User, Integer> {
     @Override
     @SuppressWarnings("unchecked")
     public List<User> getAll() {
-        List<User> userlist = new ArrayList<>();
-
+        List<User> userlist;
         try (Session session = DatabaseAccess.getSessionFactory().openSession()) {
             userlist = session.createQuery("from User").list();
+            return userlist;
+        } catch (NoResultException ignored) {
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        return userlist;
+        return Collections.emptyList();
     }
 
     @Override

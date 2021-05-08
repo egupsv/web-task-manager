@@ -1,8 +1,8 @@
 package com.example.web_task_manager.servlet;
 
 import com.example.web_task_manager.CookieName;
-import com.example.web_task_manager.controller.CookieController;
 import com.example.web_task_manager.model.User;
+import com.example.web_task_manager.servlet.template.ServletTemplate;
 import com.example.web_task_manager.users.Encryptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,9 +48,7 @@ public class LoginServlet extends ServletTemplate {
             user = targetUser;
 
         if (user != null) {
-            cookieController.createCookie(response, CookieName.LOGIN, login);
-            cookieController.createCookie(response, CookieName.PASSWORD, encPassword);
-            logInUser(request, response, login);
+            logInUser(request, response, targetUser);
             //response.sendRedirect(request.getContextPath() + "/tasks/" + login);
 
             log.info("User has logged in");
@@ -63,10 +61,13 @@ public class LoginServlet extends ServletTemplate {
         }
     }
 
-    private void logInUser(HttpServletRequest request, HttpServletResponse response, String login) throws IOException {
-        request.getSession().setAttribute("login", login);
+    private void logInUser(HttpServletRequest request, HttpServletResponse response, User user) throws IOException {
+        request.getSession().setAttribute("login", user.getName());
+        request.getSession().setAttribute("role", user.getRole());
+        cookieController.createCookie(response, CookieName.LOGIN, user.getName());
+        cookieController.createCookie(response, CookieName.PASSWORD, user.getEncPassword());
         TryChecker.setPropertyOfLoginDiv("none");
         request.getSession().setAttribute("attempt", null);
-        response.sendRedirect(request.getContextPath() + "/tasks/" + login);
+        response.sendRedirect(request.getContextPath() + "/tasks/" + user.getName());
     }
 }

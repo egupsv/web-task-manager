@@ -130,3 +130,6 @@ input[type=text], input[type=password], input[type=email] {
 .nav-h{
     margin-bottom: 2rem;
 }
+.nav-el{
+    color: white !important;
+}

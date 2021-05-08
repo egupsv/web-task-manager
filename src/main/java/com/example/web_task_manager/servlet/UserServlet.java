@@ -1,6 +1,7 @@
 package com.example.web_task_manager.servlet;
 
 import com.example.web_task_manager.CookieName;
+import com.example.web_task_manager.servlet.template.AuthServletTemplate;
 import com.example.web_task_manager.users.Encryptor;
 
 import javax.servlet.ServletException;

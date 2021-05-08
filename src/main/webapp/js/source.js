@@ -1,4 +1,4 @@
-function showEditFields(id) {
+function showEditFields(id,name,mail,role) {
     let visibility = document.getElementById("edit_form").style.display === "none" ? 0 : 1;
     if (visibility === 0) {
         document.getElementById("edit_form").style.display = "table";
@@ -8,6 +8,9 @@ function showEditFields(id) {
     document.getElementById("delete_b").value = id;
     document.getElementById("delete_b").style.display = "inline-block";
     document.getElementById("submit_edit_b").value = id;
+    document.getElementById("name").value = name
+    document.getElementById("mail").value = mail
+    document.getElementById("role").value = role
 }
 
 function showUserAddFields() {
@@ -20,6 +23,10 @@ function showUserAddFields() {
     document.getElementById("delete_b").value = 0;
     document.getElementById("submit_edit_b").value = 0;
     document.getElementById('new_user_check').value = 1;
+    document.getElementById("name").value = ""
+    document.getElementById("mail").value = ""
+    document.getElementById("password").value = ""
+    document.getElementById("role").value = ""
 }
 
 function hideEditFields() {

@@ -1,4 +1,4 @@
-package com.example.web_task_manager.servlet;
+package com.example.web_task_manager.servlet.template;
 
 import com.example.web_task_manager.controller.CookieController;
 import com.example.web_task_manager.dba.UserDAO;
@@ -13,6 +13,7 @@ import java.io.IOException;
 public class ServletTemplate extends HttpServlet {
     protected final String EMPTY_VALUE = "";
     protected final UserDAO userDAO = new UserDAO();
+
     protected final CookieController cookieController = new CookieController();
 
     @Override

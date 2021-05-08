@@ -12,6 +12,7 @@ import javax.persistence.PersistenceException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class TaskDAO extends DataAccessible<Task, Integer> {
@@ -80,18 +81,20 @@ public class TaskDAO extends DataAccessible<Task, Integer> {
      * @return list uf user tasks
      */
     public List<Task> getUserTasks(User user) {
+        List<Task> tasksList;
         try (Session session = DatabaseAccess.getSessionFactory().openSession()) {
             CriteriaQuery<Task> c = session.getCriteriaBuilder().createQuery(Task.class);
             Root<Task> from = c.from(Task.class);
             c.select(from);
             c.where(session.getCriteriaBuilder().equal(from.get("user"), user));
-            return session.createQuery(c).getResultList();
+            tasksList = session.createQuery(c).getResultList();
+            return tasksList;
         } catch (NoResultException ignored) {
 
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        return null;
+        return Collections.emptyList();
     }
 
 

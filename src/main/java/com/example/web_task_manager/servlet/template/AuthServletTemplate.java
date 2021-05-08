@@ -1,8 +1,8 @@
-package com.example.web_task_manager.servlet;
+package com.example.web_task_manager.servlet.template;
 
+import com.example.web_task_manager.CookieName;
 import com.example.web_task_manager.users.Role;
 import com.example.web_task_manager.dba.TaskDAO;
-import com.example.web_task_manager.dba.UserDAO;
 import com.example.web_task_manager.model.User;
 
 import javax.servlet.ServletException;
@@ -35,14 +35,19 @@ public class AuthServletTemplate extends ServletTemplate {
 
     }
 
-    private boolean loginCheck(HttpServletRequest req) { //todo: ques? if we have LoginFilter, then why we need this?
+    private boolean loginCheck(HttpServletRequest req) {
         return req.getParameter("Logout") == null;
     }
 
     protected void logoutUser(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        System.out.println("LOGOUT USER AUTH");
         req.getSession().removeAttribute("password");
         req.getSession().removeAttribute("login");
+        req.getSession().removeAttribute("role");
+        cookieController.eraseCookie(resp, CookieName.LOGIN);
+        cookieController.eraseCookie(resp, CookieName.PASSWORD);
         resp.sendRedirect(req.getContextPath() + "/login.jsp");
+        System.out.println("/LOGOUT USER AUTH");
     }
 
 }

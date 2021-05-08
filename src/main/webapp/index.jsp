@@ -23,30 +23,60 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light nav-h" style="background-color: #5b1375 !important;">
     <div class="container header">
-        Web Task Manager
-        <a class="btn btn-close-white nav-button" href="${pageContext.request.contextPath}/user">Go to Profile</a>
-        <div>
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+                <a class="nav-link active nav-el" aria-current="page" href="">Web Task Manager</a>
+            </li>
             <c:choose>
-                <c:when test="${sessionScope.login != null}">
+            <c:when test="${sessionScope.login != null}">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle nav-el" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+                   aria-expanded="false">
+                        ${sessionScope.login}
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/user">Profile</a></li>
+                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/tasks/${sessionScope.login}">Tasks</a>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <c:choose>
+                        <c:when test="${sessionScope.role != null &&'ADMIN'.equals(sessionScope.role)}">
+                            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/users">Users</a></li>
+                        </c:when>
+                    </c:choose>
+                </ul>
+            </li>
+        </ul>
+        <div>
+            <form action="${pageContext.request.contextPath}/tasks/${sessionScope.login}"
+                  style="margin-bottom:0 !important;">
+                <button class="btn btn-outline-danger nav-button" type="submit" name="Logout" value="Logout">Log
+                    Out
+                </button>
+            </form>
+            </c:when>
 
-                    <form action="${pageContext.request.contextPath}/tasks" style="margin-bottom:0 !important;">
-                            ${sessionScope.login}
-                        <button class="btn btn-outline-danger nav-button" type="submit" name="Logout" value="Logout">Log Out
-                        </button>
-                    </form>
-                </c:when>
-
-                <c:otherwise>
-                    please log in
-                </c:otherwise>
+            <c:otherwise>
+                please log in
+            </c:otherwise>
             </c:choose>
         </div>
+
     </div>
 </nav>
 <jsp:useBean id="target_user" scope="request" type="com.example.web_task_manager.model.User"/>
 <div class="container">
     <form method="post" action="${pageContext.request.contextPath}/tasks/${target_user.name}">
-        <h2 class="h1 fw-bold">Tasks of " ${target_user.name} "</h2>
+        <c:choose>
+            <c:when test="${target_user.name.equals(sessionScope.login)}">
+                <h2 class="h1 fw-bold">Your Tasks</h2>
+            </c:when>
+            <c:otherwise>
+                <h2 class="h1 fw-bold">Tasks of " ${target_user.name} "</h2>
+            </c:otherwise>
+        </c:choose>
         <table class="table table-hover table-dark table-data">
             <thead class="thead-dark">
             <tr>

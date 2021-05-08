@@ -48,7 +48,7 @@ public class LoginFilter implements Filter {
 //        log.info("reqURI " + reqURI);
 
 
-        if (loggedIn  || (loginRequest && !isSmthWrong) || (signupRequest && !isSmthWrong)) {
+        if (loggedIn || (loginRequest && !isSmthWrong) || (signupRequest && !isSmthWrong)) {
 //            log.info("doFilter");
             chain.doFilter(req, res);
         } else {
@@ -61,12 +61,13 @@ public class LoginFilter implements Filter {
             if (cookieUser != null && userPassword.equals(cookieUser.getEncPassword())) {
                 System.out.println("EQUALS and etc");
                 request.getSession().setAttribute("login", cookieUser.getName()); //dupl
+                request.getSession().setAttribute("role", cookieUser.getRole());
                 TryChecker.setPropertyOfLoginDiv("none");
                 request.getSession().setAttribute("attempt", null);
                 chain.doFilter(request, response);
             } else {
-                cookieController.deleteCookie(response, CookieName.LOGIN);
-                cookieController.deleteCookie(response, CookieName.PASSWORD);
+                cookieController.eraseCookie(response, CookieName.LOGIN);
+                cookieController.eraseCookie(response, CookieName.PASSWORD);
                 log.info("redirect");
                 String page = reqURI.contains("signup") ? "signup.jsp" : "login.jsp";
                 log.info("to " + page);

@@ -3,6 +3,7 @@ package com.example.web_task_manager.servlet;
 import com.example.web_task_manager.Properties;
 import com.example.web_task_manager.dba.UserDAO;
 import com.example.web_task_manager.model.User;
+import com.example.web_task_manager.servlet.template.AuthServletTemplate;
 import com.example.web_task_manager.users.Encryptor;
 import com.sun.istack.NotNull;
 
@@ -68,18 +69,19 @@ public class UsersServlet extends AuthServletTemplate {
 
             if (newRole.length() > 0 && !targetUser.getName().equals(req.getSession().getAttribute("login")))
                 targetUser.setRole(newRole);
-            if (newName.length() > 0)
+            if (newName.length() > 0 && !newName.equals(targetUser.getName()))
                 targetUser.setName(newName);
 
             if (newPassword.length() > 0) {
                 try {
                     String encPassword = new Encryptor().encrypt(newPassword);
-                    targetUser.setEncPassword(encPassword);
+                    if (!encPassword.equals(targetUser.getEncPassword()))
+                        targetUser.setEncPassword(encPassword);
                 } catch (NoSuchPaddingException | NoSuchAlgorithmException e) {
                     e.printStackTrace();
                 }
             }
-            if (Properties.REGEX_MAIL_PATTERN.matcher(newMail).find())
+            if (Properties.REGEX_MAIL_PATTERN.matcher(newMail).find() && !newMail.equals(targetUser.getMail()))
                 targetUser.setMail(newMail);
 
             userDAO.update(targetUser);
@@ -119,7 +121,8 @@ public class UsersServlet extends AuthServletTemplate {
 
     public void setUsersParameter(@NotNull HttpServletRequest req) {
         List<User> users;
-        //if (req.getParameter("filtered_users") == null)
+        if (req.getParameter("filtered_name") != null)
+            System.out.println("filtered_name"); //mby finish
         users = new UserDAO().getAll();
         req.setAttribute("users", users);
     }

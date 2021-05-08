@@ -30,11 +30,24 @@ public class CookieController {
         return null;
     }
 
-    public void deleteCookie(HttpServletResponse response, CookieName name) {
+    public void eraseCookie(HttpServletResponse response, CookieName name) {
         String cookieName = name.toString().toLowerCase();
         Cookie cookie = new Cookie(cookieName, "");
+        cookie.setHttpOnly(true);
         cookie.setMaxAge(0);
         response.addCookie(cookie);
+        System.out.println("cookie: " + cookieName + " erased");
+    }
+
+    public void eraseAllCookies(HttpServletRequest req, HttpServletResponse resp) {
+        Cookie[] cookies = req.getCookies();
+        if (cookies != null)
+            for (Cookie cookie : cookies) {
+                cookie.setValue("");
+                cookie.setPath("/");
+                cookie.setMaxAge(0);
+                resp.addCookie(cookie);
+            }
     }
 
 

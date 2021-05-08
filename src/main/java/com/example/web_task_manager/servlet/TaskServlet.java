@@ -4,6 +4,7 @@ import com.example.web_task_manager.CookieName;
 import com.example.web_task_manager.converter.Converter;
 import com.example.web_task_manager.model.Task;
 import com.example.web_task_manager.model.User;
+import com.example.web_task_manager.servlet.template.AuthServletTemplate;
 import com.example.web_task_manager.users.Role;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +29,7 @@ public class TaskServlet extends AuthServletTemplate {
     private static final String NAME_PARAM = "name";
     private static final String DESCRIPTION_PARAM = "description";
     private static final String TIME_PARAM = "time";
+    private static final String TARGET_USER_PARAM = "target_user";
     private static final String LOGOUT_PARAM = "Logout";
     private String targetUserName;
 
@@ -47,10 +49,11 @@ public class TaskServlet extends AuthServletTemplate {
 
         if (targetUserName.length() > 4) {
             User targetUser = userDAO.getUserByName(targetUserName);
-            request.setAttribute("target_user", targetUser);
+            request.setAttribute(TARGET_USER_PARAM, targetUser);
             if (targetUser == null) {
-                System.out.println("target USER is not found");
+                System.out.println("target USER not found");
                 request.removeAttribute("target_user");
+                response.sendRedirect(request.getContextPath() + "/tasks/" + user.getName());
                 return;
             }
             boolean access = Role.ADMIN.toString().equals(user.getRole()) || user.getName().equals(targetUser.getName());
@@ -87,7 +90,7 @@ public class TaskServlet extends AuthServletTemplate {
                 log.info("export");
                 String parameter = request.getParameter(EXPORT_PARAM);
                 String fileName = "tasks.xml";
-                List<Task> tasks = new ArrayList<Task>();
+                List<Task> tasks = new ArrayList<>();
                 if(parameter.equals("all")) {
                     tasks = taskDAO.getUserTasks(user);
                     log.info("tasks: {}", tasks);
@@ -116,17 +119,7 @@ public class TaskServlet extends AuthServletTemplate {
             }
 
         }
-        System.out.println("PRE LOGOUT_PARAM CHECK");
-        if (request.getParameter(LOGOUT_PARAM) != null) {
-            System.out.println("deleting cookies--"); //todo че происходит
-            cookieController.deleteCookie(response, CookieName.LOGIN);
-            cookieController.deleteCookie(response, CookieName.PASSWORD);
-            System.out.println("COOKIES DELETED--");
-            request.setAttribute("login", null);
-            request.setAttribute("password", null);
-            return;
-        }
-        System.out.println("POST LOGOUT_PARAM CHECK");
+
         response.sendRedirect(request.getContextPath() + "/tasks/" + targetUserName);
     }
 }
