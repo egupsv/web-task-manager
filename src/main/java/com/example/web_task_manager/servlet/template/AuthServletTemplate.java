@@ -31,7 +31,7 @@ public class AuthServletTemplate extends ServletTemplate {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 
     }
 

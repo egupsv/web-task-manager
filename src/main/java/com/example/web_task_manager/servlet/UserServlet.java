@@ -27,7 +27,7 @@ public class UserServlet extends AuthServletTemplate {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         super.doPost(req, resp);
 
         if (checkDeleteStatus(req, resp))

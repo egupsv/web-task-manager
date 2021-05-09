@@ -60,3 +60,20 @@ function userDeleteConfirmDialog() {
         document.getElementById("delete_input").value = 0;
     }
 }
+
+const showUploadField = () => {
+    let visibility = document.getElementById("import_form").style.display === "none" ? 0 : 1;
+    if (visibility === 0) {
+        document.getElementById("import_form").style.display = "table";
+        document.getElementById("import_button").value = "Cancel import";
+    } else {
+        document.getElementById("import_form").style.display = "none";
+        document.getElementById("import_button").value = "Import";
+    }
+}
+
+const callAlert = (existed) => {
+    window.addEventListener('load',function(){
+        alert(existed);
+    });
+}

@@ -21,6 +21,13 @@
 </head>
 
 <body>
+<c:if test="${not empty requestScope.existed}">
+    <script>
+        window.addEventListener('load',function(){
+            alert(${requestScope.existed});
+        });
+    </script>
+</c:if>
 <nav class="navbar navbar-expand-lg navbar-light bg-light nav-h" style="background-color: #5b1375 !important;">
     <div class="container header">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -121,6 +128,7 @@
         </table>
         <input id="add_button" class="btn btn-primary" type="button" onclick="showAddFields()" value="Add task"/>
         <button id="export_button" class="btn btn-primary" type="submit" name="export" value="all">Export all</button>
+        <input id="import_button" class="btn btn-primary" type="button" onclick="showUploadField()" value="import"/>
     </form>
     <div>
         <form id="add_form" method="post" style="display: none"
@@ -148,6 +156,13 @@
                 <p>time in format "dd.mm.yyyy hh:mm" for example "01.01.2021 15:00"</p>
             </div>
             <input type="submit" class="btn btn-success" value="confirm">
+        </form>
+        <form id="import_form" method="post" style="display: none"
+              action="${pageContext.request.contextPath}/tasks/${target_user.name}" enctype="multipart/form-data">
+            <div>
+                <input id="upload_button" class="btn btn-primary" type="file" name="file" accept="text/xml"/>
+            </div>
+            <input type="submit" class="btn btn-success" value="confirm"/>
         </form>
     </div>
 </div>

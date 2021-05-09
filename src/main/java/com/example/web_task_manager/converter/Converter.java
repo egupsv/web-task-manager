@@ -9,10 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import javax.xml.bind.Unmarshaller;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,5 +49,11 @@ public class Converter {
         } catch (JAXBException | IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public UsersForXml convertXmlToObject(InputStream fileContent) throws JAXBException {
+        JAXBContext context = JAXBContext.newInstance(Task.class, TasksForXml.class, UserForXml.class, UsersForXml.class);
+        Unmarshaller unmarshaller = context.createUnmarshaller();
+        return (UsersForXml) unmarshaller.unmarshal(fileContent);
     }
 }

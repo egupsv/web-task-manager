@@ -76,6 +76,14 @@ public class Task implements Serializable {
         this.user = user;
     }
 
+    public Task(String name, String description, Date time, boolean completed, User user) {
+        this.name = name;
+        this.time = time;
+        this.description = description;
+        this.completed = completed;
+        this.user = user;
+    }
+
 
     public String getName() {
         return name;
@@ -127,6 +135,11 @@ public class Task implements Serializable {
         this.id = id;
     }
 
+    public boolean equals(Task task) {
+        return (getName().equals(task.getName()) &&
+                getDescription().equals(task.getDescription()) &&
+                getTime().equals(task.getTime()));
+    }
 
     @Override
     public String toString() {
