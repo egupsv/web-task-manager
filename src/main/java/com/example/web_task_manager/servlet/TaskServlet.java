@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import javax.xml.bind.JAXBException;
 import java.io.*;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -81,6 +82,7 @@ public class TaskServlet extends AuthServletTemplate {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         super.doPost(request, response);
+        request.getSession().setAttribute("existed", null);
         if (targetUserName == null)
             targetUserName = user.getName();
 
@@ -160,6 +162,7 @@ public class TaskServlet extends AuthServletTemplate {
     public void importFromFile(HttpServletRequest request) {
         try {
             Part filePart = request.getPart("file");
+            Path a = Paths.get(filePart.getSubmittedFileName());
             String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
             InputStream fileContent = filePart.getInputStream();
             log.info("file name: " + fileName);
@@ -176,16 +179,15 @@ public class TaskServlet extends AuthServletTemplate {
                             log.info("not contain");
                             taskDAO.create(newTask);
                         } else {
-                            existedTasks.append("\nname: ").append(newTask.getName()).
-                                    append("\ndescription: ").append(newTask.getDescription()).
-                                    append("\ntime: ").append(Utils.getFormattedTime(newTask.getTime())).
-                                    append("\n");
+                            existedTasks.append("<p>name: ").append(newTask.getName()).append("</p>").
+                                    append("<p>description: ").append(newTask.getDescription()).append("</p>").
+                                    append("<p>time: ").append(Utils.getFormattedTime(newTask.getTime())).append("</p>");
                         }
                     }
                 }
             }
             if (!"".equals(existedTasks.toString())) {
-                String message = "Task(s):" + existedTasks + "already exist(s)";
+                String message = "<p><strong>Task(s):</strong></p>" + existedTasks + "<p><strong>already exist(s)</strong></p>";
                 request.getSession().setAttribute("existed", message);
             }
         } catch (IOException | ServletException | JAXBException e) {

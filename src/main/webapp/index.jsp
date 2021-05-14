@@ -4,6 +4,8 @@
 <head>
     <meta charset="utf-8">
     <title>tasks</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"
@@ -21,12 +23,13 @@
 </head>
 
 <body>
-<c:if test="${not empty requestScope.existed}">
-    <script>
-        window.addEventListener('load',function(){
-            alert(${requestScope.existed});
-        });
-    </script>
+<c:if test="${sessionScope.existed != null}">
+<div class="container">
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        ${sessionScope.existed}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+</div>
 </c:if>
 <nav class="navbar navbar-expand-lg navbar-light bg-light nav-h" style="background-color: #5b1375 !important;">
     <div class="container header">
