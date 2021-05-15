@@ -20,7 +20,8 @@ public class UserServlet extends AuthServletTemplate {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         super.doGet(req, resp);
-
+        req.getSession().setAttribute("invalidU", null);
+        req.getSession().setAttribute("invalid", null);
         req.setAttribute("tar_user", user);
 
         getServletContext().getRequestDispatcher("/user.jsp").forward(req, resp);

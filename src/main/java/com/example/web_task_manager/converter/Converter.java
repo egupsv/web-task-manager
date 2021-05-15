@@ -20,7 +20,11 @@ import java.util.List;
 
 @Stateless
 public class Converter {
-    public void convertObjectToXml(List<User> exportedUsers, Task exportedTask, String fileName, HttpServletResponse response) {
+    public void convertObjectToXml(List<User> exportedUsers,
+                                   Task exportedTask,
+                                   String fileName,
+                                   HttpServletResponse response,
+                                   boolean useAdminInfo) {
         try (ServletOutputStream sos = response.getOutputStream()) {
             File file = new File(fileName);
             List<UserForXml> users = new ArrayList<UserForXml>();
@@ -32,15 +36,15 @@ public class Converter {
                     tasks.add(exportedTask);
                 }
                 TasksForXml tasksForXml = new TasksForXml(tasks);
-                UserForXml userForXml = new UserForXml(user.getName(), tasksForXml);
+                UserForXml userForXml = useAdminInfo ?
+                        new UserForXml(user.getName(), tasksForXml, user.getEncPassword(), user.getMail()) :
+                        new UserForXml(user.getName(), tasksForXml);
                 users.add(userForXml);
             }
             UsersForXml usersForXml = new UsersForXml(users);
             JAXBContext context = JAXBContext.newInstance(Task.class, TasksForXml.class, UserForXml.class, UsersForXml.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            //marshaller.setProperty(Marshaller.JAXB_FRAGMENT, true);
-            //marshaller.setProperty("com.sun.xml.bind.xmlHeaders", "<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
             marshaller.marshal(usersForXml, file);
             response.setContentLength((int) file.length());
             FileInputStream fileInputStream = new FileInputStream(file);

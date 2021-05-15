@@ -2,6 +2,8 @@ package com.example.web_task_manager.servlet;
 
 import com.example.web_task_manager.Properties;
 import com.example.web_task_manager.converter.Converter;
+import com.example.web_task_manager.converter.UserForXml;
+import com.example.web_task_manager.converter.UsersForXml;
 import com.example.web_task_manager.dba.UserDAO;
 import com.example.web_task_manager.model.Task;
 import com.example.web_task_manager.model.User;
@@ -15,16 +17,23 @@ import javax.crypto.NoSuchPaddingException;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
+@MultipartConfig
 public class UsersServlet extends AuthServletTemplate {
     private static final String NEW_USER_PARAM = "new_user_check";
     private static final String EXPORT_PARAM = "export";
+    private static final String FILE_PARAM = "file";
     private static final Logger log = LoggerFactory.getLogger(UsersServlet.class);
 
     @EJB
@@ -33,6 +42,7 @@ public class UsersServlet extends AuthServletTemplate {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         super.doGet(req, resp);
+        req.getSession().setAttribute("invalid", null);
         if (!isAdmin) {
             resp.sendRedirect("http://localhost:8888/web_task_manager-1.0-SNAPSHOT/user");
             return;
@@ -43,7 +53,8 @@ public class UsersServlet extends AuthServletTemplate {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+        req.getSession().setAttribute("invalidU", null);
         if (!isAdmin) {
             resp.sendRedirect(req.getContextPath() + "/user");
             return;
@@ -54,21 +65,14 @@ public class UsersServlet extends AuthServletTemplate {
         }
         deleteParamCheck(req);
         if (req.getParameter(EXPORT_PARAM) != null) {
-
-            String parameter = req.getParameter(EXPORT_PARAM);
-            String fileName = "users.xml";
-            List<User> users = new ArrayList<>();
-            if(parameter.equals("all")) {
-                users = userDAO.getAll();
-            } else {
-                int exportedUserID = Integer.parseInt(parameter);
-                User user = userDAO.getEntityById(exportedUserID);
-                users.add(user);
-                fileName = "user" + user.getId() + ".xml";
+            export(req, resp);
+        }
+        if(req.getParameter(EXPORT_PARAM) == null) {
+            if (req.getPart(FILE_PARAM) != null) {
+                log.info(req.getParameterNames().toString());
+                log.info("1" + req.getParameter("flexRadioDefault"));
+                importFromFile(req, req.getParameter("flexRadioDefault").equals("replace"));
             }
-            resp.setHeader("Content-disposition", "attachment; filename=\"" + fileName + "\"");
-            resp.setContentType("text/xml; name=\"fileName\"");
-            ejb.convertObjectToXml(users, null, fileName, resp);
         }
         resp.sendRedirect(req.getContextPath() + "/users");
     }
@@ -151,4 +155,91 @@ public class UsersServlet extends AuthServletTemplate {
         req.setAttribute("users", users);
     }
 
+    public void export(HttpServletRequest req, HttpServletResponse resp) {
+        String parameter = req.getParameter(EXPORT_PARAM);
+        String fileName = "users.xml";
+        List<User> users = new ArrayList<>();
+        if(parameter.equals("all")) {
+            users = userDAO.getAll();
+        } else {
+            int exportedUserID = Integer.parseInt(parameter);
+            User user = userDAO.getEntityById(exportedUserID);
+            users.add(user);
+            fileName = "user" + user.getId() + ".xml";
+        }
+        resp.setHeader("Content-disposition", "attachment; filename=\"" + fileName + "\"");
+        resp.setContentType("text/xml; name=\"fileName\"");
+        ejb.convertObjectToXml(users, null, fileName, resp, true);
+    }
+
+    public void importFromFile(HttpServletRequest request, boolean replace) {
+        try {
+            Part filePart = request.getPart("file");
+            Path submittedFileName = Paths.get(filePart.getSubmittedFileName());
+            String fileName = submittedFileName.getFileName().toString();
+            InputStream fileContent = filePart.getInputStream();
+            log.info("file name: " + fileName);
+            UsersForXml usersForXml = ejb.convertXmlToObject(fileContent);
+            if (usersForXml == null) {
+                String message = "<p><strong>invalid xml<strong></p>";
+                request.getSession().setAttribute("invalidU", message);
+            } else {
+                try {
+                    importUsers(usersForXml.getUsers(), replace);
+                } catch (NullPointerException e) {
+                    String message = "<p><strong>invalid xml<strong></p>";
+                    request.getSession().setAttribute("invalidU", message);
+                }
+            }
+        } catch (IOException | ServletException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void importUsers(List<UserForXml> usersForXml, boolean replace) throws NullPointerException {
+        List<User> users = new UserDAO().getAll();
+        for (UserForXml userForXml : usersForXml) {
+            User currentUser = findUser(userForXml.getName(), users);
+            if (currentUser == null) {
+                importNewUser(userForXml);
+            } else {
+                List<Task> tasks = userForXml.getTasks().getTasks();
+                for (Task task : tasks) {
+                    if(replace) {
+                        taskDAO.deleteAllUserTasks(currentUser);
+                    }
+                    Task newTask = new Task(task.getName(), task.getDescription(), task.getTime(), task.getCompleted(), currentUser);
+                    if (!currentUser.containTask(newTask)) {
+                        taskDAO.create(newTask);
+                    }
+                }
+            }
+        }
+    }
+
+
+    public User findUser (String name, List<User> users) {
+        for (User user : users) {
+            if (name.equals(user.getName())) {
+                return user;
+            }
+        }
+        return null;
+    }
+
+    public void importNewUser (UserForXml userForXml) {
+        if (userForXml.getMail() == null || userForXml.getEncPassword() == null) {
+            throw new NullPointerException();
+        } else {
+            User newUser = new User(userForXml.getName(),
+                    userForXml.getEncPassword(),
+                    userForXml.getMail());
+            userDAO.create(newUser);
+            List<Task> tasks = userForXml.getTasks().getTasks();
+            for (Task task : tasks) {
+                Task newTask = new Task(task.getName(), task.getDescription(), task.getTime(), task.getCompleted(), user);
+                taskDAO.create(newTask);
+            }
+        }
+    }
 }

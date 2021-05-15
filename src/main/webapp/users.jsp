@@ -3,6 +3,7 @@
 <html>
 <head>
     <title>Users list</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"
@@ -19,6 +20,14 @@
     </script>
 </head>
 <body>
+<c:if test="${sessionScope.invalidU != null}">
+    <div class="container">
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                ${sessionScope.invalidU}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+</c:if>
 <nav class="navbar navbar-expand-lg navbar-light bg-light nav-h" style="background-color: #5b1375 !important;">
     <div class="container header">
         <ul id="users-ul" class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -107,6 +116,7 @@
         <div>
             <button class="btn btn-primary" onclick="showUserAddFields()">Add user</button>
             <button id="export_button" class="btn btn-primary" type="submit" name="export" value="all">Export all</button>
+            <input id="import_button" class="btn btn-primary" type="button" onclick="showUploadField()" value="import"/>
         </div>
     </form>
     <div class="compose_user_field">
@@ -137,6 +147,36 @@
             <button class="user_b" id="submit_edit_b" name="submit_edit_b" type="submit" value="0">Submit</button>
             <button class="user_b" id="close_edit_form" onclick="hideEditFields()">Close</button>
             <button class="user_b delete_b" type="submit" id="delete_b" name="delete" value="0">Delete User</button>
+        </form>
+        <form id="import_form" method="post" style="display: none"
+              action="${pageContext.request.contextPath}/users" enctype="multipart/form-data">
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" value="replace">
+                <label class="form-check-label" for="flexRadioDefault1">
+                    import with users replacement
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" value="add" checked>
+                <label class="form-check-label" for="flexRadioDefault2">
+                    import with adding tasks to existing users
+                </label>
+            </div>
+            <div class="p-3 mb-2 bg-secondary text-white">
+                <p> to import new users, it is necessary that the encrypted password and user email must be specified in the xml-file</p>
+                <p>
+                    <strong>import with users replacement</strong>  means that if a user with a name from the file
+                    already exists, then all his (her) tasks will be overwritten
+                </p>
+                <p>
+                    <strong>import with adding tasks to existing users</strong> means that if a user with a name from
+                    the file already exists, then all his (her) tasks will remain, and new ones will be added
+                </p>
+            </div>
+            <div>
+                <input id="upload_button" class="btn btn-primary" type="file" name="file" accept="text/xml"/>
+            </div>
+            <input type="submit" class="btn btn-success" value="confirm"/>
         </form>
     </div>
 </div>

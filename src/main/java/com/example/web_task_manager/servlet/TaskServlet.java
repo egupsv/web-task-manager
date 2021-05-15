@@ -52,6 +52,7 @@ public class TaskServlet extends AuthServletTemplate {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         super.doGet(request, response);
+        request.getSession().setAttribute("invalidU", null);
         String pathInfo = request.getPathInfo();
 
         Object userNameParam = request.getSession().getAttribute("login");
@@ -119,7 +120,7 @@ public class TaskServlet extends AuthServletTemplate {
         }
         response.setHeader("Content-disposition", "attachment; filename=\"" + fileName + "\"");
         response.setContentType("text/xml; name=\"fileName\"");
-        ejb.convertObjectToXml(users, exportedTask, fileName, response);
+        ejb.convertObjectToXml(users, exportedTask, fileName, response, false);
     }
 
     public void complete(HttpServletRequest request, HttpServletResponse response) {
