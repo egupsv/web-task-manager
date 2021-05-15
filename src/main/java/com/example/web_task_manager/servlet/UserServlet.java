@@ -38,15 +38,11 @@ public class UserServlet extends AuthServletTemplate {
     }
 
     private boolean checkDeleteStatus(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String deleteStatusParam = req.getParameter(DELETE_PARAM);
-        String deleteStatusString = deleteStatusParam == null ? "" : deleteStatusParam.trim();
-        if (deleteStatusString.length() > 0) {
-            int deleteStatus = Integer.parseInt(deleteStatusString);
-            if (deleteStatus == 1) {
-                logoutUser(req, resp);
-                userDAO.delete(user.getId());
-                return true;
-            }
+
+        if (req.getParameter(DELETE_PARAM) != null) {
+            logoutUser(req, resp);
+            userDAO.delete(user.getId());
+            return true;
         }
         return false;
     }

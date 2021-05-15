@@ -20,6 +20,8 @@ public class User implements Serializable {
     public static final String PASSWORD_COLUMN = "ENC_PASSWORD";
     public static final String MAIL_COLUMN = "MAIL";
     public static final String ROLE_COLUMN = "ROLE";
+
+    public static final int MIN_USER_NAME = 4;
     /**
      * user id
      */

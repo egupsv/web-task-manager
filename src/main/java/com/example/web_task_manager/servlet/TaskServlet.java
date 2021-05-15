@@ -60,7 +60,7 @@ public class TaskServlet extends AuthServletTemplate {
         if (pathInfo != null)
             targetUserName = pathInfo.substring(1).trim();
 
-        if (targetUserName.length() > 4) {
+        if (targetUserName.length() > User.MIN_USER_NAME) {
             User targetUser = userDAO.getUserByName(targetUserName);
             request.setAttribute(TARGET_USER_PARAM, targetUser);
             if (targetUser == null) {

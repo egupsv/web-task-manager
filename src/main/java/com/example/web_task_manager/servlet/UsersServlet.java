@@ -118,11 +118,8 @@ public class UsersServlet extends AuthServletTemplate {
     }
 
     public void createUser(HttpServletRequest req) {
-        String addParamString = req.getParameter(NEW_USER_PARAM);
-        System.out.println("PARAM STRING ADD: " + addParamString);
-        int addParam = addParamString == null ? 0 : Integer.parseInt(addParamString.trim());
-        System.out.println("NEW USER PRE-START: " + addParam);
-        if (addParam == 1) {
+
+        if (req.getParameter(NEW_USER_PARAM) != null) {
             System.out.println("NEW USER START");
             String newName = req.getParameter("name").trim();
             String newMail = req.getParameter("mail").trim();
