@@ -17,5 +17,6 @@ services:
     volumes:
 #      - ./target:/opt/jboss/wildfly/standalone/deployments/
       - ./libs:/opt/jboss/wildfly/standalone/deployments/
+      - ./schema.xsd:/opt/jboss/schema.xsd
     links:
       - db

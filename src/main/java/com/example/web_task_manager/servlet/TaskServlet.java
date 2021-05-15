@@ -26,7 +26,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.function.BiConsumer;
 
 
 @MultipartConfig
@@ -83,34 +85,21 @@ public class TaskServlet extends AuthServletTemplate {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         super.doPost(request, response);
         request.getSession().setAttribute("existed", null);
+        request.getSession().setAttribute("invalid", null);
         if (targetUserName == null)
             targetUserName = user.getName();
 
         boolean access = (targetUserName.equals(user.getName()) || Role.ADMIN.toString().equals(user.getRole()));
         if (access) {
-
-            //chooseAction().get(request.getParameterNames().nextElement()).accept(request);
-            if (request.getParameter(DELETE_PARAM) != null) {
-                delete(request);
-            }
-            if (request.getParameter(COMPLETE_PARAM) != null) {
-
-                complete(request);
-            }
-            if (request.getParameter(EXPORT_PARAM) != null) {
-                export(request, response);
-            }
-            if (request.getParameter(NAME_PARAM) != null) {
-                add(request);
-            }
             if(request.getParameter(NAME_PARAM) == null &&
                     request.getParameter(EXPORT_PARAM) == null &&
                     request.getParameter(DELETE_PARAM) == null &&
                     request.getParameter(COMPLETE_PARAM) == null) {
                 if (request.getPart(FILE_PARAM) != null) {
-                    log.info("import");
                     importFromFile(request);
                 }
+            } else {
+                chooseAction().get(request.getParameterNames().nextElement()).accept(request, response);
             }
         }
         response.sendRedirect(request.getContextPath() + "/tasks/" + targetUserName);
@@ -133,19 +122,19 @@ public class TaskServlet extends AuthServletTemplate {
         ejb.convertObjectToXml(users, exportedTask, fileName, response);
     }
 
-    public void complete(HttpServletRequest request) {
+    public void complete(HttpServletRequest request, HttpServletResponse response) {
         int completedTaskID = Integer.parseInt(request.getParameter(COMPLETE_PARAM));
         Task task = taskDAO.getEntityById(completedTaskID);
         task.setCompleted(!task.getCompleted());
         taskDAO.update(task);
     }
 
-    public void delete(HttpServletRequest request) {
+    public void delete(HttpServletRequest request, HttpServletResponse response) {
         int deletedTaskID = Integer.parseInt(request.getParameter(DELETE_PARAM));
         taskDAO.delete(deletedTaskID);
     }
 
-    public void add(HttpServletRequest request) {
+    public void add(HttpServletRequest request, HttpServletResponse response) {
         String name = request.getParameter(NAME_PARAM);
         String description = request.getParameter(DESCRIPTION_PARAM) != null ? request.getParameter(DESCRIPTION_PARAM) : EMPTY_VALUE;
         String timeStr = request.getParameter(TIME_PARAM);
@@ -162,45 +151,53 @@ public class TaskServlet extends AuthServletTemplate {
     public void importFromFile(HttpServletRequest request) {
         try {
             Part filePart = request.getPart("file");
-            Path a = Paths.get(filePart.getSubmittedFileName());
-            String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+            Path submittedFileName = Paths.get(filePart.getSubmittedFileName());
+            String fileName = submittedFileName.getFileName().toString();
             InputStream fileContent = filePart.getInputStream();
             log.info("file name: " + fileName);
             UsersForXml usersForXml = ejb.convertXmlToObject(fileContent);
-            List<UserForXml> users = usersForXml.getUsers();
-            StringBuilder existedTasks = new StringBuilder();
-            //List<Task> existedTasks = new ArrayList<>();
-            for (UserForXml userForXml : users) {
-                if (userForXml.getName().equals(user.getName())) {
-                    List<Task> tasks = userForXml.getTasks().getTasks();
-                    for (Task task : tasks) {
-                        Task newTask = new Task(task.getName(), task.getDescription(), task.getTime(), task.getCompleted(), user);
-                        if (!user.containTask(newTask)) {
-                            log.info("not contain");
-                            taskDAO.create(newTask);
-                        } else {
-                            existedTasks.append("<p>name: ").append(newTask.getName()).append("</p>").
-                                    append("<p>description: ").append(newTask.getDescription()).append("</p>").
-                                    append("<p>time: ").append(Utils.getFormattedTime(newTask.getTime())).append("</p>");
-                        }
-                    }
+            if (usersForXml == null) {
+                String message = "<p><strong>invalid xml<strong></p>";
+                request.getSession().setAttribute("invalid", message);
+            } else {
+                List<UserForXml> users = usersForXml.getUsers();
+                StringBuilder existedTasks = new StringBuilder();
+                importTasks(users, existedTasks);
+                if (!"".equals(existedTasks.toString())) {
+                    String message = "<p><strong>Task(s):</strong></p>" + existedTasks + "<p><strong>already exist(s)</strong></p>";
+                    request.getSession().setAttribute("existed", message);
                 }
             }
-            if (!"".equals(existedTasks.toString())) {
-                String message = "<p><strong>Task(s):</strong></p>" + existedTasks + "<p><strong>already exist(s)</strong></p>";
-                request.getSession().setAttribute("existed", message);
-            }
-        } catch (IOException | ServletException | JAXBException e) {
+        } catch (IOException | ServletException e) {
             e.printStackTrace();
         }
     }
 
-//    public HashMap<String, Consumer<HttpServletRequest>> chooseAction() {
-//        HashMap<String, Consumer<HttpServletRequest>> actions = new HashMap<>();
-//        actions.put(COMPLETE_PARAM, this::complete);
-//        actions.put(DELETE_PARAM, this::delete);
-//        actions.put(NAME_PARAM, this::add);
-//        actions.put(EXPORT_PARAM, this::export);
-//        return actions;
-//   }
+    public void importTasks(List<UserForXml> users, StringBuilder existedTasks) {
+        for (UserForXml userForXml : users) {
+            if (userForXml.getName().equals(user.getName())) {
+                List<Task> tasks = userForXml.getTasks().getTasks();
+                for (Task task : tasks) {
+                    Task newTask = new Task(task.getName(), task.getDescription(), task.getTime(), task.getCompleted(), user);
+                    if (!user.containTask(newTask)) {
+                        log.info("not contain");
+                        taskDAO.create(newTask);
+                    } else {
+                        existedTasks.append("<p>name: ").append(newTask.getName()).append("</p>").
+                                append("<p>description: ").append(newTask.getDescription()).append("</p>").
+                                append("<p>time: ").append(Utils.getFormattedTime(newTask.getTime())).append("</p>");
+                    }
+                }
+            }
+        }
+    }
+
+    public HashMap<String, BiConsumer<HttpServletRequest, HttpServletResponse>> chooseAction() {
+        HashMap<String, BiConsumer<HttpServletRequest, HttpServletResponse>> actions = new HashMap<>();
+        actions.put(COMPLETE_PARAM, this::complete);
+        actions.put(DELETE_PARAM, this::delete);
+        actions.put(NAME_PARAM, this::add);
+        actions.put(EXPORT_PARAM, this::export);
+        return actions;
+   }
 }

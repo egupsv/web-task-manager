@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <xsd:element name="users">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element maxOccurs="unbounded" name="user">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="name" type="xsd:string" />
+                            <xsd:element name="tasks">
+                                <xsd:complexType>
+                                    <xsd:sequence>
+                                        <xsd:element maxOccurs="unbounded" name="task">
+                                            <xsd:complexType>
+                                                <xsd:sequence>
+                                                    <xsd:element name="name" type="xsd:string" />
+                                                    <xsd:element name="description" type="xsd:string" />
+                                                    <xsd:element name="completed" type="xsd:boolean" />
+                                                    <xsd:element name="time" type="xsd:dateTime" />
+                                                </xsd:sequence>
+                                            </xsd:complexType>
+                                        </xsd:element>
+                                    </xsd:sequence>
+                                </xsd:complexType>
+                            </xsd:element>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>
