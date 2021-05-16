@@ -60,7 +60,7 @@ public class UsersServlet extends AuthServletTemplate {
             return;
         }
         if (!editParamCheck(req)) {
-            System.out.println("POST CREATE USER CHECK");
+            log.info("POST CREATE USER CHECK");
             createUser(req);
         }
         deleteParamCheck(req);
@@ -124,7 +124,7 @@ public class UsersServlet extends AuthServletTemplate {
     public void createUser(HttpServletRequest req) {
 
         if (req.getParameter(NEW_USER_PARAM) != null) {
-            System.out.println("NEW USER START");
+            log.info("NEW USER START");
             String newName = req.getParameter("name").trim();
             String newMail = req.getParameter("mail").trim();
             String newPassword = req.getParameter("password").trim();
@@ -133,12 +133,12 @@ public class UsersServlet extends AuthServletTemplate {
 
             if (!("".equals(newName) && "".equals(newPassword) && "".equals(newMail))) {
                 try {
-                    System.out.println("__________CREATING USER________");
+                    log.info("__________CREATING USER________");
                     newUser = new User(newName, new Encryptor().encrypt(newPassword), newMail);
                     if (!"".equals(newRole))
                         newUser.setRole(newRole);
                     userDAO.create(newUser);
-                    System.out.println("__________USER CREATED________");
+                    log.info("__________USER CREATED________");
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -150,7 +150,7 @@ public class UsersServlet extends AuthServletTemplate {
     public void setUsersParameter(@NotNull HttpServletRequest req) {
         List<User> users;
         if (req.getParameter("filtered_name") != null)
-            System.out.println("filtered_name"); //mby finish
+            log.info("filtered_name"); //mby finish
         users = new UserDAO().getAll();
         req.setAttribute("users", users);
     }

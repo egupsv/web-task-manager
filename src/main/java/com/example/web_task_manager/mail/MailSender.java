@@ -1,6 +1,9 @@
 package com.example.web_task_manager.mail;
 
 import com.example.web_task_manager.Properties;
+import com.example.web_task_manager.servlet.TaskServlet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.mail.*;
 import javax.mail.internet.*;
@@ -9,6 +12,7 @@ import javax.mail.internet.*;
  * Class for sending mail messages.
  */
 public class MailSender {
+    private static final Logger log = LoggerFactory.getLogger(MailSender.class);
     private static final String USERNAME = Properties.MAIL_LOGIN_OUT;
     private static final String PASSWORD = Properties.MAIL_PASSWORD_OUT;// evlgcqtbgkrvktzy _123aBcqwe53412P sfcbhaepcweijobd
     private static Session session;
@@ -51,14 +55,14 @@ public class MailSender {
     public boolean sendMessage(String to, String subject, String text) { //dezen53412gml@gmail.com
 
         try {
-            System.out.println("sending message...");
+            log.info("sending message...");
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(USERNAME));
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
             message.setSubject(subject);
             message.setText(text);
             Transport.send(message);
-            System.out.println("message sent successfully...");
+            log.info("message sent successfully...");
             return true;
         } catch (Exception ex) {
             ex.printStackTrace();

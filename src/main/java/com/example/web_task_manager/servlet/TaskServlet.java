@@ -65,7 +65,7 @@ public class TaskServlet extends AuthServletTemplate {
             User targetUser = userDAO.getUserByName(targetUserName);
             request.setAttribute(TARGET_USER_PARAM, targetUser);
             if (targetUser == null) {
-                System.out.println("target USER not found");
+                log.info("target USER not found");
                 request.removeAttribute("target_user");
                 response.sendRedirect(request.getContextPath() + "/tasks/" + user.getName());
                 return;
@@ -74,7 +74,7 @@ public class TaskServlet extends AuthServletTemplate {
             if (access) {
                 List<Task> tasks = taskDAO.getUserTasks(targetUser);
                 request.setAttribute("tasks", tasks);
-                System.out.println("CAST /index.jsp");
+                log.info("CAST /index.jsp");
                 getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
             } else {
                 response.sendRedirect(request.getContextPath() + "/tasks/" + user.getName());

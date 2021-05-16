@@ -23,7 +23,6 @@ public class HibernateOracleTestXML {
 //        }
         MailSender ms = new MailSender();
         //ms.sendMessage(Properties.DEFAULT_MAIL_IN, "wqefqwef", "qewfweqdf");
-        System.out.println();
 
         Task task = new TaskDAO().getEntityById(6);
 
