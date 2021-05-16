@@ -97,7 +97,7 @@
                     <td><c:out value="${user.name}"/></td>
                     <td><c:out value="${user.mail}"/></td>
                     <td>
-                        <button class="btn btn-warning" value="Edit" onclick="showEditFields(${user.id})">
+                        <button type="button" class="btn btn-warning" value="Edit" onclick="showEditFields(${user.id},'${user.name}','${user.mail}','${user.role}')">
                             Edit
                         </button>
                     </td>
@@ -114,11 +114,12 @@
             </c:forEach>
         </table>
         <div>
-            <button class="btn btn-primary" onclick="showUserAddFields()">Add user</button>
             <button id="export_button" class="btn btn-primary" type="submit" name="export" value="all">Export all</button>
             <input id="import_button" class="btn btn-primary" type="button" onclick="showUploadField()" value="import"/>
+            <button type="button" class="btn btn-primary" onclick="showUserAddFields()">Add user</button>
         </div>
     </form>
+
     <div class="compose_user_field">
         <form id="edit_form" method="post" style="display: none" action="${pageContext.request.contextPath}/users">
             <input id="new_user_check" name="new_user_check" type="hidden" value="0">
