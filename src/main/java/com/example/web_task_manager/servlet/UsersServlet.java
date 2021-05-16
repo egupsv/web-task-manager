@@ -27,12 +27,16 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.function.BiConsumer;
 
 @MultipartConfig
 public class UsersServlet extends AuthServletTemplate {
     private static final String NEW_USER_PARAM = "new_user_check";
     private static final String EXPORT_PARAM = "export";
+    private static final String SUBMIT_EDIT_B = "submit_edit_b";
+    private static final String DELETE = "delete";
     private static final String FILE_PARAM = "file";
     private static final Logger log = LoggerFactory.getLogger(UsersServlet.class);
 
@@ -59,38 +63,47 @@ public class UsersServlet extends AuthServletTemplate {
             resp.sendRedirect(req.getContextPath() + "/user");
             return;
         }
-        if (!editParamCheck(req)) {
-            log.info("POST CREATE USER CHECK");
-            createUser(req);
+        if(req.getParameter(SUBMIT_EDIT_B) != null) {
+            editParamCheck(req, resp);
         }
-        deleteParamCheck(req);
-        if (req.getParameter(EXPORT_PARAM) != null) {
+        if(req.getParameter(EXPORT_PARAM) != null) {
             export(req, resp);
         }
-        if(req.getParameter(EXPORT_PARAM) == null) {
-            if (req.getPart(FILE_PARAM) != null) {
-                log.info(req.getParameterNames().toString());
-                log.info("1" + req.getParameter("flexRadioDefault"));
-                importFromFile(req, req.getParameter("flexRadioDefault").equals("replace"));
-            }
+        if(req.getParameter(DELETE) != null) {
+            deleteParamCheck(req, resp);
         }
+//        if(req.getParameter(EXPORT_PARAM) == null &&
+//                req.getParameter(NEW_USER_PARAM) == null &&
+//                req.getParameter(SUBMIT_EDIT_B) == null &&
+//                req.getParameter(DELETE) == null &&
+//                req.getParameter("name") == null &&
+//                req.getParameter("mail") == null &&
+//                req.getParameter("password") == null &&
+//                req.getParameter("role") == null) {
+//            log.info(req.getParameterNames().nextElement());
+//            if (req.getPart(FILE_PARAM) != null) {
+//                log.info(req.getParameterNames().toString());
+//                log.info("1" + req.getParameter("flexRadioDefault"));
+//                importFromFile(req, req.getParameter("flexRadioDefault").equals("replace"));
+////            }
+//        } else {
+//            chooseAction().get(req.getParameterNames().nextElement()).accept(req, resp);
+//        }
         resp.sendRedirect(req.getContextPath() + "/users");
     }
 
-    private void deleteParamCheck(HttpServletRequest req) {
+    private void deleteParamCheck(HttpServletRequest req, HttpServletResponse resp) {
         String deleteParam = req.getParameter("delete");
-        int deleteId = deleteParam == null ? 0 : Integer.parseInt(deleteParam.trim());
-
-        if (deleteId > 0) {
-            User targetUser = new UserDAO().getEntityById(deleteId);
-            if (!targetUser.getName().equals(req.getSession().getAttribute("login")))
-                new UserDAO().delete(targetUser.getId());
+        int deleteId = Integer.parseInt(deleteParam.trim());
+        User targetUser = new UserDAO().getEntityById(deleteId);
+        if (!targetUser.getName().equals(req.getSession().getAttribute("login"))) {
+            new UserDAO().delete(targetUser.getId());
         }
     }
 
-    public boolean editParamCheck(HttpServletRequest req) {
-        String editIdParam = req.getParameter("submit_edit_b");
-        int editableId = editIdParam == null ? 0 : Integer.parseInt(editIdParam.trim());
+    public void editParamCheck(HttpServletRequest req, HttpServletResponse resp) {
+        String editIdParam = req.getParameter(SUBMIT_EDIT_B);
+        int editableId = Integer.parseInt(editIdParam.trim());
         if (editableId > 0) {
             User targetUser = new UserDAO().getEntityById(editableId);
             String newName = req.getParameter("name").trim();
@@ -116,9 +129,9 @@ public class UsersServlet extends AuthServletTemplate {
                 targetUser.setMail(newMail);
 
             userDAO.update(targetUser);
-            return true;
         }
-        return false;
+        log.info("POST CREATE USER CHECK");
+        createUser(req);
     }
 
     public void createUser(HttpServletRequest req) {
@@ -149,8 +162,6 @@ public class UsersServlet extends AuthServletTemplate {
 
     public void setUsersParameter(@NotNull HttpServletRequest req) {
         List<User> users;
-        if (req.getParameter("filtered_name") != null)
-            log.info("filtered_name"); //mby finish
         users = new UserDAO().getAll();
         req.setAttribute("users", users);
     }
@@ -241,5 +252,13 @@ public class UsersServlet extends AuthServletTemplate {
                 taskDAO.create(newTask);
             }
         }
+    }
+
+    public HashMap<String, BiConsumer<HttpServletRequest, HttpServletResponse>> chooseAction() {
+        HashMap<String, BiConsumer<HttpServletRequest, HttpServletResponse>> actions = new HashMap<>();
+        actions.put(SUBMIT_EDIT_B, this::editParamCheck);
+        actions.put(DELETE, this::deleteParamCheck);
+        actions.put(EXPORT_PARAM, this::export);
+        return actions;
     }
 }
