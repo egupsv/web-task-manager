@@ -1,9 +1,12 @@
 package com.example.web_task_manager.servlet.template;
 
 import com.example.web_task_manager.CookieName;
+import com.example.web_task_manager.servlet.TaskServlet;
 import com.example.web_task_manager.users.Role;
 import com.example.web_task_manager.dba.TaskDAO;
 import com.example.web_task_manager.model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -12,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 public class AuthServletTemplate extends ServletTemplate {
+    private static final Logger log = LoggerFactory.getLogger(AuthServletTemplate.class);
     protected final TaskDAO taskDAO = new TaskDAO();
     protected User user;
 
@@ -40,14 +44,14 @@ public class AuthServletTemplate extends ServletTemplate {
     }
 
     protected void logoutUser(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        System.out.println("LOGOUT USER AUTH");
+        log.info("LOGOUT USER AUTH");
         req.getSession().removeAttribute("password");
         req.getSession().removeAttribute("login");
         req.getSession().removeAttribute("role");
         cookieController.eraseCookie(resp, CookieName.LOGIN);
         cookieController.eraseCookie(resp, CookieName.PASSWORD);
         resp.sendRedirect(req.getContextPath() + "/login.jsp");
-        System.out.println("/LOGOUT USER AUTH");
+        log.info("/LOGOUT USER AUTH");
     }
 
 }

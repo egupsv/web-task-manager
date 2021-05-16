@@ -52,14 +52,14 @@ public class LoginFilter implements Filter {
 //            log.info("doFilter");
             chain.doFilter(req, res);
         } else {
-            System.out.println("LOGIN FILTER");
+            log.info("LOGIN FILTER");
             String userName = cookieController.getCookieValue(request, CookieName.LOGIN);
-            System.out.println("username: " + userName);
+            log.info("username: " + userName);
             String userPassword = cookieController.getCookieValue(request, CookieName.PASSWORD);
-            System.out.println("userpassword: " + userPassword);
+            log.info("userpassword: " + userPassword);
             User cookieUser = new UserDAO().getUserByName(userName);
             if (cookieUser != null && userPassword.equals(cookieUser.getEncPassword())) {
-                System.out.println("EQUALS and etc");
+                log.info("EQUALS and etc");
                 request.getSession().setAttribute("login", cookieUser.getName()); //dupl
                 request.getSession().setAttribute("role", cookieUser.getRole());
                 TryChecker.setPropertyOfLoginDiv("none");
