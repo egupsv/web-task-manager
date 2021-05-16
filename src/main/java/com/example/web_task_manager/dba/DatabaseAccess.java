@@ -1,11 +1,15 @@
 package com.example.web_task_manager.dba;
 
+import com.example.web_task_manager.controller.NotifyWorker;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DatabaseAccess {
+    private static final Logger log = LoggerFactory.getLogger(DatabaseAccess.class);
     public static DatabaseAccess INSTANCE;
     private StandardServiceRegistry registry;
     private static SessionFactory sessionFactory;
@@ -14,7 +18,7 @@ public class DatabaseAccess {
     public DatabaseAccess() {
         if (isLoading)
             return;
-        System.out.println("CREATING INSTANCE OF DA");
+        log.info("CREATING INSTANCE OF DA");
         if (sessionFactory != null) {
             closeFactory();
         }
@@ -25,9 +29,9 @@ public class DatabaseAccess {
                     .build();
 
 
-            System.out.println("creating factory-------------------------");
+            log.info("creating factory-------------------------");
             sessionFactory = new MetadataSources(registry).buildMetadata().buildSessionFactory();
-            System.out.println("factory created-----------------------");
+            log.info("factory created-----------------------");
         } catch (Exception ex) {
             StandardServiceRegistryBuilder.destroy(registry);
             ex.printStackTrace();

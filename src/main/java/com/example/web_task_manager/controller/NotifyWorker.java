@@ -8,6 +8,8 @@ import com.example.web_task_manager.mail.MailSender;
 import com.example.web_task_manager.model.Task;
 import com.example.web_task_manager.model.User;
 import org.hibernate.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,13 +18,13 @@ import java.util.List;
  * Class for parse input users and finding expired task
  */
 public class NotifyWorker implements Runnable {
-
+    private static final Logger log = LoggerFactory.getLogger(NotifyWorker.class);
     private final TaskDAO taskDao = new TaskDAO();
     private final UserDAO userDAO = new UserDAO();
     private final MailSender mailSender = new MailSender();
 
     public NotifyWorker() {
-        System.out.println("NOTIFY WORKER CREATED");
+        log.info("NOTIFY WORKER CREATED");
 
     }
 
@@ -58,10 +60,10 @@ public class NotifyWorker implements Runnable {
         try (Session session = DatabaseAccess.getSessionFactory().openSession()) {
             String hql = "from Task task where task.completed = false and current_date > task.time";
             expired = session.createQuery(hql).list();
-            System.out.println(expired.isEmpty() ? "expired list is empty" : expired.get(0));
+            log.info(expired.isEmpty() ? "expired list is empty" : expired.get(0).toString());
             return expired;
         } catch (Exception ex) {
-            System.out.println("EXPIRED LIST IS ERROR");
+            log.info("EXPIRED LIST IS ERROR");
             ex.printStackTrace();
         }
 
