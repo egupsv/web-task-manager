@@ -36,44 +36,20 @@ public class LoginFilter implements Filter {
         String loginURL = request.getContextPath() + "/login";
         String signupURL = request.getContextPath() + "/signup";
         boolean loggedIn = session != null && session.getAttribute("login") != null;
-        boolean isSmthWrong = session != null && session.getAttribute("attempt") != null;
         String reqURI = request.getRequestURI();
-//        log.info("requestUI " + reqURI);
+        log.info("requestUI " + reqURI);
         boolean loginRequest = request.getRequestURI().equals(loginURL) || request.getRequestURI().equals(loginURL + ".jsp");
         boolean signupRequest = request.getRequestURI().equals(signupURL) || request.getRequestURI().equals(signupURL + ".jsp");
 
-//        log.info("loginRequest " + (loginRequest ? "true" : "false"));
-//        log.info("signupRequest " + (signupRequest ? "true" : "false"));
-//        log.info("loggedIn " + (loggedIn ? "true" : "false"));
-//        log.info("reqURI " + reqURI);
 
-
-        if (loggedIn || (loginRequest && !isSmthWrong) || (signupRequest && !isSmthWrong)) {
-//            log.info("doFilter");
+        if (loggedIn || loginRequest || signupRequest) {
             chain.doFilter(req, res);
+//        } else if (cookieController.getCookieValue(request, CookieName.LOGIN) != null) {
+//            log.info(cookieController.getCookieValue(request, CookieName.LOGIN));
         } else {
-            log.info("LOGIN FILTER");
-            String userName = cookieController.getCookieValue(request, CookieName.LOGIN);
-            log.info("username: " + userName);
-            String userPassword = cookieController.getCookieValue(request, CookieName.PASSWORD);
-            log.info("userpassword: " + userPassword);
-            User cookieUser = new UserDAO().getUserByName(userName);
-            if (cookieUser != null && userPassword.equals(cookieUser.getEncPassword())) {
-                log.info("EQUALS and etc");
-                request.getSession().setAttribute("login", cookieUser.getName()); //dupl
-                request.getSession().setAttribute("role", cookieUser.getRole());
-                TryChecker.setPropertyOfLoginDiv("none");
-                request.getSession().setAttribute("attempt", null);
-                chain.doFilter(request, response);
-            } else {
-                cookieController.eraseCookie(response, CookieName.LOGIN);
-                cookieController.eraseCookie(response, CookieName.PASSWORD);
-                log.info("redirect");
-                String page = reqURI.contains("signup") ? "signup.jsp" : "login.jsp";
-                log.info("to " + page);
-                if (session != null) session.setAttribute("attempt", null);
-                response.sendRedirect(page);
-            }
+            String page = reqURI.contains("signup") ? "signup" : "login";
+            log.info("to " + page);
+            response.sendRedirect(request.getContextPath() + "/" + page);
         }
     }
 

@@ -21,18 +21,20 @@ public class SignupServlet extends ServletTemplate {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        getServletContext().getRequestDispatcher("/signup.jsp").forward(req, resp);
+        req.getSession().removeAttribute("wrong");
+        resp.sendRedirect(req.getContextPath() + "/signup.jsp");
     }
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        request.getSession().removeAttribute("taken");
         String login = request.getParameter("login");
         String password = request.getParameter("password");
         String mail = request.getParameter("mail");
         if (userDAO.getUserByName(login) != null || userDAO.getUserByMail(mail) != null) {
             log.info("this login is already taken");
-            request.getSession().setAttribute("attempt", "wrong");
-            TryChecker.setPropertyOfSignupDiv("block");
+            String message = "<p>this login is already taken</p>";
+            request.getSession().setAttribute("taken", message);
             response.sendRedirect("signup.jsp");
         } else if (Properties.REGEX_LOGIN_PATTERN.matcher(login).find() && Properties.REGEX_MAIL_PATTERN.matcher(mail).find()) {
             String encPassword = null;
@@ -44,15 +46,9 @@ public class SignupServlet extends ServletTemplate {
             User user = new User(login, encPassword, mail);
             userDAO.create(user);
             log.info("User has logged in");
-            request.getSession().setAttribute("attempt", null);
-            TryChecker.setPropertyOfSignupDiv("none");
             request.getSession().setAttribute("login", login);
-            request.getSession().setAttribute("role", user.getRole());
             cookieController.createCookie(response, CookieName.LOGIN, login);
-            cookieController.createCookie(response, CookieName.PASSWORD, encPassword);
             response.sendRedirect(request.getContextPath() + "/tasks/" + user.getName());
-
-
         } else {
             log.info("this login + " + login + " is incorrect");
             log.info(" or this mail + " + mail + " is incorrect");

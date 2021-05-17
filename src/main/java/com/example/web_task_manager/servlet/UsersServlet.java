@@ -72,22 +72,22 @@ public class UsersServlet extends AuthServletTemplate {
         if(req.getParameter(DELETE) != null) {
             deleteParamCheck(req, resp);
         }
-//        if(req.getParameter(EXPORT_PARAM) == null &&
-//                req.getParameter(NEW_USER_PARAM) == null &&
-//                req.getParameter(SUBMIT_EDIT_B) == null &&
-//                req.getParameter(DELETE) == null &&
-//                req.getParameter("name") == null &&
-//                req.getParameter("mail") == null &&
-//                req.getParameter("password") == null &&
-//                req.getParameter("role") == null) {
-//            log.info(req.getParameterNames().nextElement());
-//            if (req.getPart(FILE_PARAM) != null) {
-//                log.info(req.getParameterNames().toString());
-//                log.info("1" + req.getParameter("flexRadioDefault"));
-//                importFromFile(req, req.getParameter("flexRadioDefault").equals("replace"));
-////            }
+        if(req.getParameter(EXPORT_PARAM) == null &&
+                req.getParameter(NEW_USER_PARAM) == null &&
+                req.getParameter(SUBMIT_EDIT_B) == null &&
+                req.getParameter(DELETE) == null) {
+            if (req.getPart(FILE_PARAM) != null) {
+                log.info(req.getParameterNames().toString());
+                log.info("1" + req.getParameter("flexRadioDefault"));
+                importFromFile(req, req.getParameter("flexRadioDefault").equals("replace"));
+            }
+        }
 //        } else {
-//            chooseAction().get(req.getParameterNames().nextElement()).accept(req, resp);
+//            try {
+//                chooseAction().get(req.getParameterNames().nextElement()).accept(req, resp);
+//            } catch (NullPointerException e) {
+//                resp.sendRedirect(req.getContextPath() + "/users");
+//            }
 //        }
         resp.sendRedirect(req.getContextPath() + "/users");
     }

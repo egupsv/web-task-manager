@@ -26,12 +26,13 @@ public class LoginServlet extends ServletTemplate {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-        getServletContext().getRequestDispatcher("/login.jsp").forward(req, resp);
+        req.getSession().removeAttribute("taken");
+        resp.sendRedirect(req.getContextPath() + "/login.jsp");
     }
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        request.getSession().removeAttribute("wrong");
         String login = request.getParameter("login");
         String password = request.getParameter("password");
         String encPassword = null;
@@ -48,26 +49,14 @@ public class LoginServlet extends ServletTemplate {
             user = targetUser;
 
         if (user != null) {
-            logInUser(request, response, targetUser);
-            //response.sendRedirect(request.getContextPath() + "/tasks/" + login);
-
+            request.getSession().setAttribute("login", login);
+            cookieController.createCookie(response, CookieName.LOGIN, user.getName());
+            response.sendRedirect("/web_task_manager-1.0-SNAPSHOT/tasks");
             log.info("User has logged in");
         } else {
-            log.info("login or password is incorrect");
-            request.getSession().setAttribute("attempt", "wrong");
+            String message = "<p>login or password is incorrect</p>";
+            request.getSession().setAttribute("wrong", message);
             response.sendRedirect("login.jsp");
-            TryChecker.setPropertyOfLoginDiv("block");
-
         }
-    }
-
-    private void logInUser(HttpServletRequest request, HttpServletResponse response, User user) throws IOException {
-        request.getSession().setAttribute("login", user.getName());
-        request.getSession().setAttribute("role", user.getRole());
-        cookieController.createCookie(response, CookieName.LOGIN, user.getName());
-        cookieController.createCookie(response, CookieName.PASSWORD, user.getEncPassword());
-        TryChecker.setPropertyOfLoginDiv("none");
-        request.getSession().setAttribute("attempt", null);
-        response.sendRedirect(request.getContextPath() + "/tasks/" + user.getName());
     }
 }
