@@ -129,9 +129,10 @@ public class UsersServlet extends AuthServletTemplate {
                 targetUser.setMail(newMail);
 
             userDAO.update(targetUser);
+        } else {
+            log.info("POST CREATE USER CHECK");
+            createUser(req);
         }
-        log.info("POST CREATE USER CHECK");
-        createUser(req);
     }
 
     public void createUser(HttpServletRequest req) {
@@ -208,9 +209,8 @@ public class UsersServlet extends AuthServletTemplate {
     }
 
     public void importUsers(List<UserForXml> usersForXml, boolean replace) throws NullPointerException {
-        List<User> users = new UserDAO().getAll();
         for (UserForXml userForXml : usersForXml) {
-            User currentUser = findUser(userForXml.getName(), users);
+            User currentUser = userDAO.getUserByName(userForXml.getName());
             if (currentUser == null) {
                 importNewUser(userForXml);
             } else {
@@ -226,16 +226,6 @@ public class UsersServlet extends AuthServletTemplate {
                 }
             }
         }
-    }
-
-
-    public User findUser (String name, List<User> users) {
-        for (User user : users) {
-            if (name.equals(user.getName())) {
-                return user;
-            }
-        }
-        return null;
     }
 
     public void importNewUser (UserForXml userForXml) {

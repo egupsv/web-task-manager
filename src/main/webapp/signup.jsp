@@ -19,14 +19,6 @@
     </style>
 </head>
 <body>
-<c:if test="${sessionScope.taken != null}">
-    <div class="container">
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                ${sessionScope.taken}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    </div>
-</c:if>
 <nav class="navbar navbar-expand-lg navbar-light bg-light nav-h" style="background-color: #5b1375 !important;">
     <div class="container header">
         Web Task Manager
@@ -50,10 +42,8 @@
 </nav>
 <div class="container auth-center">
     <h1 class="auth-title">Sign up</h1>
-    <form method="post" action="${pageContext.request.contextPath}/signup">
-        <jsp:useBean id="TryChecker" class="com.example.web_task_manager.servlet.TryChecker" scope="page"/>
-        <div id="try" style="color:red; display:${TryChecker.getPropertyOfSignupDiv()}">this login is already used</div>
-        <div class="container">
+    <div class="container">
+        <form method="post" action="${pageContext.request.contextPath}/signup">
             <label for="mail"><b>Email</b></label>
             <input id="mail" class="auth_field" type="email" required placeholder="Enter Email" name="mail"
                    pattern="(?:[a-z0-9!#$%&amp;&apos;*+\=?^_`{|}~-]+(?:\.[a-z0-9!#$%&amp;&apos;*+\=?^_`{|}~-]+)*|&quot;(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*&quot;)@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])"/>
@@ -64,12 +54,19 @@
 
             <label for="psw"><b>Password</b></label>
             <input id="psw" class="auth_field" type="password" required placeholder="Enter Password" name="password"/>
-
-            <input class="auth_button" type="submit" value="Sign up">
-            <input class="auth_button" type="button" value="Log in"
-                   onclick="window.location='/web_task_manager-1.0-SNAPSHOT/login.jsp';"/>
-        </div>
-    </form>
+        </form>
+        <button class="auth_button">
+            <a href="${pageContext.request.contextPath}/login" style="text-decoration: none; color: #d5d5d5 ">Log in</a>
+        </button>
+    </div>
 </div>
+<c:if test="${sessionScope.taken != null}">
+    <div class="container">
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                ${sessionScope.taken}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+</c:if>
 </body>
 </html>

@@ -40,12 +40,23 @@ public class LoginFilter implements Filter {
         log.info("requestUI " + reqURI);
         boolean loginRequest = request.getRequestURI().equals(loginURL) || request.getRequestURI().equals(loginURL + ".jsp");
         boolean signupRequest = request.getRequestURI().equals(signupURL) || request.getRequestURI().equals(signupURL + ".jsp");
+        String cookieValue = cookieController.getCookieValue(request, CookieName.LOGIN);
+//            log.info(cookieValue);
+//        } catch (NullPointerException e) {
+//            e.printStackTrace();
+//        }
+
 
 
         if (loggedIn || loginRequest || signupRequest) {
             chain.doFilter(req, res);
-//        } else if (cookieController.getCookieValue(request, CookieName.LOGIN) != null) {
-//            log.info(cookieController.getCookieValue(request, CookieName.LOGIN));
+        } else if (cookieValue != null) {
+            User cookieUser = new UserDAO().getUserByName(cookieValue);
+            if (cookieUser != null) {
+                session.setAttribute("login", cookieValue);
+                session.setAttribute("role", cookieUser.getRole());
+                response.sendRedirect(request.getContextPath() + "/tasks");
+            }
         } else {
             String page = reqURI.contains("signup") ? "signup" : "login";
             log.info("to " + page);

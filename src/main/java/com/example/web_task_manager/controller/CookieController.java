@@ -25,11 +25,14 @@ public class CookieController {
     public String getCookieValue(HttpServletRequest request, CookieName name) {
         String cookieName = name.toString().toLowerCase();
         Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
-            String targetName = cookie.getName();
-            if (cookieName.equals(targetName)) {
-                return cookie.getValue();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                String targetName = cookie.getName();
+                if (cookieName.equals(targetName)) {
+                    return cookie.getValue();
+                }
             }
+            return null;
         }
         return null;
     }
@@ -48,7 +51,7 @@ public class CookieController {
         if (cookies != null)
             for (Cookie cookie : cookies) {
                 cookie.setValue("");
-                cookie.setPath("/");
+                cookie.setPath(req.getContextPath());
                 cookie.setMaxAge(0);
                 resp.addCookie(cookie);
             }

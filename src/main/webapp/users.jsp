@@ -20,14 +20,6 @@
     </script>
 </head>
 <body>
-<c:if test="${sessionScope.invalidU != null}">
-    <div class="container">
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                ${sessionScope.invalidU}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    </div>
-</c:if>
 <nav class="navbar navbar-expand-lg navbar-light bg-light nav-h" style="background-color: #5b1375 !important;">
     <div class="container header">
         <ul id="users-ul" class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -74,6 +66,14 @@
 
     </div>
 </nav>
+<c:if test="${sessionScope.invalidU != null}">
+    <div class="container">
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                ${sessionScope.invalidU}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+</c:if>
 <div class="container">
     <form method="post" action="${pageContext.request.contextPath}/users">
         <h2 class="h1 fw-bold">Users</h2>

@@ -21,14 +21,6 @@
     </script>
 </head>
 <body>
-<c:if test="${sessionScope.wrong != null}">
-    <div class="container">
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                ${sessionScope.wrong}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    </div>
-</c:if>
 <nav class="navbar navbar-expand-lg navbar-light bg-light nav-h" style="background-color: #5b1375 !important;">
     <div class="container header">
         Web Task Manager
@@ -52,8 +44,8 @@
 </nav>
 <div class="container auth-center">
     <h1 class="auth-title">Log in</h1>
-    <form method="post" action="${pageContext.request.contextPath}/login">
-        <div class="container">
+    <div class="container">
+        <form method="post" action="${pageContext.request.contextPath}/login">
             <label for="login"><b>Username</b></label>
             <input id="login" class="auth_field" type="text" required placeholder="Enter Username" name="login"
                    pattern="^[A-Za-z0-9]{4,16}$"
@@ -61,12 +53,20 @@
 
             <label for="psw"><b>Password</b></label>
             <input id="psw" class="auth_field" type="password" required placeholder="Enter Password" name="password"/>
-
             <input class="auth_button" type="submit" value="Log in"/>
-            <input class="auth_button" type="button" value="Sign up"
-                   onclick="window.location='/web_task_manager-1.0-SNAPSHOT/signup.jsp';"/>
-        </div>
-    </form>
+        </form>
+        <button class="auth_button">
+            <a href="${pageContext.request.contextPath}/signup" style="text-decoration: none; color: #d5d5d5 ">Sign up</a>
+        </button>
+    </div>
 </div>
+<c:if test="${sessionScope.wrong != null}">
+    <div class="container">
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                ${sessionScope.wrong}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+</c:if>
 </body>
 </html>

@@ -45,12 +45,12 @@ public class AuthServletTemplate extends ServletTemplate {
 
     protected void logoutUser(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         log.info("LOGOUT USER AUTH");
-        req.getSession().removeAttribute("password");
         req.getSession().removeAttribute("login");
         req.getSession().removeAttribute("role");
-        cookieController.eraseCookie(resp, CookieName.LOGIN);
-        cookieController.eraseCookie(resp, CookieName.PASSWORD);
+        cookieController.eraseAllCookies(req, resp);
         resp.sendRedirect(req.getContextPath() + "/login.jsp");
+        log.info("login " + req.getSession().getAttribute("login"));
+        log.info("login " + cookieController.getCookieValue(req, CookieName.LOGIN));
         log.info("/LOGOUT USER AUTH");
     }
 

@@ -47,6 +47,7 @@ public class SignupServlet extends ServletTemplate {
             userDAO.create(user);
             log.info("User has logged in");
             request.getSession().setAttribute("login", login);
+            request.getSession().setAttribute("role", user.getRole());
             cookieController.createCookie(response, CookieName.LOGIN, login);
             response.sendRedirect(request.getContextPath() + "/tasks/" + user.getName());
         } else {

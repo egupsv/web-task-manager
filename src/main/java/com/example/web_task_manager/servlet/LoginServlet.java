@@ -32,7 +32,6 @@ public class LoginServlet extends ServletTemplate {
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        request.getSession().removeAttribute("wrong");
         String login = request.getParameter("login");
         String password = request.getParameter("password");
         String encPassword = null;
@@ -50,6 +49,7 @@ public class LoginServlet extends ServletTemplate {
 
         if (user != null) {
             request.getSession().setAttribute("login", login);
+            request.getSession().setAttribute("role", user.getRole());
             cookieController.createCookie(response, CookieName.LOGIN, user.getName());
             response.sendRedirect("/web_task_manager-1.0-SNAPSHOT/tasks");
             log.info("User has logged in");

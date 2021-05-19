@@ -31,14 +31,6 @@
         </div>
     </div>
 </c:if>
-<c:if test="${sessionScope.existed != null}">
-<div class="container">
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-        ${sessionScope.existed}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-</div>
-</c:if>
 <nav class="navbar navbar-expand-lg navbar-light bg-light nav-h" style="background-color: #5b1375 !important;">
     <div class="container header">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -84,6 +76,14 @@
 
     </div>
 </nav>
+<c:if test="${sessionScope.existed != null}">
+    <div class="container">
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                ${sessionScope.existed}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+</c:if>
 <jsp:useBean id="target_user" scope="request" type="com.example.web_task_manager.model.User"/>
 <div class="container">
     <form method="post" action="${pageContext.request.contextPath}/tasks/${target_user.name}">
