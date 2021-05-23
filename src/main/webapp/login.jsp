@@ -63,7 +63,7 @@
 <c:if test="${sessionScope.wrong != null}">
     <div class="container">
         <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                ${sessionScope.wrong}
+            <p>${sessionScope.wrong}</p>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     </div>

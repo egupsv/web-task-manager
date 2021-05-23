@@ -43,6 +43,8 @@ public class TaskServlet extends AuthServletTemplate {
     private static final String DESCRIPTION_PARAM = "description";
     private static final String TIME_PARAM = "time";
     private static final String TARGET_USER_PARAM = "target_user";
+    private static final String EXISTED_ATTRIBUTE = "existed";
+    private static final String INVALID_ATTRIBUTE = "invalid";
     private static final String LOGOUT_PARAM = "Logout";
     private String targetUserName;
 
@@ -85,17 +87,14 @@ public class TaskServlet extends AuthServletTemplate {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         super.doPost(request, response);
-        request.getSession().setAttribute("existed", null);
-        request.getSession().setAttribute("invalid", null);
+        request.getSession().setAttribute(EXISTED_ATTRIBUTE, null);
+        request.getSession().setAttribute(INVALID_ATTRIBUTE, null);
         if (targetUserName == null)
             targetUserName = user.getName();
 
         boolean access = (targetUserName.equals(user.getName()) || Role.ADMIN.toString().equals(user.getRole()));
         if (access) {
-            if(request.getParameter(NAME_PARAM) == null &&
-                    request.getParameter(EXPORT_PARAM) == null &&
-                    request.getParameter(DELETE_PARAM) == null &&
-                    request.getParameter(COMPLETE_PARAM) == null) {
+            if(isMultipartRequest(request)) {
                 if (request.getPart(FILE_PARAM) != null) {
                     importFromFile(request);
                 }
@@ -106,14 +105,22 @@ public class TaskServlet extends AuthServletTemplate {
         response.sendRedirect(request.getContextPath() + "/tasks/" + targetUserName);
     }
 
+    public boolean isMultipartRequest (HttpServletRequest request) {
+        return (request.getParameter(NAME_PARAM) == null &&
+                request.getParameter(EXPORT_PARAM) == null &&
+                request.getParameter(DELETE_PARAM) == null &&
+                request.getParameter(COMPLETE_PARAM) == null);
+    }
+
     public void export(HttpServletRequest request, HttpServletResponse response) {
+        log.info("export");
         String parameter = request.getParameter(EXPORT_PARAM);
         String fileName = "tasks.xml";
         Task exportedTask = null;
         List<User> users = new ArrayList<>();
         users.add(user);
         int exportedTaskID = 0;
-        if(!parameter.equals("all")) {
+        if(!"all".equals(parameter)) {
             exportedTaskID = Integer.parseInt(parameter);
             exportedTask = taskDAO.getEntityById(exportedTaskID);
             fileName = "task" + exportedTaskID + ".xml";
@@ -158,15 +165,15 @@ public class TaskServlet extends AuthServletTemplate {
             log.info("file name: " + fileName);
             UsersForXml usersForXml = ejb.convertXmlToObject(fileContent);
             if (usersForXml == null) {
-                String message = "<p><strong>invalid xml<strong></p>";
-                request.getSession().setAttribute("invalid", message);
+                String message = "invalid xml";
+                request.getSession().setAttribute(INVALID_ATTRIBUTE, message);
             } else {
                 List<UserForXml> users = usersForXml.getUsers();
-                StringBuilder existedTasks = new StringBuilder();
+                List<Task> existedTasks = new ArrayList<>();
+                //StringBuilder existedTasks = new StringBuilder();
                 importTasks(users, existedTasks);
-                if (!"".equals(existedTasks.toString())) {
-                    String message = "<p><strong>Task(s):</strong></p>" + existedTasks + "<p><strong>already exist(s)</strong></p>";
-                    request.getSession().setAttribute("existed", message);
+                if (!existedTasks.isEmpty()) {
+                    request.getSession().setAttribute(EXISTED_ATTRIBUTE, existedTasks);
                 }
             }
         } catch (IOException | ServletException e) {
@@ -174,20 +181,19 @@ public class TaskServlet extends AuthServletTemplate {
         }
     }
 
-    public void importTasks(List<UserForXml> users, StringBuilder existedTasks) {
+    public void importTasks(List<UserForXml> users, List<Task> existedTasks) {
         for (UserForXml userForXml : users) {
-            if (userForXml.getName().equals(user.getName())) {
-                List<Task> tasks = userForXml.getTasks().getTasks();
-                for (Task task : tasks) {
-                    Task newTask = new Task(task.getName(), task.getDescription(), task.getTime(), task.getCompleted(), user);
-                    if (!user.containTask(newTask)) {
-                        log.info("not contain");
-                        taskDAO.create(newTask);
-                    } else {
-                        existedTasks.append("<p>name: ").append(newTask.getName()).append("</p>").
-                                append("<p>description: ").append(newTask.getDescription()).append("</p>").
-                                append("<p>time: ").append(Utils.getFormattedTime(newTask.getTime())).append("</p>");
-                    }
+            if (!userForXml.getName().equals(user.getName())) {
+                continue;
+            }
+            List<Task> tasks = userForXml.getTasks().getTasks();
+            for (Task task : tasks) {
+                Task newTask = new Task(task.getName(), task.getDescription(), task.getTime(), task.getCompleted(), user);
+                if (!user.containTask(newTask)) {
+                    log.info("not contain");
+                    taskDAO.create(newTask);
+                } else {
+                    existedTasks.add(newTask);
                 }
             }
         }

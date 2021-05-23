@@ -51,10 +51,10 @@ public class LoginServlet extends ServletTemplate {
             request.getSession().setAttribute("login", login);
             request.getSession().setAttribute("role", user.getRole());
             cookieController.createCookie(response, CookieName.LOGIN, user.getName());
-            response.sendRedirect("/web_task_manager-1.0-SNAPSHOT/tasks");
+            response.sendRedirect(request.getContextPath() + "/tasks");
             log.info("User has logged in");
         } else {
-            String message = "<p>login or password is incorrect</p>";
+            String message = "login or password is incorrect";
             request.getSession().setAttribute("wrong", message);
             response.sendRedirect("login.jsp");
         }

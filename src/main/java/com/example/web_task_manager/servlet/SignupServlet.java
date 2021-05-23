@@ -33,7 +33,7 @@ public class SignupServlet extends ServletTemplate {
         String mail = request.getParameter("mail");
         if (userDAO.getUserByName(login) != null || userDAO.getUserByMail(mail) != null) {
             log.info("this login is already taken");
-            String message = "<p>this login is already taken</p>";
+            String message = "this login is already taken";
             request.getSession().setAttribute("taken", message);
             response.sendRedirect("signup.jsp");
         } else if (Properties.REGEX_LOGIN_PATTERN.matcher(login).find() && Properties.REGEX_MAIL_PATTERN.matcher(mail).find()) {

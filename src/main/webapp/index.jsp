@@ -26,7 +26,7 @@
 <c:if test="${sessionScope.invalid != null}">
     <div class="container">
         <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                ${sessionScope.invalid}
+            <p><strong>${sessionScope.invalid}</strong></p>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     </div>
@@ -76,14 +76,7 @@
 
     </div>
 </nav>
-<c:if test="${sessionScope.existed != null}">
-    <div class="container">
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                ${sessionScope.existed}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    </div>
-</c:if>
+<jsp:useBean id="Utils" class="com.example.web_task_manager.Utils"/>
 <jsp:useBean id="target_user" scope="request" type="com.example.web_task_manager.model.User"/>
 <div class="container">
     <form method="post" action="${pageContext.request.contextPath}/tasks/${target_user.name}">
@@ -108,7 +101,6 @@
                 <th scope="col">export</th>
             </tr>
             </thead>
-            <jsp:useBean id="Utils" class="com.example.web_task_manager.Utils"/>
             <jsp:useBean id="tasks" scope="request" type="java.util.List"/>
             <tbody>
             <c:forEach var="task" items="${tasks}">
@@ -141,6 +133,22 @@
         <button id="export_button" class="btn btn-primary" type="submit" name="export" value="all">Export all</button>
         <input id="import_button" class="btn btn-primary" type="button" onclick="showUploadField()" value="import"/>
     </form>
+    <c:if test="${sessionScope.existed != null}">
+        <div class="container">
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <p><strong>Task(s):</strong></p>
+                <jsp:useBean id="existed" scope="session" type="java.util.List"/>
+                <c:forEach var="existedTask" items="${sessionScope.existed}">
+                    <p><strong>name:</strong> ${existedTask.getName()}</p>
+                    <p><strong>description:</strong> ${existedTask.getDescription()}</p>
+                    <p><strong>time:</strong> ${Utils.getFormattedTime(existedTask)}</p>
+                    <hr>
+                </c:forEach>
+                <p><strong>already exist(s)</strong></p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    </c:if>
     <div>
         <form id="add_form" method="post" style="display: none"
               action="${pageContext.request.contextPath}/tasks/${target_user.name}">

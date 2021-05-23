@@ -38,6 +38,7 @@ public class UsersServlet extends AuthServletTemplate {
     private static final String SUBMIT_EDIT_B = "submit_edit_b";
     private static final String DELETE = "delete";
     private static final String FILE_PARAM = "file";
+    private static final String INVALID_U = "invalidU";
     private static final Logger log = LoggerFactory.getLogger(UsersServlet.class);
 
     @EJB
@@ -48,7 +49,7 @@ public class UsersServlet extends AuthServletTemplate {
         super.doGet(req, resp);
         req.getSession().setAttribute("invalid", null);
         if (!isAdmin) {
-            resp.sendRedirect("http://localhost:8888/web_task_manager-1.0-SNAPSHOT/user");
+            resp.sendRedirect(req.getContextPath() + "/user");
             return;
         }
 
@@ -58,7 +59,7 @@ public class UsersServlet extends AuthServletTemplate {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        req.getSession().setAttribute("invalidU", null);
+        req.getSession().setAttribute(INVALID_U, null);
         if (!isAdmin) {
             resp.sendRedirect(req.getContextPath() + "/user");
             return;
@@ -77,9 +78,7 @@ public class UsersServlet extends AuthServletTemplate {
                 req.getParameter(SUBMIT_EDIT_B) == null &&
                 req.getParameter(DELETE) == null) {
             if (req.getPart(FILE_PARAM) != null) {
-                log.info(req.getParameterNames().toString());
-                log.info("1" + req.getParameter("flexRadioDefault"));
-                importFromFile(req, req.getParameter("flexRadioDefault").equals("replace"));
+                importFromFile(req, "replace".equals(req.getParameter("flexRadioDefault")));
             }
         }
 //        } else {
@@ -93,7 +92,7 @@ public class UsersServlet extends AuthServletTemplate {
     }
 
     private void deleteParamCheck(HttpServletRequest req, HttpServletResponse resp) {
-        String deleteParam = req.getParameter("delete");
+        String deleteParam = req.getParameter(DELETE);
         int deleteId = Integer.parseInt(deleteParam.trim());
         User targetUser = new UserDAO().getEntityById(deleteId);
         if (!targetUser.getName().equals(req.getSession().getAttribute("login"))) {
@@ -193,14 +192,14 @@ public class UsersServlet extends AuthServletTemplate {
             log.info("file name: " + fileName);
             UsersForXml usersForXml = ejb.convertXmlToObject(fileContent);
             if (usersForXml == null) {
-                String message = "<p><strong>invalid xml<strong></p>";
-                request.getSession().setAttribute("invalidU", message);
+                String message = "invalid xml";
+                request.getSession().setAttribute(INVALID_U, message);
             } else {
                 try {
                     importUsers(usersForXml.getUsers(), replace);
                 } catch (NullPointerException e) {
-                    String message = "<p><strong>invalid xml<strong></p>";
-                    request.getSession().setAttribute("invalidU", message);
+                    String message = "invalid xml";
+                    request.getSession().setAttribute(INVALID_U, message);
                 }
             }
         } catch (IOException | ServletException e) {
