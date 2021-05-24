@@ -123,7 +123,7 @@ public class User implements Serializable {
         this.tasks = tasks;
     }
 
-    public boolean containTask (Task taskForCheck) {
+    public boolean containsTask(Task taskForCheck) {
         List<Task> tasks = getTasks();
         for (Task task : tasks) {
             if (taskForCheck.equals(task)) {

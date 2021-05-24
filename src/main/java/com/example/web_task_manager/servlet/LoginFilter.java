@@ -41,12 +41,6 @@ public class LoginFilter implements Filter {
         boolean loginRequest = request.getRequestURI().equals(loginURL) || request.getRequestURI().equals(loginURL + ".jsp");
         boolean signupRequest = request.getRequestURI().equals(signupURL) || request.getRequestURI().equals(signupURL + ".jsp");
         String cookieValue = cookieController.getCookieValue(request, CookieName.LOGIN);
-//            log.info(cookieValue);
-//        } catch (NullPointerException e) {
-//            e.printStackTrace();
-//        }
-
-
 
         if (loggedIn || loginRequest || signupRequest) {
             chain.doFilter(req, res);

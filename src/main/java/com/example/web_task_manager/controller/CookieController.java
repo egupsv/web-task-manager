@@ -1,7 +1,6 @@
 package com.example.web_task_manager.controller;
 
 import com.example.web_task_manager.CookieName;
-import com.example.web_task_manager.servlet.TaskServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

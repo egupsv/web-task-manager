@@ -1,7 +1,6 @@
 package com.example.web_task_manager.servlet;
 
 import com.example.web_task_manager.controller.NotifyWorker;
-import com.example.web_task_manager.dba.DatabaseAccess;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;

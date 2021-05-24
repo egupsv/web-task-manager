@@ -25,7 +25,7 @@ public class LoginServlet extends ServletTemplate {
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         req.getSession().removeAttribute("taken");
         resp.sendRedirect(req.getContextPath() + "/login.jsp");
     }
@@ -44,7 +44,7 @@ public class LoginServlet extends ServletTemplate {
         User user = null;
         User targetUser = userDAO.getUserByName(login);
         if (targetUser != null &&
-                encPassword.equals(targetUser.getEncPassword()))
+                targetUser.getEncPassword().equals(encPassword))
             user = targetUser;
 
         if (user != null) {

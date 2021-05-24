@@ -1,7 +1,7 @@
 package com.example.web_task_manager.servlet.template;
 
 import com.example.web_task_manager.CookieName;
-import com.example.web_task_manager.servlet.TaskServlet;
+import com.example.web_task_manager.constants.Constants;
 import com.example.web_task_manager.users.Role;
 import com.example.web_task_manager.dba.TaskDAO;
 import com.example.web_task_manager.model.User;
@@ -40,7 +40,7 @@ public class AuthServletTemplate extends ServletTemplate {
     }
 
     private boolean loginCheck(HttpServletRequest req) {
-        return req.getParameter("Logout") == null;
+        return req.getParameter(Constants.LOGOUT_PARAM) == null;
     }
 
     protected void logoutUser(HttpServletRequest req, HttpServletResponse resp) throws IOException {
