@@ -4,6 +4,7 @@ import com.example.web_task_manager.constants.Constants;
 import com.example.web_task_manager.converter.Converter;
 import com.example.web_task_manager.converter.UserForXml;
 import com.example.web_task_manager.converter.UsersForXml;
+import com.example.web_task_manager.exceptions.ExportException;
 import com.example.web_task_manager.model.Task;
 import com.example.web_task_manager.model.User;
 import com.example.web_task_manager.servlet.template.AuthServletTemplate;
@@ -39,7 +40,8 @@ public class TaskServlet extends AuthServletTemplate {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         super.doGet(request, response);
-        request.getSession().setAttribute("invalidU", null);
+        request.getSession().setAttribute(Constants.INVALID_U_ATTRIBUTE, null);
+        request.getSession().setAttribute(Constants.EXPORT_FAIL, null);
         String pathInfo = request.getPathInfo();
 
         Object userNameParam = request.getSession().getAttribute("login");
@@ -74,6 +76,7 @@ public class TaskServlet extends AuthServletTemplate {
         super.doPost(request, response);
         request.getSession().setAttribute(Constants.EXISTED_ATTRIBUTE, null);
         request.getSession().setAttribute(Constants.INVALID_ATTRIBUTE, null);
+        request.getSession().setAttribute(Constants.EXPORT_FAIL, null);
         if (targetUserName == null)
             targetUserName = user.getName();
 
@@ -112,7 +115,13 @@ public class TaskServlet extends AuthServletTemplate {
         }
         response.setHeader("Content-disposition", "attachment; filename=\"" + fileName + "\"");
         response.setContentType("text/xml; name=\"fileName\"");
-        ejb.convertObjectToXml(users, exportedTask, fileName, response, false);
+        try {
+            ejb.convertObjectToXml(users, exportedTask, fileName, response, false);
+        } catch (ExportException e) {
+            log.error("cause of ExportException: " + e.getCause());
+            request.getSession().setAttribute(Constants.EXPORT_FAIL, e.getMessage());
+        }
+
     }
 
     public void complete(HttpServletRequest request, HttpServletResponse response) {

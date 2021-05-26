@@ -21,6 +21,7 @@ public class Constants {
     public static final String EXISTED_ATTRIBUTE = "existed";
     public static final String INVALID_ATTRIBUTE = "invalid";
     public static final String INVALID_U_ATTRIBUTE = "invalidU";
+    public static final String EXPORT_FAIL = "exportFail";
     public static final String USERS_ATTRIBUTE = "users";
     public static final SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm");
     public static final String EMPTY_VALUE = "";

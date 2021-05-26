@@ -23,14 +23,6 @@
 </head>
 
 <body>
-<c:if test="${sessionScope.invalid != null}">
-    <div class="container">
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            <p><strong>${sessionScope.invalid}</strong></p>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    </div>
-</c:if>
 <nav class="navbar navbar-expand-lg navbar-light bg-light nav-h" style="background-color: #5b1375 !important;">
     <div class="container header">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -145,6 +137,22 @@
                     <hr>
                 </c:forEach>
                 <p><strong>already exist(s)</strong></p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    </c:if>
+    <c:if test="${sessionScope.invalid != null}">
+        <div class="container">
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <p><strong>${sessionScope.invalid}</strong></p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    </c:if>
+    <c:if test="${sessionScope.exportFail != null}">
+        <div class="container">
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <p><strong>${sessionScope.exportFail}</strong></p>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         </div>

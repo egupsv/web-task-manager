@@ -6,6 +6,7 @@ import com.example.web_task_manager.converter.Converter;
 import com.example.web_task_manager.converter.UserForXml;
 import com.example.web_task_manager.converter.UsersForXml;
 import com.example.web_task_manager.dba.UserDAO;
+import com.example.web_task_manager.exceptions.ExportException;
 import com.example.web_task_manager.model.Task;
 import com.example.web_task_manager.model.User;
 import com.example.web_task_manager.servlet.template.AuthServletTemplate;
@@ -43,6 +44,8 @@ public class UsersServlet extends AuthServletTemplate {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         super.doGet(req, resp);
         req.getSession().setAttribute(Constants.INVALID_ATTRIBUTE, null);
+        req.getSession().setAttribute(Constants.EXISTED_ATTRIBUTE, null);
+        req.getSession().setAttribute(Constants.EXPORT_FAIL, null);
         if (!isAdmin) {
             resp.sendRedirect(req.getContextPath() + "/user");
             return;
@@ -179,7 +182,12 @@ public class UsersServlet extends AuthServletTemplate {
         }
         resp.setHeader("Content-disposition", "attachment; filename=\"" + fileName + "\"");
         resp.setContentType("text/xml; name=\"fileName\"");
-        ejb.convertObjectToXml(users, null, fileName, resp, true);
+        try {
+            ejb.convertObjectToXml(users, null, fileName, resp, true);
+        } catch (ExportException e) {
+            log.error("cause of ExportException: " + e.getCause());
+            req.getSession().setAttribute(Constants.EXPORT_FAIL, e.getMessage());
+        }
     }
 
     public void importFromFile(HttpServletRequest request, boolean replace) {

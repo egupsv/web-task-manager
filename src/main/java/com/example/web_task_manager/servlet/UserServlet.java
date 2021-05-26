@@ -21,6 +21,8 @@ public class UserServlet extends AuthServletTemplate {
         super.doGet(req, resp);
         req.getSession().setAttribute(Constants.INVALID_U_ATTRIBUTE, null);
         req.getSession().setAttribute(Constants.INVALID_ATTRIBUTE, null);
+        req.getSession().setAttribute(Constants.EXISTED_ATTRIBUTE, null);
+        req.getSession().setAttribute(Constants.EXPORT_FAIL, null);
         req.setAttribute("tar_user", user);
 
         getServletContext().getRequestDispatcher("/user.jsp").forward(req, resp);

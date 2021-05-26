@@ -1,5 +1,6 @@
 package com.example.web_task_manager.converter;
 
+import com.example.web_task_manager.exceptions.ExportException;
 import com.example.web_task_manager.model.Task;
 import com.example.web_task_manager.model.User;
 import org.xml.sax.SAXException;
@@ -24,7 +25,7 @@ public class Converter {
                                    Task exportedTask,
                                    String fileName,
                                    HttpServletResponse response,
-                                   boolean useAdminInfo) {
+                                   boolean useAdminInfo) throws ExportException {
         try (ServletOutputStream sos = response.getOutputStream()) {
             File file = new File(fileName);
             List<UserForXml> users = new ArrayList<UserForXml>();
@@ -56,6 +57,7 @@ public class Converter {
             }
         } catch (JAXBException | IOException e) {
             e.printStackTrace();
+            throw new ExportException("something went wrong", e);
         }
     }
 
