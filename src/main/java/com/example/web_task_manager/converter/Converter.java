@@ -56,7 +56,6 @@ public class Converter {
                 sos.flush();
             }
         } catch (JAXBException | IOException e) {
-            e.printStackTrace();
             throw new ExportException("something went wrong", e);
         }
     }
@@ -70,7 +69,6 @@ public class Converter {
             unmarshaller.setSchema(usersSchema);
             return (UsersForXml) unmarshaller.unmarshal(fileContent);
         } catch (SAXException | JAXBException e) {
-            e.printStackTrace();
             return null;
         }
     }

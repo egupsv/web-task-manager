@@ -4,6 +4,8 @@ package com.example.web_task_manager.dba;
 import com.example.web_task_manager.model.User;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 import javax.persistence.NoResultException;
@@ -15,7 +17,7 @@ import java.util.List;
 
 
 public class UserDAO extends DataAccessible<User, Integer> {
-
+    private static final Logger log = LoggerFactory.getLogger(DataAccessible.class);
 
     public User getUserByName(String userName) {
         try (Session session = DatabaseAccess.getSessionFactory().openSession()) {
@@ -28,7 +30,7 @@ public class UserDAO extends DataAccessible<User, Integer> {
         } catch (NoResultException ignored) {
 
         } catch (PersistenceException ex) {
-            ex.printStackTrace();
+            log.error("cause of PersistenceException " + ex.getCause());
         }
         return null;
     }
@@ -43,7 +45,8 @@ public class UserDAO extends DataAccessible<User, Integer> {
         } catch (NoResultException ignored) {
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.error(ex.getMessage());
+            log.error("cause: " + ex.getCause());
         }
         return Collections.emptyList();
     }
@@ -53,7 +56,8 @@ public class UserDAO extends DataAccessible<User, Integer> {
         try (Session session = DatabaseAccess.getSessionFactory().openSession()) {
             return session.get(User.class, id);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.error(ex.getMessage());
+            log.error("cause: " + ex.getCause());
         }
         return null;
     }
@@ -71,7 +75,7 @@ public class UserDAO extends DataAccessible<User, Integer> {
                 return true;
             }
         } catch (PersistenceException pex) {
-            pex.printStackTrace();
+            log.error("cause of PersistenceException: " + pex.getCause());
         }
         return false;
     }
@@ -85,8 +89,7 @@ public class UserDAO extends DataAccessible<User, Integer> {
             transaction.commit();
             return true;
         } catch (PersistenceException ex) {
-
-            ex.printStackTrace();
+            log.error("cause of PersistenceException: " + ex.getCause());
         }
         return false;
     }
@@ -102,7 +105,7 @@ public class UserDAO extends DataAccessible<User, Integer> {
         } catch (NoResultException e) {
             return null;
         } catch (PersistenceException ex) {
-            ex.printStackTrace();
+            log.error("cause of PersistenceException: " + ex.getCause());
         }
         return null;
     }

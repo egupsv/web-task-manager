@@ -1,6 +1,5 @@
 package com.example.web_task_manager.dba;
 
-import com.example.web_task_manager.controller.NotifyWorker;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
@@ -34,7 +33,8 @@ public class DatabaseAccess {
             log.info("factory created-----------------------");
         } catch (Exception ex) {
             StandardServiceRegistryBuilder.destroy(registry);
-            ex.printStackTrace();
+            log.error(ex.getMessage());
+            log.error("cause: " + ex.getCause());
             sessionFactory = null;
         }
         isLoading = false;

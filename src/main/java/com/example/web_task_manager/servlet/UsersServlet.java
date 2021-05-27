@@ -123,7 +123,8 @@ public class UsersServlet extends AuthServletTemplate {
                     if (!encPassword.equals(targetUser.getEncPassword()))
                         targetUser.setEncPassword(encPassword);
                 } catch (NoSuchPaddingException | NoSuchAlgorithmException e) {
-                    e.printStackTrace();
+                    log.error(e.getMessage());
+                    log.error("cause: " + e.getCause());
                 }
             }
             if (Properties.REGEX_MAIL_PATTERN.matcher(newMail).find() && !newMail.equals(targetUser.getMail()))
@@ -155,7 +156,7 @@ public class UsersServlet extends AuthServletTemplate {
                     userDAO.create(newUser);
                     log.info("__________USER CREATED________");
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    log.error(ex.getMessage());
                 }
             }
 
@@ -210,7 +211,8 @@ public class UsersServlet extends AuthServletTemplate {
                 }
             }
         } catch (IOException | ServletException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
+            log.error("cause: " + e.getCause());
         }
     }
 

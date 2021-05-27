@@ -145,7 +145,8 @@ public class TaskServlet extends AuthServletTemplate {
         try {
             time = Constants.formatter.parse(timeStr);
         } catch (ParseException e) {
-            e.printStackTrace();
+            log.error("ParseException: " + e.getMessage());
+            log.error("cause: " + e.getCause());
         }
         Task createdTask = new Task(name, description, time, userDAO.getUserByName(targetUserName));
         taskDAO.create(createdTask);
@@ -172,7 +173,8 @@ public class TaskServlet extends AuthServletTemplate {
                 }
             }
         } catch (IOException | ServletException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
+            log.error("cause: " + e.getCause());
         }
     }
 

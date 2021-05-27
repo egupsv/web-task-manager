@@ -1,13 +1,15 @@
 package com.example.web_task_manager.dba;
 
-
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.PersistenceException;
 import java.util.List;
 
 public abstract class DataAccessible<E, K> {
+    private static final Logger log = LoggerFactory.getLogger(DataAccessible.class);
     public abstract List<E> getAll();
 
     public abstract E getEntityById(K id);
@@ -25,7 +27,8 @@ public abstract class DataAccessible<E, K> {
             transaction.commit();
             return true;
         } catch (PersistenceException pex) {
-            pex.printStackTrace();
+            log.error(pex.getMessage());
+            log.error("cause: " + pex.getCause());
         }
         return false;
     }

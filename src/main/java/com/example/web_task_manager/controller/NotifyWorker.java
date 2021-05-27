@@ -63,8 +63,9 @@ public class NotifyWorker implements Runnable {
             log.info(expired.isEmpty() ? "expired list is empty" : expired.get(0).toString());
             return expired;
         } catch (Exception ex) {
-            log.info("EXPIRED LIST IS ERROR");
-            ex.printStackTrace();
+            log.error("EXPIRED LIST IS ERROR");
+            log.error("exception: " + ex.getMessage());
+            log.error("cause: " + ex.getCause());
         }
 
         return expired;

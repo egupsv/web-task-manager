@@ -6,6 +6,8 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
@@ -16,7 +18,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class TaskDAO extends DataAccessible<Task, Integer> {
-
+    private static final Logger log = LoggerFactory.getLogger(TaskDAO.class);
     @Override
     public boolean create(Task task) {
         try (Session session = DatabaseAccess.getSessionFactory().openSession()) {
@@ -25,8 +27,7 @@ public class TaskDAO extends DataAccessible<Task, Integer> {
             transaction.commit();
             return true;
         } catch (HibernateException ex) {
-
-            ex.printStackTrace();
+            log.error("cause of HibernateException: ");
         }
         return false;
     }
@@ -37,7 +38,7 @@ public class TaskDAO extends DataAccessible<Task, Integer> {
         try (Session session = DatabaseAccess.getSessionFactory().openSession()) {
             return session.get(Task.class, id);
         } catch (PersistenceException pex) {
-            pex.printStackTrace();
+            log.error("cause of PersistenceException: " + pex.getCause());
         }
         return null;
     }
@@ -60,7 +61,7 @@ public class TaskDAO extends DataAccessible<Task, Integer> {
             }
 
         } catch (PersistenceException pex) {
-            pex.printStackTrace();
+            log.error("cause of PersistenceException: " + pex.getCause());
         }
         return false;
     }
@@ -92,7 +93,8 @@ public class TaskDAO extends DataAccessible<Task, Integer> {
         } catch (NoResultException ignored) {
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.error(ex.getMessage());
+            log.error("cause: " + ex.getCause());
         }
         return Collections.emptyList();
     }
@@ -106,7 +108,8 @@ public class TaskDAO extends DataAccessible<Task, Integer> {
         try (Session session = DatabaseAccess.getSessionFactory().openSession()) {
             taskList = session.createQuery("from Task").list();
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.error(ex.getMessage());
+            log.error("cause: " + ex.getCause());
         }
         return taskList;
     }
@@ -121,7 +124,8 @@ public class TaskDAO extends DataAccessible<Task, Integer> {
                 return true;
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.error(ex.getMessage());
+            log.error("cause: " + ex.getCause());
         }
         return false;
     }

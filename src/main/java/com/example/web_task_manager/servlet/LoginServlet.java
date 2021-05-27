@@ -38,7 +38,8 @@ public class LoginServlet extends ServletTemplate {
         try {
             encPassword = new Encryptor().encrypt(password);
         } catch (NoSuchPaddingException | NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
+            log.error("cause: " + e.getCause());
         }
         log.info(encPassword);
         User user = null;

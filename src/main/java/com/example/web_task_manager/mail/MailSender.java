@@ -1,7 +1,6 @@
 package com.example.web_task_manager.mail;
 
 import com.example.web_task_manager.Properties;
-import com.example.web_task_manager.servlet.TaskServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,7 +64,8 @@ public class MailSender {
             log.info("message sent successfully...");
             return true;
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.error(ex.getMessage());
+            log.error("cause: " + ex.getCause());
         }
         return false;
     }

@@ -1,14 +1,10 @@
 package com.example.web_task_manager.converter;
 
-import com.example.web_task_manager.model.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.annotation.*;
 import java.io.Serializable;
-import java.util.List;
-
 
 @XmlRootElement(name = "user")
 @XmlType(propOrder = {"name", "encPassword", "mail", "tasks"})

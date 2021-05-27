@@ -1,5 +1,9 @@
 package com.example.web_task_manager.users;
 
+import com.example.web_task_manager.dba.TaskDAO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
@@ -16,6 +20,8 @@ public class Encryptor {
      */
     private final Cipher cipher;
     SecretKey key;
+
+    private static final Logger log = LoggerFactory.getLogger(Encryptor.class);
 
     /**
      * Initializes a newly created {@code Encryptor} object
@@ -43,7 +49,8 @@ public class Encryptor {
             byte[] encryptedText = cipher.doFinal(plainText);
             result = Base64.getEncoder().encodeToString(encryptedText);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
+            log.error("cause: " + e.getCause());
         }
         return result;
     }
