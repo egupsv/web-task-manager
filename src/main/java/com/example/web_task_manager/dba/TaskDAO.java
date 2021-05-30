@@ -38,7 +38,7 @@ public class TaskDAO extends DataAccessible<Task, Integer> {
         try (Session session = DatabaseAccess.getSessionFactory().openSession()) {
             return session.get(Task.class, id);
         } catch (PersistenceException pex) {
-            log.error("cause of PersistenceException: " + pex.getCause());
+            log.error(pex.getMessage(), pex);
         }
         return null;
     }
@@ -61,7 +61,7 @@ public class TaskDAO extends DataAccessible<Task, Integer> {
             }
 
         } catch (PersistenceException pex) {
-            log.error("cause of PersistenceException: " + pex.getCause());
+            log.error(pex.getMessage(), pex);
         }
         return false;
     }
@@ -93,8 +93,7 @@ public class TaskDAO extends DataAccessible<Task, Integer> {
         } catch (NoResultException ignored) {
 
         } catch (Exception ex) {
-            log.error(ex.getMessage());
-            log.error("cause: " + ex.getCause());
+            log.error(ex.getMessage(), ex);
         }
         return Collections.emptyList();
     }
@@ -108,8 +107,7 @@ public class TaskDAO extends DataAccessible<Task, Integer> {
         try (Session session = DatabaseAccess.getSessionFactory().openSession()) {
             taskList = session.createQuery("from Task").list();
         } catch (Exception ex) {
-            log.error(ex.getMessage());
-            log.error("cause: " + ex.getCause());
+            log.error(ex.getMessage(), ex);
         }
         return taskList;
     }
@@ -124,8 +122,7 @@ public class TaskDAO extends DataAccessible<Task, Integer> {
                 return true;
 
         } catch (Exception ex) {
-            log.error(ex.getMessage());
-            log.error("cause: " + ex.getCause());
+            log.error(ex.getMessage(), ex);
         }
         return false;
     }

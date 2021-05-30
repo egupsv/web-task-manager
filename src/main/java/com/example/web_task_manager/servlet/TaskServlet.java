@@ -118,7 +118,7 @@ public class TaskServlet extends AuthServletTemplate {
         try {
             ejb.convertObjectToXml(users, exportedTask, fileName, response, false);
         } catch (ExportException e) {
-            log.error("cause of ExportException: " + e.getCause());
+            log.error(e.getMessage(), e);
             request.getSession().setAttribute(Constants.EXPORT_FAIL, e.getMessage());
         }
 
@@ -145,8 +145,7 @@ public class TaskServlet extends AuthServletTemplate {
         try {
             time = Constants.formatter.parse(timeStr);
         } catch (ParseException e) {
-            log.error("ParseException: " + e.getMessage());
-            log.error("cause: " + e.getCause());
+            log.error(e.getMessage(), e);
         }
         Task createdTask = new Task(name, description, time, userDAO.getUserByName(targetUserName));
         taskDAO.create(createdTask);
@@ -173,8 +172,7 @@ public class TaskServlet extends AuthServletTemplate {
                 }
             }
         } catch (IOException | ServletException e) {
-            log.error(e.getMessage());
-            log.error("cause: " + e.getCause());
+            log.error(e.getMessage(), e);
         }
     }
 

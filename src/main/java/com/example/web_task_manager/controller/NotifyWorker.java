@@ -64,8 +64,7 @@ public class NotifyWorker implements Runnable {
             return expired;
         } catch (Exception ex) {
             log.error("EXPIRED LIST IS ERROR");
-            log.error("exception: " + ex.getMessage());
-            log.error("cause: " + ex.getCause());
+            log.error(ex.getMessage(), ex);
         }
 
         return expired;

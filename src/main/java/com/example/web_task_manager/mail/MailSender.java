@@ -64,8 +64,7 @@ public class MailSender {
             log.info("message sent successfully...");
             return true;
         } catch (Exception ex) {
-            log.error(ex.getMessage());
-            log.error("cause: " + ex.getCause());
+            log.error(ex.getMessage(), ex);
         }
         return false;
     }

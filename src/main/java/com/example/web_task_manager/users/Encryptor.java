@@ -49,8 +49,7 @@ public class Encryptor {
             byte[] encryptedText = cipher.doFinal(plainText);
             result = Base64.getEncoder().encodeToString(encryptedText);
         } catch (Exception e) {
-            log.error(e.getMessage());
-            log.error("cause: " + e.getCause());
+            log.error(e.getMessage(), e);
         }
         return result;
     }

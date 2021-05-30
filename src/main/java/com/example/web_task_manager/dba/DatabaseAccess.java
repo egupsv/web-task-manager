@@ -33,8 +33,7 @@ public class DatabaseAccess {
             log.info("factory created-----------------------");
         } catch (Exception ex) {
             StandardServiceRegistryBuilder.destroy(registry);
-            log.error(ex.getMessage());
-            log.error("cause: " + ex.getCause());
+            log.error(ex.getMessage(), ex);
             sessionFactory = null;
         }
         isLoading = false;

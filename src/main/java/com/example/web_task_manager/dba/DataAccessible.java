@@ -27,8 +27,7 @@ public abstract class DataAccessible<E, K> {
             transaction.commit();
             return true;
         } catch (PersistenceException pex) {
-            log.error(pex.getMessage());
-            log.error("cause: " + pex.getCause());
+            log.error(pex.getMessage(), pex);
         }
         return false;
     }

@@ -123,8 +123,7 @@ public class UsersServlet extends AuthServletTemplate {
                     if (!encPassword.equals(targetUser.getEncPassword()))
                         targetUser.setEncPassword(encPassword);
                 } catch (NoSuchPaddingException | NoSuchAlgorithmException e) {
-                    log.error(e.getMessage());
-                    log.error("cause: " + e.getCause());
+                    log.error(e.getMessage(), e);
                 }
             }
             if (Properties.REGEX_MAIL_PATTERN.matcher(newMail).find() && !newMail.equals(targetUser.getMail()))
@@ -186,7 +185,7 @@ public class UsersServlet extends AuthServletTemplate {
         try {
             ejb.convertObjectToXml(users, null, fileName, resp, true);
         } catch (ExportException e) {
-            log.error("cause of ExportException: " + e.getCause());
+            log.error(e.getMessage(), e);
             req.getSession().setAttribute(Constants.EXPORT_FAIL, e.getMessage());
         }
     }
@@ -211,8 +210,7 @@ public class UsersServlet extends AuthServletTemplate {
                 }
             }
         } catch (IOException | ServletException e) {
-            log.error(e.getMessage());
-            log.error("cause: " + e.getCause());
+            log.error(e.getMessage(), e);
         }
     }
 

@@ -40,8 +40,7 @@ public class SignupServlet extends ServletTemplate {
             try {
                 encPassword = new Encryptor().encrypt(password);
             } catch (NoSuchPaddingException | NoSuchAlgorithmException e) {
-                log.error(e.getMessage());
-                log.error("cause: " + e.getCause());
+                log.error(e.getMessage(), e);
             }
             User user = new User(login, encPassword, mail);
             userDAO.create(user);

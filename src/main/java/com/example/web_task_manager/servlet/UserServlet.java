@@ -61,8 +61,7 @@ public class UserServlet extends AuthServletTemplate {
                 userDAO.update(user);
                 cookieController.createCookie(resp, CookieName.PASSWORD, newPass);
             } catch (Exception ex) {
-                log.error(ex.getMessage());
-                log.error("cause: " + ex.getCause());
+                log.error(ex.getMessage(), ex);
             }
         }
     }

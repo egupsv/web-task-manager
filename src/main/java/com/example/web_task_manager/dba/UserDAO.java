@@ -30,7 +30,7 @@ public class UserDAO extends DataAccessible<User, Integer> {
         } catch (NoResultException ignored) {
 
         } catch (PersistenceException ex) {
-            log.error("cause of PersistenceException " + ex.getCause());
+            log.error(ex.getMessage(), ex);
         }
         return null;
     }
@@ -45,8 +45,7 @@ public class UserDAO extends DataAccessible<User, Integer> {
         } catch (NoResultException ignored) {
 
         } catch (Exception ex) {
-            log.error(ex.getMessage());
-            log.error("cause: " + ex.getCause());
+            log.error(ex.getMessage(), ex);
         }
         return Collections.emptyList();
     }
@@ -56,8 +55,7 @@ public class UserDAO extends DataAccessible<User, Integer> {
         try (Session session = DatabaseAccess.getSessionFactory().openSession()) {
             return session.get(User.class, id);
         } catch (Exception ex) {
-            log.error(ex.getMessage());
-            log.error("cause: " + ex.getCause());
+            log.error(ex.getMessage(), ex);
         }
         return null;
     }
@@ -75,7 +73,7 @@ public class UserDAO extends DataAccessible<User, Integer> {
                 return true;
             }
         } catch (PersistenceException pex) {
-            log.error("cause of PersistenceException: " + pex.getCause());
+            log.error(pex.getMessage(), pex);
         }
         return false;
     }
@@ -89,7 +87,7 @@ public class UserDAO extends DataAccessible<User, Integer> {
             transaction.commit();
             return true;
         } catch (PersistenceException ex) {
-            log.error("cause of PersistenceException: " + ex.getCause());
+            log.error(ex.getMessage(), ex);
         }
         return false;
     }
@@ -105,7 +103,7 @@ public class UserDAO extends DataAccessible<User, Integer> {
         } catch (NoResultException e) {
             return null;
         } catch (PersistenceException ex) {
-            log.error("cause of PersistenceException: " + ex.getCause());
+            log.error(ex.getMessage(), ex);
         }
         return null;
     }
